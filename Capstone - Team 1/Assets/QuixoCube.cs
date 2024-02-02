@@ -39,11 +39,11 @@ public class QuixoCube : MonoBehaviour, IPointerClickHandler
                 cube.SetActive(false);
                 from = loc();
                 Game.moveInProgress = true;
-                moves = Game.getPossibleMoves(row, col);
+                moves = Game.GetPossibleMoves(row, col);
             }
             else
             {
-                if (Game.isValidMove(moves, row, col))
+                if (Game.IsValidMove(moves, row, col))
                 {
                     cube.SetActive(false);
                     Game.moveInProgress = false;

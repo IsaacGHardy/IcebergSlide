@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Linq;
 using UnityEngine;
 
 
@@ -26,7 +27,8 @@ public class QuixoClass : MonoBehaviour
     public static float cubeSep = 0.125f; // separation between cubes
     private static float boardHeight = 0 + cubeSize / 2;
     public bool moveInProgress = false;
-
+    private Point[] corners = { new Point(0, 0), new Point(0, 1), new Point(1, 0), new Point(1, 1) };
+    public List<Point> PossibleMoves;
 
     // Start is called before the first frame update
     void Start()
@@ -151,39 +153,60 @@ public class QuixoClass : MonoBehaviour
         }
         return possible;
     }
+
     //returns list of all possible moves based off given piece selected to move, assumes piece has already been checked to make sure it is a valid move
-    public List<Point> getPossibleMoves(int row, int col)
+
+
+    public List<Point> GetPossibleMoves(int row, int col)
     {
-        List<Point> possible;
-        if (isCorner(row, col))
+        List<Point> possible = new List<Point>();
+
+        // Find the point on the opposite side of the board from the selected point.
+        if (col == 0)
         {
-            possible = getCornerMoves(row, col);
+            possible.Add(new Point(row, 4));
         }
-        else
+        else if (col == 4)
         {
-            possible = getMiddleMoves(row, col);
+            possible.Add(new Point(row, 0));
         }
+        if (row == 0)
+        {
+            possible.Add(new Point(4, col));
+        }
+        else if (row == 4)
+        {
+            possible.Add(new Point(0, col));
+        }
+
+        // Find the corners that are in line with the selected point.
+        foreach (Point c in corners)
+        {
+            if ((c.row == row || c.col == col) // corner is a valid move
+                && !(c.col == col && c.row == row)) // corner is not the point that was selected
+            {
+                possible.Add(c);
+            }
+        }
+        PossibleMoves = possible;
         return possible;
     }
 
 
-
-
-
-
     //uses the List of possible moves to make sure the move inputed is valid
-    public bool isValidMove(List<Point> possible, int row, int col)
+    public bool IsValidMove(List<Point> possible, int row, int col)
     {
-        bool valid = false;
         foreach (Point p in possible)
         {
             if (p.row == row && p.col == col)
             {
-                valid = true;
+                return true; // Return immediately if a matching point is found
             }
         }
-        return valid;
+        return false; // Return false if no matching points are found
     }
+
+
     //moves the peices based on move made
     public void makeMove(Point moveFrom, Point moveTo)
     {

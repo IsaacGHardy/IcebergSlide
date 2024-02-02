@@ -303,13 +303,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.38929215, y: 0.5908854, z: -0.38026845, w: 0.5955687}
-  m_LocalPosition: {x: -0.34, y: 5.75, z: 3.36}
+  m_LocalRotation: {x: 0.36329383, y: 0.60721624, z: -0.35407552, w: 0.6115036}
+  m_LocalPosition: {x: -0.63, y: 5.89, z: 3.16}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 65.936, y: 90.195, z: 0.998}
+  m_LocalEulerAnglesHint: {x: 60.964, y: 90.164, z: 0.963}
 --- !u!114 &963194229
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -362,6 +362,7 @@ MonoBehaviour:
   boardObject: {fileID: 1758067592}
   boardSize: 5
   isXTurn: 1
+  moveInProgress: 0
 --- !u!64 &1758067594
 MeshCollider:
   m_ObjectHideFlags: 0
