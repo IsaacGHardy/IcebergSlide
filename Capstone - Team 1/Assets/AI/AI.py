@@ -1,27 +1,8 @@
-#START:
-#Pickle to save
-#tensorflow from tensorflow.keras import layers
-
-#Deep Reinforcement Learning or Value Iteration (VI)
-
-
-#Evaluate a given 5x5 grid
-    #Know what piece you are (X or O)
-    #Reward more for controlling middle +(25, 15, 5)
-    #Control Corners +(20)
-
-#GetBestMove
-    #Should take a board, team to move for, and difficulty
-
-#https://neptune.ai/blog/saving-trained-model-in-python#:~:text=To%20save%20a%20deep%20learning,loaded%20later%20to%20make%20predictions.
-#https://www.activestate.com/resources/quick-reads/how-to-create-a-neural-network-in-python-with-and-without-keras/
-
-#Quxio but in Python
 import numpy
 
 #Inits
 def init_board():
-    board = [[str(" ") for i in range(5)] for j in range(5)] #i+j*5
+    board = [[str(" ") for i in range(5)] for j in range(5)]
     return board
 
 def init_safe_pickup_spots():
@@ -175,7 +156,6 @@ EDGES_OF_THE_BOARD = init_safe_pickup_spots()
 
 def start_match():
     board = init_board()
-
     player_turn = "X"
     has_winner = False
     
