@@ -1,0 +1,4 @@
+pip install numpy
+pip install --upgrade pip
+pip install tensorflow==2.15.0
+Make Sure VSCode and Python are version 3.10
