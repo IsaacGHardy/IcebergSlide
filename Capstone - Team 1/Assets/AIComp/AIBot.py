@@ -4,3 +4,5 @@
 
 from tensorflow.keras.models import Sequential, model_from_json
 from tensorflow.keras.layers import Dense
+
+print("Yay")
