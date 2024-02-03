@@ -304,7 +304,7 @@ Transform:
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
   m_LocalRotation: {x: 0.36329383, y: 0.60721624, z: -0.35407552, w: 0.6115036}
-  m_LocalPosition: {x: -0.63, y: 5.89, z: 3.16}
+  m_LocalPosition: {x: -4.1, y: 6.9, z: 3.16}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -362,7 +362,11 @@ MonoBehaviour:
   boardObject: {fileID: 1758067592}
   boardSize: 5
   isXTurn: 1
+  SlideSpeed: 0
   moveInProgress: 0
+  FROM: {fileID: 0}
+  spd: 10
+  acceptableOffset: 0.00001
 --- !u!64 &1758067594
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -444,8 +448,8 @@ Transform:
   m_GameObject: {fileID: 1758067592}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.19, y: 0, z: 4.33}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 4.9334, y: -0, z: 4.1688}
+  m_LocalScale: {x: 1.7494327, y: 1, z: 2.1149185}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}

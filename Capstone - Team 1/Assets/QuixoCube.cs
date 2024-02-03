@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -14,6 +15,8 @@ public class QuixoCube : MonoBehaviour, IPointerClickHandler
     public int row = 0;
     public int col = 0;
     public char face = '_';
+    public Material xmat; // the color of a cube owned by the x player
+    public Material omat; // the color of a cube owned by the y player
 
 
     // Start is called before the first frame update
@@ -57,5 +60,16 @@ public class QuixoCube : MonoBehaviour, IPointerClickHandler
     }
 
     public Point loc() { return new Point(row, col); }
+
+    public void Face(char f)
+    {
+        if (f == '_') return; // Do nothing if the face character is '_'
+
+        // Set the material based on the face character
+        cube.GetComponent<MeshRenderer>().material = f == 'X' ? xmat : omat;
+        
+    }
+
+
 
 }

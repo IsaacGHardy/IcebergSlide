@@ -40,8 +40,9 @@ public class QuixoClass : MonoBehaviour
     public bool moveInProgress = false;
     private Point[] corners = { new Point(0, 0), new Point(0, 1), new Point(1, 0), new Point(1, 1) };
     public GameObject FROM;
-    public Point f, t;
-
+    public Point f, t; 
+    public float spd = 10f;
+    public float acceptableOffset = 0.00001f;
 
 
     // Start is called before the first frame update
@@ -121,6 +122,28 @@ public class QuixoClass : MonoBehaviour
     {
         return gameBoard[p.row, p.col].cube;
     }
+    public GameObject Cube(int row, int col)
+    {
+        return gameBoard[row, col].cube;
+    }
+    public GameObject Cube(QuixoCube p)
+    {
+        return p.cube;
+    }
+
+
+    public QuixoCube Data(int row, int col)
+    {
+        return gameBoard[row, col];
+    }
+    public QuixoCube Data(Point p)
+    {
+        return gameBoard[p.row, p.col];
+    }
+    public QuixoCube Data(GameObject p)
+    {
+        return p.GetComponent<QuixoCube>();
+    }
 
     // take a pair of points, representing a move, and return the new coordinates of the piece being moved, if it is placed
     // just outside the board, next to the piece that is currently in the location it is being moved to. this then sets the
@@ -129,24 +152,166 @@ public class QuixoClass : MonoBehaviour
     {
         if (from.row == to.row)
         {
+            Data(from).row = to.row;
+            Data(from).col = to.col == 0 ? -1 : boardSize;
             return new Vector3(real(to.row), boardHeight, real(to.col == 0 ? -1 : boardSize));
         }
         else
         {
+            Data(from).row = to.row == 0 ? -1 : boardSize;
+            Data(from).col = to.col;
             return new Vector3(real(to.row == 0 ? -1 : boardSize), boardHeight, real(to.col));
         }
     }
-    
-    private void doSlide(Point from, Point to)
+
+    private bool bounds(Point p)
     {
-        // 1. figure out which blocks need to slide. This will be the blocks at to,
-        // and from, as well as all blocks that were in-between. 
-        // 2. move the blocks at >SlideSpeed< until they have traveled the distance
-        // of one full block, in whatever direction.
-        // 3. update the row and col fields of each of the relevant QuixoCube objects
-        // to match their new locations on the board
+        return p.row >= 0 && p.row < boardSize && p.col >= 0 && p.col < boardSize;
+    }
+    private bool bounds(QuixoCube p)
+    {
+        return p.row >= 0 && p.row < boardSize && p.col >= 0 && p.col < boardSize;
+    }
+    private bool bounds(int r, int c)
+    {
+        return r >= 0 && r < boardSize && c >= 0 && c < boardSize;
     }
 
+    private Func<Point, QuixoCube> getNextToSlide(Point from, Point to)
+    {
+        // Determine the direction of the slide
+        Point step;
+        if (from.row == to.row)
+        {
+            int c = to.col > from.col ? 1 : -1;
+            int r = to.row;
+            step = new Point(r, c);
+        }
+        else
+        {
+            int r = to.row > from.row ? 1 : -1;
+            int c = to.col;
+            step = new Point(r, c);
+        }
+        return (Point cur) =>
+        {
+            // Calculate the next point based on the direction
+            Point next = new Point(cur.row + step.row, cur.col + step.col);
+
+            // Return the QuixoCube at the next point, if within bounds
+            return bounds(next) ? Data(next) : null;
+        };
+    }
+
+    private List<GameObject> getCubesToSlide(Point from, Point to)
+    {
+        List<GameObject> toslide = new List<GameObject>();
+        Point cur = from;
+
+        UnityEngine.Debug.Log($"Plan To Slide ({Data(cur).row},{Data(cur).col})");
+        toslide.Add(Cube(cur));
+
+        var getNextCube = getNextToSlide(from, to);
+        QuixoCube nextCube = getNextCube(cur);
+        while (nextCube != null && bounds(nextCube))
+        {
+            toslide.Add(Cube(nextCube));
+            UnityEngine.Debug.Log($"Plan To Slide ({nextCube.row},{nextCube.col})");
+            cur = nextCube.loc();
+            nextCube = getNextCube(cur);
+        }
+        return toslide;
+    }
+
+
+    private Func<GameObject, Vector3> makeDest(Point from, Point to)
+    {
+        // Determine the direction of the slide
+        Point step;
+        if (from.row == to.row)
+        {
+            int c = to.col < from.col ? 1 : -1;
+            int r = to.row;
+            step = new Point(r, c);
+        }
+        else
+        {
+            int r = to.row < from.row ? 1 : -1;
+            int c = to.col;
+            step = new Point(r, c);
+        }
+
+        // Return a function 'dest' that calculates the destination for a given cube
+        return (GameObject cube) =>
+        {
+            QuixoCube quixoCube = cube.GetComponent<QuixoCube>();
+            if (quixoCube == null) return Vector3.zero; // Safety check
+
+            return getPos(quixoCube.row + step.row, quixoCube.col + step.col);
+        };
+    }
+    private Func<GameObject, Point> makepDest(Point from, Point to)
+    {
+        // Determine the direction of the slide
+        Point step;
+        if (from.row == to.row)
+        {
+            int c = to.col < from.col ? 1 : -1;
+            int r = to.row;
+            step = new Point(r, c);
+        }
+        else
+        {
+            int r = to.row < from.row ? 1 : -1;
+            int c = to.col;
+            step = new Point(r, c);
+        }
+
+        // Return a function 'dest' that calculates the destination for a given cube
+        return (GameObject cube) =>
+        {
+            QuixoCube quixoCube = cube.GetComponent<QuixoCube>();
+            return new Point(quixoCube.row + step.row, quixoCube.col + step.col);
+        };
+    }
+
+
+    private IEnumerator doSlide(Point from, Point to, List<GameObject> toSlide)
+    {
+        // Initialize the destination functions with specifics of this move
+        Func<GameObject, Vector3> dest = makeDest(from, to);
+        Func<GameObject, Point> pdest = makepDest(from, to);
+
+        bool MoveDone = false;
+
+        while (!MoveDone)
+        {
+            MoveDone = true; // Assume all cubes have reached until checked
+
+            foreach (GameObject cube in toSlide)
+            {
+                Vector3 toPos = dest(cube); // Calculate the destination for this cube
+
+                // actually move the cube
+                cube.transform.position = Vector3.MoveTowards(cube.transform.position, toPos, spd * Time.deltaTime);
+
+
+                // Check if this cube has reached its target position
+                MoveDone = Vector3.Distance(cube.transform.position, toPos) >= acceptableOffset ? false : MoveDone;
+                
+            }
+
+            yield return null; // Wait until the next frame to continue the loop
+        }
+
+        // lock each of the cubes into place
+        foreach (GameObject cube in toSlide)
+        {
+            cube.transform.position = dest(cube);
+            Data(cube).row = pdest(cube).row;
+            Data(cube).col = pdest(cube).col;
+        }
+    }
 
 
     // #########################################################################################################################
@@ -231,9 +396,9 @@ public class QuixoClass : MonoBehaviour
     // #########################################################################################################################
     // functions entirely re-written by Caleb Merroto
     // #########################################################################################################################
+    
+
     //returns list of all possible moves based off given piece selected to move, assumes piece has already been checked to make sure it is a valid move
-
-
     public List<Point> GetPossibleMoves(int row, int col)
     {
         List<Point> possible = new List<Point>();
@@ -315,10 +480,21 @@ public class QuixoClass : MonoBehaviour
     public void makeMove(Point from, Point to)
     {
         char blockVal = isXTurn ? 'X': 'O';
-        FROM.SetActive(true);
-        Cube(to).SetActive(true);
+        isXTurn = !isXTurn;
 
-        FROM.transform.position = prepSlide(from, to);
+        Cube(from).SetActive(true);
+        Cube(to).SetActive(true);
+        
+        Data(from).Face(blockVal);
+
+        List<GameObject> cubes = getCubesToSlide(from, to);
+        UnityEngine.Debug.Log($"Cubes to slide: {cubes.Count}");
+
+        Cube(from).transform.position = prepSlide(from, to);
+
+
+        StartCoroutine(doSlide(from, to, cubes));
+
 
     }
 

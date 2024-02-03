@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 3778208110520756913}
   - component: {fileID: 20127823503132078}
   - component: {fileID: 8965134536783252660}
+  - component: {fileID: -715233586772222936}
   m_Layer: 0
   m_Name: Quixo Cube
   m_TagString: Untagged
@@ -124,6 +125,8 @@ MonoBehaviour:
   row: 0
   col: 0
   face: 95
+  xmat: {fileID: 2100000, guid: 40d2cb6f8c261c34087f809003158205, type: 2}
+  omat: {fileID: 2100000, guid: 6c78cd5148af8b845a73ff6fd42009cb, type: 2}
 --- !u!65 &8965134536783252660
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -145,3 +148,30 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &-715233586772222936
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8422232719760208488}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 116
+  m_CollisionDetection: 0
