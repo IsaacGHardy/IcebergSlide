@@ -14,7 +14,6 @@ public class QuixoCube : MonoBehaviour, IPointerClickHandler
     public int row = 0;
     public int col = 0;
     public char face = '_';
-    private Point from, to;
 
 
     // Start is called before the first frame update
@@ -31,24 +30,26 @@ public class QuixoCube : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        UnityEngine.Debug.Log($"Selected block ({row},{col})");
         List<Point> moves = new List<Point>();
         if (Game.canPickPiece(row, col))
         {
             if (!Game.moveInProgress)
             {
                 cube.SetActive(false);
-                from = loc();
                 Game.moveInProgress = true;
-                moves = Game.GetPossibleMoves(row, col);
+                Game.FROM = cube;
+                Game.f = loc();
             }
             else
             {
-                if (Game.IsValidMove(moves, row, col))
+                Game.t = loc();
+                if (Game.IsValidMove(Game.f, Game.t))
                 {
-                    cube.SetActive(false);
                     Game.moveInProgress = false;
-                    to = loc();
-                    Game.makeMove(from, to);
+                    Game.makeMove(Game.f, Game.t);
+
+                    UnityEngine.Debug.Log($"Move complete! ({Game.f.row},{Game.f.col}) >> ({row},{col})");
                 }
             }
         }       
