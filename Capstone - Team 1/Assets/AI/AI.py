@@ -1,14 +1,3 @@
-def check_for_win(turns_to_think_ahead):
-    return True
-
-def check_for_loss(turns_to_think_ahead):
-    return True
-
-def search_for_unflipped_pieces():
-    #check_for_loss
-    #check_for_win
-    return True
-
 def is_a_corner(spot_row, spot_col):
     if ((spot_row % 4 == 0) and spot_col % 4 == 0):
         return True
@@ -31,21 +20,20 @@ def check_for_connections(board, spot_row, spot_col, team):
                     connections.append("(" + str(spot_row + row) + "," + str(spot_col + col) + ")")
     return connections
 
-board = [ ["O"] * 5 ] * 5
-print(check_for_connections(board, 3, 2, "O"))
-board = [ ["X"] * 5 ] * 5
-print(check_for_connections(board, 4, 1, "O"))
-
-#Need a function that takes a desired team, a board state, and returns how many in a row the opp will have
 def analyze_board(board, team_looking_at):
-    #for x in range():
-        #Check for connections
+    streaks = []
+    
+    #For all the spots on the board
+        #if they equal the team_lookng_at
+            #check connections
+                #check the connections of those
+                    #check con
+                        #check con
+                            #check con
+            #save how many in a row
 
-    #You look at opp piece
-    #You see how many connect
-    #if streak gets to 3 or more
-    #add it
-    return True
+    streaks.sort()
+    return streaks[-1]
 
 
 def score_pickup(spot_contains, playing_as, spot_row, spot_col):
@@ -95,3 +83,9 @@ def request_ai_move(board, EDGES_OF_THE_BOARD, playing_as):
     best_placement = max(possible_place_downs.items(), key=lambda item: item[1])[0]
 
     return best_pickup, best_placement 
+
+
+#board = [ ["O"] * 5 ] * 5
+#print(check_for_connections(board, 3, 2, "O"))
+#board = [ ["X"] * 5 ] * 5
+#print(check_for_connections(board, 4, 1, "O"))
