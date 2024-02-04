@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -14,7 +15,8 @@ public class QuixoCube : MonoBehaviour, IPointerClickHandler
     public int row = 0;
     public int col = 0;
     public char face = '_';
-    private Point from, to;
+    public Material xmat; // the color of a cube owned by the x player
+    public Material omat; // the color of a cube owned by the y player
 
 
     // Start is called before the first frame update
@@ -31,24 +33,26 @@ public class QuixoCube : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        UnityEngine.Debug.Log($"Selected block ({row},{col})");
         List<Point> moves = new List<Point>();
         if (Game.canPickPiece(row, col))
         {
             if (!Game.moveInProgress)
             {
                 cube.SetActive(false);
-                from = loc();
                 Game.moveInProgress = true;
-                moves = Game.getPossibleMoves(row, col);
+                Game.FROM = cube;
+                Game.f = loc();
             }
             else
             {
-                if (Game.isValidMove(moves, row, col))
+                Game.t = loc();
+                if (Game.IsValidMove(Game.f, Game.t))
                 {
-                    cube.SetActive(false);
                     Game.moveInProgress = false;
-                    to = loc();
-                    Game.makeMove(from, to);
+                    Game.makeMove(Game.f, Game.t);
+
+                    UnityEngine.Debug.Log($"Move complete! ({Game.f.row},{Game.f.col}) >> ({row},{col})");
                 }
             }
         }       
@@ -56,5 +60,16 @@ public class QuixoCube : MonoBehaviour, IPointerClickHandler
     }
 
     public Point loc() { return new Point(row, col); }
+
+    public void Face(char f)
+    {
+        if (f == '_') return; // Do nothing if the face character is '_'
+
+        // Set the material based on the face character
+        cube.GetComponent<MeshRenderer>().material = f == 'X' ? xmat : omat;
+        
+    }
+
+
 
 }
