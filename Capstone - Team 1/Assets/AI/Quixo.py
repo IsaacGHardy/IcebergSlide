@@ -1,3 +1,4 @@
+from AI import request_ai_move
 import numpy
 
 #Inits
@@ -175,5 +176,8 @@ def start_match():
             print(wins_list[0]+" has won.")
         else:
             player_turn = change_turn(player_turn)
+            if (player_turn != x_or_o):
+                request_ai_move(board, EDGES_OF_THE_BOARD, player_turn)
+                player_turn = change_turn(player_turn)
 
 start_match()
