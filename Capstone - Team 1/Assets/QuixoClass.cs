@@ -1,4 +1,5 @@
 using System;
+using System.CodeDom.Compiler;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -6,6 +7,7 @@ using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Cryptography;
 using UnityEngine;
 
 
@@ -39,8 +41,19 @@ public class QuixoClass : MonoBehaviour
     public float SlideSpeed;
     public bool moveInProgress = false;
     private Point[] corners = { new Point(0, 0), new Point(0, 1), new Point(1, 0), new Point(1, 1) };
-    public GameObject FROM;
-    public Point f, t; 
+    public int frow, fcol, trow, tcol; // so that I can see the values of from & to in the unity editor
+    private Point _from, _to;
+    public Point from
+    {
+        get { return _from; }
+        set { _from = value; frow = _from.row; fcol = from.col; }
+    }
+    public Point to
+    {
+        get { return _to; }
+        set { _to = value; trow = _to.row; tcol = to.col; }
+    }
+    public List<Point> poss;
     public float spd = 10f;
     public float acceptableOffset = 0.00001f;
 
@@ -66,12 +79,6 @@ public class QuixoClass : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
 
     // #########################################################################################################################
     // Helper Functions
@@ -84,13 +91,12 @@ public class QuixoClass : MonoBehaviour
     }
 
 
-
     // Take a point and return the coresponding unity coordinates
-    private Vector3 getPos(Point p)
+    public Vector3 getPos(Point p)
     {
         return new Vector3(real(p.row), boardHeight, real(p.col));
     }
-    private Vector3 getPos(float r, float c)
+    public Vector3 getPos(float r, float c)
     {
         return new Vector3(real(r), boardHeight, real(c));
     }
@@ -110,9 +116,13 @@ public class QuixoClass : MonoBehaviour
     
     
     // returns a function that can be used to check if a pair of ints match the row and column of the given point and returns true or false
-    private Func<int, int, bool> PointTester(Point point)
+    private Func<int, int, bool> PointTester(int r, int c)
     {
-        return (row, col) => point.row == row && point.col == col;
+        return (row, col) => r == row && c == col;
+    }
+    private Func<Point, bool> PointTester(Point point)
+    {
+        return (Point p) => point.row == p.row && point.col == p.col;
     }
 
 
@@ -145,10 +155,7 @@ public class QuixoClass : MonoBehaviour
         return p.GetComponent<QuixoCube>();
     }
 
-    // take a pair of points, representing a move, and return the new coordinates of the piece being moved, if it is placed
-    // just outside the board, next to the piece that is currently in the location it is being moved to. this then sets the
-    // board up for the entire row or column to be slid to fit into their new places. 
-    private Vector3 prepSlide(Point from, Point to)
+    private Vector3 prepSlide()
     {
         if (from.row == to.row)
         {
@@ -177,142 +184,127 @@ public class QuixoClass : MonoBehaviour
         return r >= 0 && r < boardSize && c >= 0 && c < boardSize;
     }
 
-    private Func<Point, QuixoCube> getNextToSlide(Point from, Point to)
+    private Func<Point, QuixoCube> getNextToSlide()
     {
-        // Determine the direction of the slide
-        Point step;
         if (from.row == to.row)
         {
             int c = to.col > from.col ? 1 : -1;
-            int r = to.row;
-            step = new Point(r, c);
+            return (Point cur) =>
+            {
+                if (bounds(cur.row, cur.col + c))
+                    return Data(cur.row, cur.col + c);
+                return null;
+            };
         }
         else
         {
             int r = to.row > from.row ? 1 : -1;
-            int c = to.col;
-            step = new Point(r, c);
+            return (Point cur) =>
+            {
+                if (bounds(cur.row + r, cur.col))
+                    return Data(cur.row + r, cur.col);
+                return null;
+            };
         }
-        return (Point cur) =>
-        {
-            // Calculate the next point based on the direction
-            Point next = new Point(cur.row + step.row, cur.col + step.col);
-
-            // Return the QuixoCube at the next point, if within bounds
-            return bounds(next) ? Data(next) : null;
-        };
+        
     }
 
-    private List<GameObject> getCubesToSlide(Point from, Point to)
+    private List<QuixoCube> getCubesToSlide()
     {
-        List<GameObject> toslide = new List<GameObject>();
+        List<QuixoCube> toslide = new List<QuixoCube>();
         Point cur = from;
 
-        UnityEngine.Debug.Log($"Plan To Slide ({Data(cur).row},{Data(cur).col})");
-        toslide.Add(Cube(cur));
+        UnityEngine.Debug.Log($"Plan To Slide ({cur.row},{cur.col})");
+        UnityEngine.Debug.Log($"TO: ({to.row},{to.col})");
+        toslide.Add(Data(cur));
 
-        var getNextCube = getNextToSlide(from, to);
+        var getNextCube = getNextToSlide();
         QuixoCube nextCube = getNextCube(cur);
         while (nextCube != null && bounds(nextCube))
         {
-            toslide.Add(Cube(nextCube));
-            UnityEngine.Debug.Log($"Plan To Slide ({nextCube.row},{nextCube.col})");
+            toslide.Add(nextCube);
+            //UnityEngine.Debug.Log($"Plan To Slide ({nextCube.row},{nextCube.col})");
             cur = nextCube.loc();
             nextCube = getNextCube(cur);
         }
+        string log = "Plan To Slide: ";
+        for (int i = 0; i < toslide.Count; i++)
+        {
+            log += $"({toslide[i].row},{toslide[i].col})";
+            if (i < toslide.Count - 1) { log += ", "; } // Add a comma unless this is the last element
+        } 
+        UnityEngine.Debug.Log(log);
         return toslide;
     }
 
 
-    private Func<GameObject, Vector3> makeDest(Point from, Point to)
+    private void dest(QuixoCube cube)
     {
-        // Determine the direction of the slide
-        Point step;
         if (from.row == to.row)
         {
             int c = to.col < from.col ? 1 : -1;
-            int r = to.row;
-            step = new Point(r, c);
+            cube.toPoint = (new Point(cube.row, cube.col + c));
         }
         else
         {
             int r = to.row < from.row ? 1 : -1;
-            int c = to.col;
-            step = new Point(r, c);
+            cube.toPoint = (new Point(cube.row + r, cube.col));
         }
-
-        // Return a function 'dest' that calculates the destination for a given cube
-        return (GameObject cube) =>
-        {
-            QuixoCube quixoCube = cube.GetComponent<QuixoCube>();
-            if (quixoCube == null) return Vector3.zero; // Safety check
-
-            return getPos(quixoCube.row + step.row, quixoCube.col + step.col);
-        };
-    }
-    private Func<GameObject, Point> makepDest(Point from, Point to)
-    {
-        // Determine the direction of the slide
-        Point step;
-        if (from.row == to.row)
-        {
-            int c = to.col < from.col ? 1 : -1;
-            int r = to.row;
-            step = new Point(r, c);
-        }
-        else
-        {
-            int r = to.row < from.row ? 1 : -1;
-            int c = to.col;
-            step = new Point(r, c);
-        }
-
-        // Return a function 'dest' that calculates the destination for a given cube
-        return (GameObject cube) =>
-        {
-            QuixoCube quixoCube = cube.GetComponent<QuixoCube>();
-            return new Point(quixoCube.row + step.row, quixoCube.col + step.col);
-        };
+        
     }
 
-
-    private IEnumerator doSlide(Point from, Point to, List<GameObject> toSlide)
+    private IEnumerator doSlide(List<QuixoCube> toSlide)
     {
-        // Initialize the destination functions with specifics of this move
-        Func<GameObject, Vector3> dest = makeDest(from, to);
-        Func<GameObject, Point> pdest = makepDest(from, to);
 
-        bool MoveDone = false;
+        bool moveDone = false;
 
-        while (!MoveDone)
+        foreach (QuixoCube qcube in toSlide)
         {
-            MoveDone = true; // Assume all cubes have reached until checked
+            dest(qcube);
+        }
+        while (!moveDone)
+        {
+            moveDone = true; 
 
-            foreach (GameObject cube in toSlide)
+            foreach (QuixoCube cube in toSlide)
             {
-                Vector3 toPos = dest(cube); // Calculate the destination for this cube
 
-                // actually move the cube
-                cube.transform.position = Vector3.MoveTowards(cube.transform.position, toPos, spd * Time.deltaTime);
+                cube.step(spd);
 
+                if (cube.dist() >= acceptableOffset) { moveDone = false; }
 
-                // Check if this cube has reached its target position
-                MoveDone = Vector3.Distance(cube.transform.position, toPos) >= acceptableOffset ? false : MoveDone;
-                
             }
 
-            yield return null; // Wait until the next frame to continue the loop
+            yield return null; 
         }
+        finalizeMove(toSlide);
 
-        // lock each of the cubes into place
-        foreach (GameObject cube in toSlide)
-        {
-            cube.transform.position = dest(cube);
-            Data(cube).row = pdest(cube).row;
-            Data(cube).col = pdest(cube).col;
-        }
     }
 
+    private void finalizeMove(List<QuixoCube> toSlide)
+    {
+        QuixoCube[,] tempBoard = new QuixoCube[boardSize, boardSize];
+        for (int i = 0; i < boardSize; i++)
+        {
+            for (int j = 0; j < boardSize; j++)
+            {
+                tempBoard[i, j] = gameBoard[i, j];
+            }
+        }
+
+        foreach (QuixoCube cube in toSlide)
+        {
+            cube.snap();
+            tempBoard[cube.row, cube.col] = cube;
+        }
+        gameBoard = tempBoard;
+
+
+        from = new Point(-1, -1);
+        to = new Point(-1, -1); 
+        moveInProgress = false; 
+        isXTurn = !isXTurn; 
+    }
 
     // #########################################################################################################################
     // functions composed by Isaac Hardy, and slightly modified to fit with c# and Unity by Caleb Merroto
@@ -320,17 +312,35 @@ public class QuixoClass : MonoBehaviour
 
     public bool canPickPiece(int row, int col)
     {
-        if (row == 0 || row == boardSize - 1 || col == 0 || col == boardSize - 1)
+        if (bounds(row, col))
         {
-            if (isXTurn && gameBoard[row,col].face != 'O')
+            if (isXTurn)
             {
-                return true;
+                if (gameBoard[row, col].face == 'X' || gameBoard[row,col].face == '_')
+                {
+                    return true;
+                }
+                else
+                {
+                    UnityEngine.Debug.Log($"({row},{col}) is owned by the other player, please select a different cube.");
+                    return false;
+                }
+                
             }
-            else if (!isXTurn && gameBoard[row,col].face != 'X')
+            else 
             {
-                return true;
+                if (gameBoard[row, col].face == 'O' || gameBoard[row, col].face == '_')
+                {
+                    return true;
+                }
+                else
+                {
+                    UnityEngine.Debug.Log($"({row},{col}) is owned by the other player, please select a different cube.");
+                    return false;  
+                }
             }
         }
+        UnityEngine.Debug.Log($"({row},{col}) is not a valid move, please select a cube on the edge of the board.");
         return false;
     }
     //gets the moves for a corner piece
@@ -399,102 +409,84 @@ public class QuixoClass : MonoBehaviour
     
 
     //returns list of all possible moves based off given piece selected to move, assumes piece has already been checked to make sure it is a valid move
-    public List<Point> GetPossibleMoves(int row, int col)
+    public List<Point> GetPossibleMoves()
     {
         List<Point> possible = new List<Point>();
-        Point select = new Point(row, col);
+        int row = from.row; 
+        int col = from.col;
+        int m = boardSize - 1;                      // max row or col value
 
 
-        if (isCorner(select))
+        int r = (row == 0) ? m : 0;                 // opposite row
+        int c = (col == 0) ? m : 0;                 // opposite col
+
+
+        if (isCorner(from))
         {
-            int r = (row == 0) ? 4 : 0;
-            int c = (col == 0) ? 4 : 0;
-
             possible.Add(new Point(r, col));
             possible.Add(new Point(row, c));
         }
         else
         {
-            int r = (row == 0) ? 4 : 0;
-            int c = (col == 0) ? 4 : 0;
-            //
-            //if row is 0 or 4, and select is not a corner, use the opposite row, and the same col
-            if (row == 0 || row == 4)
+            if (row == 0 || row == m)
             {
                 possible.Add(new Point(r, col));
                 possible.Add(new Point(row, 0));
-                possible.Add(new Point(row, 4));
+                possible.Add(new Point(row, m));
             }
             else
             {
                 possible.Add(new Point(row, c));
                 possible.Add(new Point(0, col));
-                possible.Add(new Point(4, col));
+                possible.Add(new Point(m, col));
             }
             
         }
+        string log = $"Valid Moves from ({from.row},{from.col}): ";
+        for (int i = 0; i < possible.Count; i++)
+        {
+            log += $"({possible[i].row},{possible[i].col})";
+            if (i < possible.Count - 1) { log += ", "; } // Add a comma unless this is the last element
+        }
+        UnityEngine.Debug.Log(log);
         return possible;
     }
 
 
-    public bool IsValidMove(Point select, Point replace)
+    public bool IsValidMove()
     {
-        var test = PointTester(replace);
+        var test = PointTester(to); // tests if a point (informally represented by a pair of ints) is equal to the test point (improves readability)
 
-        // Check if the selected point is a corner
-        if (isCorner(select))
+        for (int i = 0; i < poss.Count; i++)
         {
-            int r = (select.row == 0) ? boardSize - 1 : 0;
-            int c = (select.col == 0) ? boardSize - 1 : 0;
-            UnityEngine.Debug.Log($"Valid Moves: ({r},{select.col}), ({select.row},{c})");
-            return 
-                test(r, select.col) || // corner in same column
-                test(select.row, c);   // corner in same row
+            if (test(poss[i])) { return true;  }
         }
-        else
-        {
-            if (select.row == 0 || select.row == boardSize - 1)
-            {
-                UnityEngine.Debug.Log($"Valid Moves: ({select.row},0), ({select.row},{boardSize - 1}), ({boardSize - 1},{select.col})");
-                return 
-                    test(select.row, 0) || // corner in the same row
-                    test(select.row, boardSize - 1) || // corner in the same row 
-                    test(boardSize - 1, select.col);   // edge in same column on opposite side of board
-            }
-            else if (select.col == 0 || select.col == boardSize - 1)
-            {
-                UnityEngine.Debug.Log($"Valid Moves: (0,{select.col}), ({boardSize - 1},{select.col}), ({select.row}, {boardSize - 1})");
-                return 
-                    test(0, select.col) || // corner in the same column
-                    test(boardSize - 1, select.col) || // corner in the same column
-                    test(select.row, boardSize - 1);   // edge in same row on opposite side of board
-            }
-        }
-
-        // If none of the above conditions are met, the move is not valid
         return false;
     }
 
 
+
+
     //moves the peices based on move made
-    public void makeMove(Point from, Point to)
+    public void makeMove()
     {
-        char blockVal = isXTurn ? 'X': 'O';
-        isXTurn = !isXTurn;
+        char blockVal = isXTurn ? 'X' : 'O';
 
         Cube(from).SetActive(true);
-        Cube(to).SetActive(true);
         
         Data(from).Face(blockVal);
 
-        List<GameObject> cubes = getCubesToSlide(from, to);
-        UnityEngine.Debug.Log($"Cubes to slide: {cubes.Count}");
+        List<QuixoCube> cubes = getCubesToSlide();
+        //UnityEngine.Debug.Log($"Cubes to slide: {cubes.Count}");
 
-        Cube(from).transform.position = prepSlide(from, to);
+        Cube(from).transform.position = prepSlide();
 
 
-        StartCoroutine(doSlide(from, to, cubes));
+        StartCoroutine(doSlide(cubes));
 
+        
+
+        UnityEngine.Debug.Log($"Move complete! ({from.row},{from.col}) >> ({to.row},{to.col})");
 
     }
 

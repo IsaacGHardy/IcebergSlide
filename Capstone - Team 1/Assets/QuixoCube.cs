@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -17,45 +18,50 @@ public class QuixoCube : MonoBehaviour, IPointerClickHandler
     public char face = '_';
     public Material xmat; // the color of a cube owned by the x player
     public Material omat; // the color of a cube owned by the y player
-
-
-    // Start is called before the first frame update
-    void Start()
+    private Point _toPoint;
+    public Point toPoint
     {
-        
+        get { return _toPoint; }
+        set
+        {
+            _toPoint = value;
+            _toPos = Game.getPos(_toPoint); // Ensure _toPos is updated whenever toPoint changes
+        }
+    }
+    private Vector3 _toPos;
+    public Vector3 toPos
+    {
+        get { return _toPos; } 
     }
 
-    // Update is called once per frame
-    void Update()
+    public void resetTarget()
     {
-        
+        toPoint = new Point(0, 0); 
     }
+
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        UnityEngine.Debug.Log($"Selected block ({row},{col})");
         List<Point> moves = new List<Point>();
         if (Game.canPickPiece(row, col))
         {
+            //UnityEngine.Debug.Log($"Selected block ({row},{col})");
             if (!Game.moveInProgress)
             {
                 cube.SetActive(false);
                 Game.moveInProgress = true;
-                Game.FROM = cube;
-                Game.f = loc();
+                Game.from = loc();
+                Game.poss = Game.GetPossibleMoves();
             }
             else
             {
-                Game.t = loc();
-                if (Game.IsValidMove(Game.f, Game.t))
+                Game.to = loc();
+                if (Game.IsValidMove())
                 {
-                    Game.moveInProgress = false;
-                    Game.makeMove(Game.f, Game.t);
-
-                    UnityEngine.Debug.Log($"Move complete! ({Game.f.row},{Game.f.col}) >> ({row},{col})");
+                    Game.makeMove();
                 }
             }
-        }       
+        }
         
     }
 
@@ -64,12 +70,25 @@ public class QuixoCube : MonoBehaviour, IPointerClickHandler
     public void Face(char f)
     {
         if (f == '_') return; // Do nothing if the face character is '_'
-
-        // Set the material based on the face character
         cube.GetComponent<MeshRenderer>().material = f == 'X' ? xmat : omat;
+        face = f;
         
     }
 
+    public void snap()
+    {
+        cube.transform.position = toPos;
+        row = _toPoint.row;
+        col = _toPoint.col;
+        resetTarget();
+    }
+    public void step(float spd)
+    {
+        cube.transform.position = Vector3.MoveTowards(cube.transform.position, toPos, spd * Time.deltaTime);
+    }
 
-
+    public float dist()
+    {
+        return Vector3.Distance(cube.transform.position, toPos);
+    }
 }
