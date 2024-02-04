@@ -79,37 +79,6 @@ def check_line(array, item_to_check_for):
         return True
     return False
 
-def check_for_win(board, player_turn):
-    winners = []
-    for row in board:
-        if check_line(row, "O"):
-            winners.append("O")
-        if check_line(row, "X"):
-            winners.append("X")
-
-    for col in zip(*board):
-        if check_line(col, "O"):
-            winners.append("O")
-        if check_line(col, "X"):
-            winners.append("X")
-
-    for letter in {"O", "X"}:
-        if all(board[i][i] == letter for i in range(5)):
-            winners.append(letter)
-
-    for letter in {"O", "X"}:
-        if all(board[i][len(board) - 1 - i] == letter for i in range(5)):
-            winners.append(letter)
-
-    if (player_turn == "X"):
-        if ("O" in winners and "X" in winners):
-            winners.insert(0 , "O")
-    elif (player_turn == "O"):
-        if ("O" in winners and "X" in winners):
-            winners.insert(0 , "X")
-
-    return winners
-
 def place_block(board, player_moving, move_from):
     move_to = request_input("Where would you like to place your piece? [EX: (1,1)] ", EDGES_OF_THE_BOARD)
     while (not valid_placement(board, player_moving, move_from, move_to)):
@@ -152,6 +121,47 @@ def apply_move(board, move_block_from, move_block_to, player_turn):
 
     board[int(move_block_to[1])][int(move_block_to[3])] = player_turn
 
+def check_for_win(board, player_turn):
+    winners = []
+    for row in board:
+        if check_line(row, "O"):
+            winners.append("O")
+        if check_line(row, "X"):
+            winners.append("X")
+
+    for col in zip(*board):
+        if check_line(col, "O"):
+            winners.append("O")
+        if check_line(col, "X"):
+            winners.append("X")
+
+    for letter in {"O", "X"}:
+        if all(board[i][i] == letter for i in range(5)):
+            winners.append(letter)
+
+    for letter in {"O", "X"}:
+        if all(board[i][len(board) - 1 - i] == letter for i in range(5)):
+            winners.append(letter)
+
+    if (player_turn == "X"):
+        if ("O" in winners and "X" in winners):
+            winners.insert(0 , "O")
+    elif (player_turn == "O"):
+        if ("O" in winners and "X" in winners):
+            winners.insert(0 , "X")
+
+    return winners
+
+def check_for_match_end(board, player_turn, has_winner):
+    wins_list = check_for_win(board, player_turn)
+
+    if ("X" in wins_list or "O" in wins_list):
+        has_winner = True
+        print(wins_list[0]+" has won.")
+    else:
+        player_turn = change_turn(player_turn)
+
+
 #CONST VARS
 EDGES_OF_THE_BOARD = init_safe_pickup_spots()
 
@@ -161,23 +171,19 @@ def start_match():
     has_winner = False
     
     player_count = 2
-    x_or_o = request_input("Type your team: X or O ", {'x', 'o', 'X', 'O'})
+    x_or_o = request_input("Type your team: X or O ", {'X', 'O'})
 
     while (not has_winner):
-        #Pickup needs to verify that it was a valid pickup
-        move_block_from = pickup_block(board, player_turn)
-        move_block_to = place_block(board, player_turn, move_block_from)
-        apply_move(board, move_block_from, move_block_to, player_turn)
-        print_board(board)
-
-        wins_list = check_for_win(board, player_turn)
-        if ("X" in wins_list or "O" in wins_list):
-            has_winner = True
-            print(wins_list[0]+" has won.")
+        if (player_turn != x_or_o):
+            move_block_from, move_block_to = request_ai_move(board, EDGES_OF_THE_BOARD, player_turn)
+            apply_move(board, move_block_from, move_block_to, player_turn)
         else:
-            player_turn = change_turn(player_turn)
-            if (player_turn != x_or_o):
-                request_ai_move(board, EDGES_OF_THE_BOARD, player_turn)
-                player_turn = change_turn(player_turn)
+            move_block_from = pickup_block(board, player_turn)
+            move_block_to = place_block(board, player_turn, move_block_from)
+            apply_move(board, move_block_from, move_block_to, player_turn)
+            
+        print_board(board)
+        check_for_match_end(board, player_turn, has_winner)
+        player_turn = change_turn(player_turn)
 
 start_match()
