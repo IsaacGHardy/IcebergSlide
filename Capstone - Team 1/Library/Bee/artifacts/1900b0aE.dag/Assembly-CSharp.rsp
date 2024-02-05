@@ -382,8 +382,8 @@
 "Assets/Photon/PhotonLibs/WebSocket/SocketWebTcp.cs"
 "Assets/Photon/PhotonLibs/WebSocket/WebSocket.cs"
 "Assets/Photon/PhotonRealtime/Demos/DemoLoadBalancing/ConnectAndJoinRandomLb.cs"
-"Assets/QuixoClass.cs"
-"Assets/QuixoCube.cs"
+"Assets/Scripts/Game Core/QuixoClass.cs"
+"Assets/Scripts/Game Core/QuixoCube.cs"
 "Assets/Scripts/Networking/TestConnects.cs"
 -langversion:9.0
 
