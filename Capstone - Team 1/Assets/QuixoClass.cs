@@ -8,6 +8,7 @@ using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Security.Permissions;
 using UnityEngine;
 
 
@@ -56,6 +57,7 @@ public class QuixoClass : MonoBehaviour
     public List<Point> poss;
     public float spd = 10f;
     public float acceptableOffset = 0.00001f;
+    public bool gameOver = false;
 
 
     // Start is called before the first frame update
@@ -277,6 +279,8 @@ public class QuixoClass : MonoBehaviour
 
             yield return null; 
         }
+
+
         finalizeMove(toSlide);
 
     }
@@ -305,38 +309,116 @@ public class QuixoClass : MonoBehaviour
         moveInProgress = false; 
         isXTurn = !isXTurn; 
     }
+    private List<string> doWinCheck()
+    {
+        List<string> EndConditions = new List<string>();
+        bool stalemate = true;
 
+        // Check first diagonal
+        bool diagonal1 = true;
+        char test = gameBoard[0, 0].face;
+        for (int i = 0; i < boardSize; i++)
+        {
+            if (gameBoard[i, i].face != test || gameBoard[i, i].face == '_')
+            {
+                diagonal1 = false;
+                break;
+            }
+        }
+
+        // Check second diagonal
+        bool diagonal2 = true;
+        test = gameBoard[0, boardSize - 1].face;
+        for (int i = 0; i < boardSize; i++)
+        {
+            if (gameBoard[i, boardSize - 1 - i].face != test || gameBoard[i, boardSize - 1 - i].face == '_')
+            {
+                diagonal2 = false;
+                break;
+            }
+        }
+
+        if (diagonal1 && test != '_') { EndConditions.Add($"diagonal1{test}"); gameOver = true; }
+        if (diagonal2 && test != '_') { EndConditions.Add($"diagonal2{test}"); gameOver = true; }
+
+
+
+        for (int i = 0; i < boardSize; i++)
+        {
+            if (checkRow(i)) { EndConditions.Add($"row{i}{gameBoard[i, 0].face}"); gameOver = true; }
+            if (checkCol(i)) { EndConditions.Add($"col{i}{gameBoard[0, i].face}"); gameOver = true; }
+        }
+
+        // Check for stalemate
+        if (stalemate) { EndConditions.Add("stalemate"); gameOver = true; }
+
+        // Functions to check rows and columns
+        bool checkRow(int r)
+        {
+            char t = gameBoard[r, 0].face;
+            for (int i = 0; i < boardSize; i++)
+            {
+                if (gameBoard[r, i].face == '_') { stalemate = false; return false; }// Adjust stalemate check
+                if (gameBoard[r, i].face != t) return false;
+            }
+            return true;
+        }
+
+        bool checkCol(int c)
+        {
+            char t = gameBoard[0, c].face;
+            if (t == '_') return false;
+            for (int i = 0; i < boardSize; i++)
+            {
+                if (gameBoard[i, c].face != t) return false;
+            }
+            return true;
+        }
+
+
+        return EndConditions;
+    }
+
+    
     // #########################################################################################################################
     // functions composed by Isaac Hardy, and slightly modified to fit with c# and Unity by Caleb Merroto
     // #########################################################################################################################
 
     public bool canPickPiece(int row, int col)
     {
+        if (gameOver)
+        {
+            UnityEngine.Debug.Log($"The Game Is Over! No more moves can be made!");
+            return false;
+        }
         if (bounds(row, col))
         {
-            if (isXTurn)
+            if ((row == 0 || row == boardSize-1) || (col == 0 || col == boardSize - 1))
             {
-                if (gameBoard[row, col].face == 'X' || gameBoard[row,col].face == '_')
+                if (isXTurn)
                 {
-                    return true;
+                    if (gameBoard[row, col].face == 'X' || gameBoard[row, col].face == '_' || moveInProgress)
+                    {
+                        return true;
+                    }
+                    else 
+                    {
+                        UnityEngine.Debug.Log($"({row},{col}) is owned by the other player, please select a different cube.");
+                        return false;
+                    }
+
                 }
                 else
                 {
-                    UnityEngine.Debug.Log($"({row},{col}) is owned by the other player, please select a different cube.");
-                    return false;
-                }
-                
-            }
-            else 
-            {
-                if (gameBoard[row, col].face == 'O' || gameBoard[row, col].face == '_')
-                {
-                    return true;
-                }
-                else
-                {
-                    UnityEngine.Debug.Log($"({row},{col}) is owned by the other player, please select a different cube.");
-                    return false;  
+                    if (gameBoard[row, col].face == 'O' || gameBoard[row, col].face == '_' || moveInProgress)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        UnityEngine.Debug.Log($"({row},{col}) is owned by the other player, please select a different cube.");
+                        return false;
+                    }
                 }
             }
         }
@@ -479,13 +561,17 @@ public class QuixoClass : MonoBehaviour
         List<QuixoCube> cubes = getCubesToSlide();
         //UnityEngine.Debug.Log($"Cubes to slide: {cubes.Count}");
 
+
+
         Cube(from).transform.position = prepSlide();
-
-
         StartCoroutine(doSlide(cubes));
 
-        
 
+
+        List<string> endCheck = doWinCheck();
+
+
+        
         UnityEngine.Debug.Log($"Move complete! ({from.row},{from.col}) >> ({to.row},{to.col})");
 
     }

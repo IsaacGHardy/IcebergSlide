@@ -304,7 +304,7 @@ Transform:
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
   m_LocalRotation: {x: 0.36329383, y: 0.60721624, z: -0.35407552, w: 0.6115036}
-  m_LocalPosition: {x: -4.1, y: 6.9, z: 3.16}
+  m_LocalPosition: {x: -1.69, y: 6.9, z: 2.34}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -364,9 +364,13 @@ MonoBehaviour:
   isXTurn: 1
   SlideSpeed: 0
   moveInProgress: 0
-  FROM: {fileID: 0}
+  frow: 0
+  fcol: 0
+  trow: 0
+  tcol: 0
   spd: 10
   acceptableOffset: 0.00001
+  gameOver: 0
 --- !u!64 &1758067594
 MeshCollider:
   m_ObjectHideFlags: 0

@@ -42,7 +42,6 @@ public class QuixoCube : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        List<Point> moves = new List<Point>();
         if (Game.canPickPiece(row, col))
         {
             //UnityEngine.Debug.Log($"Selected block ({row},{col})");
