@@ -384,6 +384,7 @@
 "Assets/Photon/PhotonRealtime/Demos/DemoLoadBalancing/ConnectAndJoinRandomLb.cs"
 "Assets/QuixoClass.cs"
 "Assets/QuixoCube.cs"
+"Assets/Scripts/Networking/TestConnects.cs"
 -langversion:9.0
 
 /deterministic
