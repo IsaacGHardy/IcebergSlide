@@ -3,7 +3,7 @@ using UnityEngine;
 public abstract class SingletonScriptableObject<T> : ScriptableObject where T : ScriptableObject
 {
     private static T _instance = null;
-    public static T instance
+    public static T Instance
     {
         get
         {
@@ -12,12 +12,12 @@ public abstract class SingletonScriptableObject<T> : ScriptableObject where T : 
                 T[] results = Resources.FindObjectsOfTypeAll<T>();
                 if (results.Length == 0)
                 {
-                    Debug.LogError("SingletonScriptableObject -> Instance -> results length is 0 for type " + typeof(T).ToString() + ".");
+                   Debug.LogError("SingletonScriptableObject -> Instance -> results length is 0 for type " + typeof(T).ToString() + ".");
                     return null;
                 }
                 if (results.Length > 1)
                 {
-                    Debug.LogError("SingletonScriptableObject -> Instance -> results length is greater than 1 for type " + typeof(T).ToString() + ".");
+                   Debug.LogError("SingletonScriptableObject -> Instance -> results length is greater than 1 for type " + typeof(T).ToString() + ".");
                     return null;
                 }
 

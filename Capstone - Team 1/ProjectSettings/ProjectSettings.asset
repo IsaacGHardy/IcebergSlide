@@ -747,7 +747,13 @@ PlayerSettings:
   XboxOneOverrideIdentityPublisher: 
   vrEditorSettings: {}
   cloudServicesEnabled:
+    Build: 0
+    Game Performance: 0
+    Legacy Analytics: 0
+    Purchasing: 0
+    UDP: 0
     UNet: 1
+    Unity Ads: 0
   luminIcon:
     m_Name: 
     m_ModelFolderPath: 
@@ -767,11 +773,11 @@ PlayerSettings:
   apiCompatibilityLevel: 6
   activeInputHandler: 0
   windowsGamepadBackendHint: 0
-  cloudProjectId: bdf3a5c8-0b8c-4acc-a711-18575e9697fb
+  cloudProjectId: 6618b30f-dafb-4aa2-b914-31e416001d64
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: Capstone - Team 1 2024-01-22_14-36-56
-  organizationId: dragontamer2
+  projectName: Capstone - Team 1
+  organizationId: dlainez1
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}
