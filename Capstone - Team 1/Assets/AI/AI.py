@@ -11,42 +11,54 @@ def distance_from_center(spot_row, spot_col):
     else:
         return 1
 
-def check_for_connections(board, spot_row, spot_col, team):
-    connections = []
-    for row in range(-1, 2, 1):
-        for col in range(-1, 2, 1):
-            if (spot_row + row > -1 and spot_row + row < 5 and spot_col + col > -1 and spot_col + col < 5):
-                if (board[spot_row + row][spot_col + col] == team):
-                    connections.append("(" + str(spot_row + row) + "," + str(spot_col + col) + ")")
-    return connections
+def check_win_conditions():
+    streaks = []
+    #Create a list
+    #5 Rows
+    #5 cols
+    #2 diagonals
+    #Store the max streaks and return them
+    return streaks
 
+#Need a way to take a board state, 
+#see the biggest line in a row and give move post move analysis and see if the streak shrunk or 
+#there is no way to win
 def analyze_board(board, team_looking_at):
     streaks = []
     
-    #For all the spots on the board
-        #if they equal the team_lookng_at
-            #check connections
-                #check the connections of those
-                    #check con
-                        #check con
-                            #check con
-            #save how many in a row
+    for row in range(0,4):
+        for col in range(0,4):
+            if (board[row][col] == team_looking_at):
+                streak_for_piece = 1
+                #get direction, maybe get the connections, then check in that row how many are aligned, check connections wont work
+                    #because you can have an isolated one
+                #check for connection has to check in a line for piece connections
+                #While still connecting and same direction
+                    #Add one to streakforpiece
+                #if streakfor piece is more than 3 add it to streaks
+
+    #Maybe just check for 4s?\
+    #maybe just check for 3s
+    #build streak
 
     streaks.sort()
     return streaks[-1]
 
-
 def score_pickup(spot_contains, playing_as, spot_row, spot_col):
-    reward_for_untaken, reward_for_corner, reward_for_middle = 0, 0, 0
+    pickup_score = 0
 
     if (spot_contains == " "):
-       reward_for_untaken = 25
+       pickup_score += 25
     #Needs to add a score amount for brekaing up a 4
         #make sure dont create a kill scenario when breaking a 4
+            #pickup_score -= 100
+       #pickup_score += 50
     #Will build a line for team
+        #pickup_score += 10
     #Will break a line for opponent
-    
-    return reward_for_untaken + reward_for_corner + reward_for_middle
+        #pickup_score += 5
+       
+    return pickup_score
 
 def score_placement(spot_contains, playing_as, spot_row, spot_col):
     reward_for_untaken, reward_for_corner, reward_for_middle = 0, 0, 0
@@ -54,8 +66,6 @@ def score_placement(spot_contains, playing_as, spot_row, spot_col):
     if (is_a_corner(spot_row, spot_col)):
         reward_for_corner = 10
     #Will push a piece closer to the middle
-    #will fork
-    #Will bait
     reward_for_middle = (2 - distance_from_center(spot_row, spot_col)) * 15
 
     return reward_for_corner
@@ -84,8 +94,20 @@ def request_ai_move(board, EDGES_OF_THE_BOARD, playing_as):
 
     return best_pickup, best_placement 
 
+'''
+board = [ ["O"] * 5 ] * 5
+print(check_for_connections(board, 3, 2, "O"))
+board = [ ["X"] * 5 ] * 5
+print(check_for_connections(board, 4, 1, "O"))
+'''
 
-#board = [ ["O"] * 5 ] * 5
-#print(check_for_connections(board, 3, 2, "O"))
-#board = [ ["X"] * 5 ] * 5
-#print(check_for_connections(board, 4, 1, "O"))
+'''
+def check_for_connections(board, spot_row, spot_col, team):
+    connections = []
+    for row in range(-1, 2, 1):
+        for col in range(-1, 2, 1):
+            if (spot_row + row > -1 and spot_row + row < 5 and spot_col + col > -1 and spot_col + col < 5):
+                if (board[spot_row + row][spot_col + col] == team):
+                    connections.append("(" + str(spot_row + row) + "," + str(spot_col + col) + ")")
+    return connections
+'''
