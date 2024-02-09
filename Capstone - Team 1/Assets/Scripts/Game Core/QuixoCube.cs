@@ -69,7 +69,7 @@ public class QuixoCube : MonoBehaviour, IPointerClickHandler
     public void Face(char f)
     {
         if (f == '_') return; // Do nothing if the face character is '_'
-        cube.GetComponent<MeshRenderer>().material = f == 'X' ? xmat : omat;
+        //cube.GetComponent<MeshRenderer>().material = f == 'X' ? xmat : omat;
         face = f;
         
     }

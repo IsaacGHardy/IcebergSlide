@@ -37,7 +37,7 @@ public class QuixoClass : MonoBehaviour
     public QuixoCube[,] gameBoard;
     public bool isXTurn = true;
     public static float cubeSize = 1; // size of cubes
-    public static float cubeSep = 0.125f; // separation between cubes
+    public static float cubeSep = 0.0f; // separation between cubes
     private static float boardHeight = 0 + cubeSize / 2; // the y coordinate of the cubes in unity
     public float SlideSpeed;
     public bool moveInProgress = false;
@@ -71,7 +71,9 @@ public class QuixoClass : MonoBehaviour
                 Vector3 pos = getPos(r, c);
                 GameObject ncube = Instantiate(CubePrefab, pos, Quaternion.identity);
                 QuixoCube ncubeScript = ncube.GetComponent<QuixoCube>();
+                
                 ncubeScript.Game = boardObject.GetComponent<QuixoClass>();
+                ncubeScript.cube = ncube;
 
                 ncubeScript.row = r;
                 ncubeScript.col = c;
@@ -96,11 +98,12 @@ public class QuixoClass : MonoBehaviour
     // Take a point and return the coresponding unity coordinates
     public Vector3 getPos(Point p)
     {
-        return new Vector3(real(p.row), boardHeight, real(p.col));
+        return getPos(p.row, p.col);
     }
     public Vector3 getPos(float r, float c)
     {
-        return new Vector3(real(r), boardHeight, real(c));
+        Vector3 root = boardObject.transform.position;
+        return new Vector3(root.x - real(r), boardHeight, root.z + real(c));
     }
 
 
@@ -163,13 +166,13 @@ public class QuixoClass : MonoBehaviour
         {
             Data(from).row = to.row;
             Data(from).col = to.col == 0 ? -1 : boardSize;
-            return new Vector3(real(to.row), boardHeight, real(to.col == 0 ? -1 : boardSize));
+            return getPos(to.row, to.col == 0 ? -1 : boardSize);
         }
         else
         {
             Data(from).row = to.row == 0 ? -1 : boardSize;
             Data(from).col = to.col;
-            return new Vector3(real(to.row == 0 ? -1 : boardSize), boardHeight, real(to.col));
+            return getPos(to.row == 0 ? -1 : boardSize, to.col);
         }
     }
 
