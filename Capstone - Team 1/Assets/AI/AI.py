@@ -1,5 +1,7 @@
 #Hi, I'm OX, the AI for Quixo
 
+#TODO: Go for a kill
+
 import copy
 
 #Refactor function
@@ -48,16 +50,6 @@ def is_a_corner(spot_row, spot_col):
         return True
     return False
 
-'''
-def distance_from_center(spot_row, spot_col):
-    if (spot_row % 4 == 0 or spot_col % 4 == 0):
-        return 2
-    elif(spot_row == 2 and spot_col == 2):
-        return 0
-    else:
-        return 1
-'''
-
 def check_for_streaks(board, team_looking_at):
     streaks = []
 
@@ -78,25 +70,9 @@ def check_for_streaks(board, team_looking_at):
         if (board[i][len(board) - 1 - i] == team_looking_at):
             team_in_upward_diagonal += 1
     streaks.append(team_in_upward_diagonal)
-    
-    values_to_remove = [0, 1]
-    for value_to_remove in values_to_remove:
-        while value_to_remove in streaks:
-            streaks.remove(value_to_remove)
 
     streaks.sort(reverse = True)
     return streaks
-
-'''
-row1 = ["X", "X", " ", " ", " "]
-row2 = ["X", " ", " ", " ", " "]
-row3 = ["X", " ", " ", " ", " "]
-row4 = ["X", " ", " ", " ", " "]
-row5 = [" ", " ", " ", " ", " "]
-grid = [row1, row2, row3, row4, row5]
-
-print(check_for_streaks(grid, "X"))
-'''
 
 def score_pickup(spot_contains):
     pickup_score = 0
@@ -123,24 +99,18 @@ def score_placement(board, playing_as, pickup_row, pickup_col, placement_row, pl
     if (is_a_corner(placement_row, placement_col)):
         placement_score = 10
 
-    if (check_for_streaks(board, opponent_as)[0] < check_for_streaks(future_board, opponent_as)[0]):
+    if (check_for_streaks(board, opponent_as)[0] > check_for_streaks(future_board, opponent_as)[0]):
         placement_score += 100
 
     if (check_for_streaks(board, playing_as)[0] > check_for_streaks(future_board, playing_as)[0]):
-        placement_score += 10
+        placement_score += 15
+        if (check_for_streaks(board, opponent_as)[0] < check_for_streaks(future_board, opponent_as)[0]):
+            placement_score -= 15
+
+    if (check_for_streaks(future_board, playing_as)[0] == 5 and check_for_streaks(future_board, opponent_as)[0] != 5):
+        placement_score += 1000
 
     return placement_score
-
-
-row1 = ["X", "X", " ", " ", " "]
-row2 = ["X", " ", " ", " ", " "]
-row3 = ["X", " ", " ", " ", " "]
-row4 = ["X", " ", " ", " ", " "]
-row5 = [" ", " ", " ", " ", " "]
-grid = [row1, row2, row3, row4, row5]
-
-future_board = generate_future_board(grid, "O", 2, 4, 2, 0)
-print(check_for_streaks(future_board, "O")[0])
 
 def get_placements(row, col):
     spots = []
@@ -153,7 +123,6 @@ def get_placements(row, col):
 
     return spots
 
-#Re write to get all moves with NO MODE and giving the dictionary back as a set of pickups and placements
 def get_all_moves(board, EDGES_OF_THE_BOARD, playing_as):
     possible_moves = {}
 
@@ -161,17 +130,17 @@ def get_all_moves(board, EDGES_OF_THE_BOARD, playing_as):
         pickup_row, pickup_col = str_to_int_spot_data(x)
         spot_contents = board[pickup_row][pickup_col]
 
-        move_score = 0
-
         if (spot_contents == " " or spot_contents == playing_as):
-            move_score += score_pickup(spot_contents)
+            pickup_score = 0
+            pickup_score += score_pickup(spot_contents)
+
             for spot in get_placements(pickup_row, pickup_col):
                 placement_row, placement_col = str_to_int_spot_data(spot)
-                
-                move_score += score_placement(board, playing_as, pickup_row, pickup_col, placement_row, placement_col)
+                placement_score = 0
+                placement_score += score_placement(board, playing_as, pickup_row, pickup_col, placement_row, placement_col)
 
                 combined_move = x + " " + spot
-                possible_moves[combined_move] = move_score
+                possible_moves[combined_move] = pickup_score + placement_score
 
     return possible_moves
 
@@ -179,36 +148,13 @@ def request_ai_move(board, EDGES_OF_THE_BOARD, playing_as):
     possible_moves = get_all_moves(board, EDGES_OF_THE_BOARD, playing_as)
     best_move_set = max(possible_moves.items(), key=lambda item: item[1])[0]
 
-    for key, value in sorted(possible_moves.items(), key=lambda item: item[1]):
-        print(f'{key}: {value}')
-    print()
+    #for key, value in sorted(possible_moves.items(), key=lambda item: item[1]):
+    #    print(f'{key}: {value}')
+    #print()
 
     spot_data = best_move_set.split(" ")
 
-    print(spot_data)
-    print()
+    #print(spot_data)
+    #print()
 
     return spot_data[0], spot_data[1]
-
-'''
-board = [ ["O"] * 5 ] * 5
-print(check_win_conditions(board, "O"))
-'''
-
-'''
-board = [ ["O"] * 5 ] * 5
-print(check_for_connections(board, 3, 2, "O"))
-board = [ ["X"] * 5 ] * 5
-print(check_for_connections(board, 4, 1, "O"))
-'''
-
-'''
-def check_for_connections(board, spot_row, spot_col, team):
-    connections = []
-    for row in range(-1, 2, 1):
-        for col in range(-1, 2, 1):
-            if (spot_row + row > -1 and spot_row + row < 5 and spot_col + col > -1 and spot_col + col < 5):
-                if (board[spot_row + row][spot_col + col] == team):
-                    connections.append("(" + str(spot_row + row) + "," + str(spot_col + col) + ")")
-    return connections
-'''
