@@ -154,14 +154,14 @@ def check_for_win(board, player_turn):
 
     return winners
 
-def check_for_match_end(board, player_turn, has_winner):
+def next_move_or_match_end(board, player_turn):
     wins_list = check_for_win(board, player_turn)
 
     if ("X" in wins_list or "O" in wins_list):
-        has_winner = True
         print(wins_list[0]+" has won.")
+        return None
     else:
-        player_turn = change_turn(player_turn)
+        return change_turn(player_turn)
 
 
 #CONST VARS
@@ -175,7 +175,7 @@ def start_match():
     player_count = 2
     x_or_o = request_input("Type your team: X or O ", {'X', 'O'})
 
-    while (not has_winner):
+    while (player_turn != None):
         if (player_turn != x_or_o):
             move_block_from, move_block_to = request_ai_move(board, EDGES_OF_THE_BOARD, player_turn)
             apply_move(board, move_block_from, move_block_to, player_turn)
@@ -185,7 +185,6 @@ def start_match():
             apply_move(board, move_block_from, move_block_to, player_turn)
             
         print_board(board)
-        check_for_match_end(board, player_turn, has_winner)
-        player_turn = change_turn(player_turn)
+        player_turn = next_move_or_match_end(board, player_turn)
 
 start_match()

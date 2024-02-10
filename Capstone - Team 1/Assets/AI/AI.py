@@ -1,5 +1,7 @@
 #Hi, I'm OX, the AI for Quixo
 
+import copy
+
 #Refactor function
 def apply_move(board, move_block_from, move_block_to, player_turn):
     if (move_block_to[1] != move_block_from[1]):
@@ -76,10 +78,25 @@ def check_for_streaks(board, team_looking_at):
         if (board[i][len(board) - 1 - i] == team_looking_at):
             team_in_upward_diagonal += 1
     streaks.append(team_in_upward_diagonal)
+    
+    values_to_remove = [0, 1]
+    for value_to_remove in values_to_remove:
+        while value_to_remove in streaks:
+            streaks.remove(value_to_remove)
 
     streaks.sort(reverse = True)
     return streaks
 
+'''
+row1 = ["X", "X", " ", " ", " "]
+row2 = ["X", " ", " ", " ", " "]
+row3 = ["X", " ", " ", " ", " "]
+row4 = ["X", " ", " ", " ", " "]
+row5 = [" ", " ", " ", " ", " "]
+grid = [row1, row2, row3, row4, row5]
+
+print(check_for_streaks(grid, "X"))
+'''
 
 def score_pickup(spot_contains):
     pickup_score = 0
@@ -90,9 +107,9 @@ def score_pickup(spot_contains):
     return pickup_score
 
 def generate_future_board(board, player_turn, pickup_row, pickup_col, placement_row, placement_col):
-    future_board = board
-    move_block_from = "(" + pickup_row + "," + pickup_col + ")"
-    move_block_to = "(" + placement_row + "," + placement_col + ")"
+    future_board = copy.deepcopy(board)
+    move_block_from = "(" + str(pickup_row) + "," + str(pickup_col) + ")"
+    move_block_to = "(" + str(placement_row) + "," + str(placement_col) + ")"
 
     apply_move(future_board, move_block_from, move_block_to, player_turn)
 
@@ -107,21 +124,32 @@ def score_placement(board, playing_as, pickup_row, pickup_col, placement_row, pl
         placement_score = 10
 
     if (check_for_streaks(board, opponent_as)[0] < check_for_streaks(future_board, opponent_as)[0]):
-        pickup_score += 100
+        placement_score += 100
 
     if (check_for_streaks(board, playing_as)[0] > check_for_streaks(future_board, playing_as)[0]):
-        pickup_score += 10
+        placement_score += 10
 
     return placement_score
+
+
+row1 = ["X", "X", " ", " ", " "]
+row2 = ["X", " ", " ", " ", " "]
+row3 = ["X", " ", " ", " ", " "]
+row4 = ["X", " ", " ", " ", " "]
+row5 = [" ", " ", " ", " ", " "]
+grid = [row1, row2, row3, row4, row5]
+
+future_board = generate_future_board(grid, "O", 2, 4, 2, 0)
+print(check_for_streaks(future_board, "O")[0])
 
 def get_placements(row, col):
     spots = []
 
-    spots.append("(" + row + "," + 4 + ")")
-    spots.append("(" + row + "," + 0 + ")")
-    spots.append("(" + 0 + "," + col + ")")
-    spots.append("(" + 4 + "," + col + ")")
-    spots.remove("(" + row + "," + col + ")")
+    spots.append("(" + str(row) + "," + str(0) + ")")
+    spots.append("(" + str(row) + "," + str(4) + ")")
+    spots.append("(" + str(0) + "," + str(col) + ")")
+    spots.append("(" + str(4) + "," + str(col) + ")")
+    spots.remove("(" + str(row) + "," + str(col) + ")")
 
     return spots
 
@@ -131,22 +159,36 @@ def get_all_moves(board, EDGES_OF_THE_BOARD, playing_as):
 
     for x in EDGES_OF_THE_BOARD:
         pickup_row, pickup_col = str_to_int_spot_data(x)
-
         spot_contents = board[pickup_row][pickup_col]
+
+        move_score = 0
+
         if (spot_contents == " " or spot_contents == playing_as):
-            possible_moves[x] += score_pickup(spot_contents)
-            for spot in get_placements():
+            move_score += score_pickup(spot_contents)
+            for spot in get_placements(pickup_row, pickup_col):
                 placement_row, placement_col = str_to_int_spot_data(spot)
-                possible_moves[x] += score_placement(board, playing_as, pickup_row, pickup_col, placement_row, placement_col)
-    
+                
+                move_score += score_placement(board, playing_as, pickup_row, pickup_col, placement_row, placement_col)
+
+                combined_move = x + " " + spot
+                possible_moves[combined_move] = move_score
+
     return possible_moves
 
 def request_ai_move(board, EDGES_OF_THE_BOARD, playing_as):
     possible_moves = get_all_moves(board, EDGES_OF_THE_BOARD, playing_as)
-    best_pickup = max(possible_moves.items(), key=lambda item: item[1])[0]
+    best_move_set = max(possible_moves.items(), key=lambda item: item[1])[0]
 
+    for key, value in sorted(possible_moves.items(), key=lambda item: item[1]):
+        print(f'{key}: {value}')
+    print()
 
-    return possible_moves[1]
+    spot_data = best_move_set.split(" ")
+
+    print(spot_data)
+    print()
+
+    return spot_data[0], spot_data[1]
 
 '''
 board = [ ["O"] * 5 ] * 5
