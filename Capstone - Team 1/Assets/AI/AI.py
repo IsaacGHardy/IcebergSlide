@@ -1,8 +1,52 @@
+#Hi, I'm OX, the AI for Quixo
+
+#Refactor function
+def apply_move(board, move_block_from, move_block_to, player_turn):
+    if (move_block_to[1] != move_block_from[1]):
+        #Were moving rows
+        old_row = int(move_block_from[1])
+        new_row = int(move_block_to[1])
+        Col = int(move_block_from[3])
+
+        blocks_to_shift = new_row - old_row
+        if (blocks_to_shift > 0):
+            for i in range(0, abs(blocks_to_shift)):            
+               board[old_row + i][Col] = board[old_row + i + 1][Col]
+        else:
+            for i in range(0, abs(blocks_to_shift)):            
+                board[old_row - i][Col] = board[old_row - i -+ 1][Col]
+    else:
+        #Were moving cols
+        old_col = int(move_block_from[3])
+        new_col = int(move_block_to[3])
+        Row = int(move_block_from[1])
+
+        blocks_to_shift = new_col - old_col
+        if (blocks_to_shift > 0):
+            for i in range(0, abs(blocks_to_shift)):            
+                board[Row][old_col + i] = board[Row][old_col + i + 1]
+        else:
+            for i in range(0, abs(blocks_to_shift)):            
+                board[Row][old_col - i] = board[Row][old_col - i -+ 1]
+
+    board[int(move_block_to[1])][int(move_block_to[3])] = player_turn
+
+def get_opponent(playing_as):
+    if (playing_as == "X"):
+        return "O"
+    elif (playing_as == "O"):
+        return "X"
+
+def str_to_int_spot_data(x):
+    spot_data = x[1:4].split(",")
+    return int(spot_data[0]), int(spot_data[1])
+
 def is_a_corner(spot_row, spot_col):
     if ((spot_row % 4 == 0) and spot_col % 4 == 0):
         return True
     return False
 
+'''
 def distance_from_center(spot_row, spot_col):
     if (spot_row % 4 == 0 or spot_col % 4 == 0):
         return 2
@@ -10,89 +54,104 @@ def distance_from_center(spot_row, spot_col):
         return 0
     else:
         return 1
+'''
 
-def check_win_conditions():
+def check_for_streaks(board, team_looking_at):
     streaks = []
-    #Create a list
-    #5 Rows
-    #5 cols
-    #2 diagonals
-    #Store the max streaks and return them
+
+    for row in board:
+        streaks.append(row.count(team_looking_at))
+
+    for col in zip(*board):
+        streaks.append(col.count(team_looking_at))
+
+    team_in_downward_diagonal = 0
+    for i in range(5):
+        if (board[i][i] == team_looking_at):
+            team_in_downward_diagonal += 1
+    streaks.append(team_in_downward_diagonal)
+
+    team_in_upward_diagonal = 0
+    for i in range(5):
+        if (board[i][len(board) - 1 - i] == team_looking_at):
+            team_in_upward_diagonal += 1
+    streaks.append(team_in_upward_diagonal)
+
+    streaks.sort(reverse = True)
     return streaks
 
-#Need a way to take a board state, 
-#see the biggest line in a row and give move post move analysis and see if the streak shrunk or 
-#there is no way to win
-def analyze_board(board, team_looking_at):
-    streaks = []
-    
-    for row in range(0,4):
-        for col in range(0,4):
-            if (board[row][col] == team_looking_at):
-                streak_for_piece = 1
-                #get direction, maybe get the connections, then check in that row how many are aligned, check connections wont work
-                    #because you can have an isolated one
-                #check for connection has to check in a line for piece connections
-                #While still connecting and same direction
-                    #Add one to streakforpiece
-                #if streakfor piece is more than 3 add it to streaks
 
-    #Maybe just check for 4s?\
-    #maybe just check for 3s
-    #build streak
-
-    streaks.sort()
-    return streaks[-1]
-
-def score_pickup(spot_contains, playing_as, spot_row, spot_col):
+def score_pickup(spot_contains):
     pickup_score = 0
 
     if (spot_contains == " "):
        pickup_score += 25
-    #Needs to add a score amount for brekaing up a 4
-        #make sure dont create a kill scenario when breaking a 4
-            #pickup_score -= 100
-       #pickup_score += 50
-    #Will build a line for team
-        #pickup_score += 10
-    #Will break a line for opponent
-        #pickup_score += 5
        
     return pickup_score
 
-def score_placement(spot_contains, playing_as, spot_row, spot_col):
-    reward_for_untaken, reward_for_corner, reward_for_middle = 0, 0, 0
+def generate_future_board(board, player_turn, pickup_row, pickup_col, placement_row, placement_col):
+    future_board = board
+    move_block_from = "(" + pickup_row + "," + pickup_col + ")"
+    move_block_to = "(" + placement_row + "," + placement_col + ")"
 
-    if (is_a_corner(spot_row, spot_col)):
-        reward_for_corner = 10
-    #Will push a piece closer to the middle
-    reward_for_middle = (2 - distance_from_center(spot_row, spot_col)) * 15
+    apply_move(future_board, move_block_from, move_block_to, player_turn)
 
-    return reward_for_corner
+    return future_board
 
-def get_all_moves(board, EDGES_OF_THE_BOARD, playing_as, mode, pickup_spot):
-    possible_pick_ups = {}
+def score_placement(board, playing_as, pickup_row, pickup_col, placement_row, placement_col):
+    placement_score = 0
+    opponent_as = get_opponent(playing_as)
+    future_board = generate_future_board(board, playing_as, pickup_row, pickup_col, placement_row, placement_col)
+
+    if (is_a_corner(placement_row, placement_col)):
+        placement_score = 10
+
+    if (check_for_streaks(board, opponent_as)[0] < check_for_streaks(future_board, opponent_as)[0]):
+        pickup_score += 100
+
+    if (check_for_streaks(board, playing_as)[0] > check_for_streaks(future_board, playing_as)[0]):
+        pickup_score += 10
+
+    return placement_score
+
+def get_placements(row, col):
+    spots = []
+
+    spots.append("(" + row + "," + 4 + ")")
+    spots.append("(" + row + "," + 0 + ")")
+    spots.append("(" + 0 + "," + col + ")")
+    spots.append("(" + 4 + "," + col + ")")
+    spots.remove("(" + row + "," + col + ")")
+
+    return spots
+
+#Re write to get all moves with NO MODE and giving the dictionary back as a set of pickups and placements
+def get_all_moves(board, EDGES_OF_THE_BOARD, playing_as):
+    possible_moves = {}
+
     for x in EDGES_OF_THE_BOARD:
-        spot_data = x[1:4].split(",")
-        spot_row, spot_col = int(spot_data[0]), int(spot_data[1])
+        pickup_row, pickup_col = str_to_int_spot_data(x)
 
-        if (mode == "Picking"):
-            if (board[spot_col][spot_row] == " " or board[spot_col][spot_row] == playing_as):
-                possible_pick_ups[x] = score_pickup(board[spot_col][spot_row], playing_as, spot_row, spot_col)
-        elif (mode == "Placing"):
-            if (x != pickup_spot):
-                possible_pick_ups[x] = score_placement(board[spot_col][spot_row], playing_as, spot_row, spot_col)
+        spot_contents = board[pickup_row][pickup_col]
+        if (spot_contents == " " or spot_contents == playing_as):
+            possible_moves[x] += score_pickup(spot_contents)
+            for spot in get_placements():
+                placement_row, placement_col = str_to_int_spot_data(spot)
+                possible_moves[x] += score_placement(board, playing_as, pickup_row, pickup_col, placement_row, placement_col)
     
-    return possible_pick_ups
+    return possible_moves
 
 def request_ai_move(board, EDGES_OF_THE_BOARD, playing_as):
-    possible_pick_ups = get_all_moves(board, EDGES_OF_THE_BOARD, playing_as, "Picking", None)
-    best_pickup = max(possible_pick_ups.items(), key=lambda item: item[1])[0]
+    possible_moves = get_all_moves(board, EDGES_OF_THE_BOARD, playing_as)
+    best_pickup = max(possible_moves.items(), key=lambda item: item[1])[0]
 
-    possible_place_downs = get_all_moves(board, EDGES_OF_THE_BOARD, playing_as, "Placing", best_pickup)
-    best_placement = max(possible_place_downs.items(), key=lambda item: item[1])[0]
 
-    return best_pickup, best_placement 
+    return possible_moves[1]
+
+'''
+board = [ ["O"] * 5 ] * 5
+print(check_win_conditions(board, "O"))
+'''
 
 '''
 board = [ ["O"] * 5 ] * 5
