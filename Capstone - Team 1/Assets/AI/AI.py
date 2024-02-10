@@ -1,7 +1,5 @@
 #Hi, I'm OX, the AI for Quixo
 
-#TODO: Go for a kill
-
 import copy
 
 #Refactor function
