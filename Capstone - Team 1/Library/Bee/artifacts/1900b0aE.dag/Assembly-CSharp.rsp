@@ -370,6 +370,7 @@
 -analyzer:"C:/Program Files/Unity/Hub/Editor/2022.3.17f1/Editor/Data/Tools/Unity.SourceGenerators/Unity.SourceGenerators.dll"
 "Assets/Animations/ClickAnimation.cs"
 "Assets/Animations/HoverAnimation.cs"
+"Assets/backgroundMusicScript.cs"
 "Assets/Photon/PhotonChat/Demos/Common/EventSystemSpawner.cs"
 "Assets/Photon/PhotonChat/Demos/Common/OnStartDelete.cs"
 "Assets/Photon/PhotonChat/Demos/Common/TextButtonTransition.cs"
