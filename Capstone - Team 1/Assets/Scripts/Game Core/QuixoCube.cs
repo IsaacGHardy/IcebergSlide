@@ -90,4 +90,11 @@ public class QuixoCube : MonoBehaviour, IPointerClickHandler
     {
         return Vector3.Distance(cube.transform.position, toPos);
     }
+    public void Play(string animation){
+        Animator animator = cube.GetComponent<Animator>();
+        if(animator.HasState(0, Animator.StringToHash(animation))){
+            animator.Play(animation);
+            
+        }
+    }
 }

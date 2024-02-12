@@ -43,7 +43,7 @@ public class QuixoClass : MonoBehaviour
     public const int boardSize = 5;                         // the number of rows & cols in the board
     public const float cubeSize = 1;                 // size of cubes
     public const float cubeSep = 0.0f;               // separation between cubes
-    public const float spd = 10f;                    // the speed at which penguins move
+    public const float spd = 1f;                    // the speed at which penguins move
     public const float acceptableOffset = 0.00001f;  // how far a penguin can be off from its target at the end of a slide
     private const float boardHeight = cubeSize / 2;  // the y coordinate of the cubes in unity
 
@@ -415,44 +415,130 @@ public class QuixoClass : MonoBehaviour
         return toslide;
     }
 
+    private IEnumerator RotatePenguin(List<QuixoCube> penguins)
+    {
+        Vector3 targetDirection;
+        if (from.row == to.row)
+        {
+            targetDirection = to.col > from.col ? Vector3.back : Vector3.forward; 
+        }
+        else
+        {
+            targetDirection = to.row > from.row ? Vector3.right : Vector3.left;
+        }
+
+        // Ensure targetDirection is calculated based on the movement direction
+        Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
+
+        bool allPenguinsRotated = false;
+        while (!allPenguinsRotated)
+        {
+            allPenguinsRotated = true; // Assume all penguins have finished rotating until checked
+
+            foreach (QuixoCube penguin in penguins)
+            {
+                // Rotate each penguin towards the target rotation
+                penguin.transform.rotation = Quaternion.RotateTowards(penguin.transform.rotation, targetRotation, (spd * 2) * 30 * Time.deltaTime);
+
+                // If any penguin hasn't reached the target rotation, set flag to false
+                if (Quaternion.Angle(penguin.transform.rotation, targetRotation) > acceptableOffset)
+                {
+                    allPenguinsRotated = false;
+                }
+            }
+
+            // Log rotation values for the first penguin for debugging
+            if (penguins.Count > 0)
+            {
+                QuixoCube firstPenguin = penguins[0];
+                //UnityEngine.Debug.Log($"Current Rotation: {firstPenguin.transform.rotation.eulerAngles}");
+                UnityEngine.Debug.Log($"Target Rotation: {targetRotation.eulerAngles}");
+            }
+
+            // Wait for the next frame before continuing the loop
+            yield return null;
+        }
+    }
+    private IEnumerator RotatePenguin(List<QuixoCube> penguins, Quaternion targetRotation)
+    {
+        bool allPenguinsRotated = false;
+        while (!allPenguinsRotated)
+        {
+            allPenguinsRotated = true;
+
+            foreach (QuixoCube penguin in penguins)
+            {
+                penguin.transform.rotation = Quaternion.RotateTowards(penguin.transform.rotation, targetRotation, (spd * 2) * 30 * Time.deltaTime);
+
+                if (Quaternion.Angle(penguin.transform.rotation, targetRotation) > acceptableOffset)
+                {
+                    allPenguinsRotated = false;
+                }
+            }
+
+            yield return null;
+        }
+    }
+
     // Animates the move
     private IEnumerator doSlide(List<QuixoCube> toSlide)
     {
+        // Start the walking animation for each penguin
+        foreach (QuixoCube penguin in toSlide)
+        {
+            penguin.GetComponent<Animator>().Play("Walk");
+        }
 
+        // Rotate penguins to face the direction they will move
+        yield return StartCoroutine(RotatePenguin(toSlide));
+
+        // Move penguins towards their target positions
         bool moveDone = false;
-
-        foreach (QuixoCube cube in toSlide)
+        foreach (QuixoCube penguin in toSlide)
         {
             if (from.row == to.row)
             {
                 int c = to.col < from.col ? 1 : -1;
-                cube.toPoint = (new Point(cube.row, cube.col + c));
+                penguin.toPoint = (new Point(penguin.row, penguin.col + c));
             }
             else
             {
                 int r = to.row < from.row ? 1 : -1;
-                cube.toPoint = (new Point(cube.row + r, cube.col));
+                penguin.toPoint = (new Point(penguin.row + r, penguin.col));
             }
         }
         while (!moveDone)
         {
             moveDone = true; 
 
-            foreach (QuixoCube cube in toSlide)
+            foreach (QuixoCube penguin in toSlide)
             {
 
-                cube.step(spd);
+                penguin.step(spd);
 
-                if (cube.dist() >= acceptableOffset) { moveDone = false; }
+                if (penguin.dist() >= acceptableOffset) { moveDone = false; }
+
+                penguin.Play("Idle_A");
 
             }
 
             yield return null; 
         }
 
+        // Finalize the move
         finalizeMove(toSlide);
 
+        // Rotate penguins back to their original direction after moving
+        Quaternion originalRotation = Quaternion.identity; // Default orientation; adjust if needed
+        yield return StartCoroutine(RotatePenguin(toSlide, originalRotation));
+
+        // Set penguins to idle animation after rotating back
+        foreach (QuixoCube penguin in toSlide)
+        {
+            penguin.GetComponent<Animator>().Play("Idle_A");
+        }
     }
+
     
     // Ties up any loose ends so that everything is in place for the next move
     private void finalizeMove(List<QuixoCube> toSlide)
