@@ -7,6 +7,7 @@ ScriptsOnlyBuild:
     - QuixoCube
     - Room
     - RoomList
+    - TestConnect
     - backgroundMusicScript
     PhotonUnityNetworking:
     - Photon.Pun.PhotonAnimatorView
@@ -24,7 +25,10 @@ ScriptsOnlyBuild:
     - Photon.Pun.Demo.PunBasics.PlayerUI
     - Photon.Pun.Demo.SlotRacer.PlayerControl
     - Photon.Pun.Demo.SlotRacer.Utils.SplineWalker
+    PhotonUnityNetworking.Editor.dll:
+    - Photon.Pun.PunSceneSettings
     PhotonUnityNetworking.dll:
+    - Photon.Pun.PhotonView
     - Photon.Pun.ServerSettings
     Unity.Rider.Editor.dll:
     - Packages.Rider.Editor.UnitTesting.CallbackData
@@ -164,65 +168,67 @@ ScriptsOnlyBuild:
     - Class: 108
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 1572}
+      Script: {instanceID: 1576}
     - Class: 114
-      Script: {instanceID: 1626}
+      Script: {instanceID: 1582}
     - Class: 114
-      Script: {instanceID: 1670}
+      Script: {instanceID: 1630}
     - Class: 114
-      Script: {instanceID: 1824}
+      Script: {instanceID: 1674}
     - Class: 114
-      Script: {instanceID: 2236}
+      Script: {instanceID: 1830}
     - Class: 114
-      Script: {instanceID: 2372}
+      Script: {instanceID: 2244}
     - Class: 114
-      Script: {instanceID: 2690}
+      Script: {instanceID: 2698}
     - Class: 114
-      Script: {instanceID: 2902}
+      Script: {instanceID: 2912}
     - Class: 114
-      Script: {instanceID: 3118}
+      Script: {instanceID: 3128}
     - Class: 114
-      Script: {instanceID: 3948}
+      Script: {instanceID: 3968}
     - Class: 114
-      Script: {instanceID: 3952}
-    - Class: 114
-      Script: {instanceID: 4116}
+      Script: {instanceID: 3974}
     - Class: 114
       Script: {instanceID: 4140}
     - Class: 114
-      Script: {instanceID: 4254}
+      Script: {instanceID: 4164}
     - Class: 114
-      Script: {instanceID: 4514}
+      Script: {instanceID: 4280}
     - Class: 114
-      Script: {instanceID: 5178}
+      Script: {instanceID: 4542}
     - Class: 114
-      Script: {instanceID: 5194}
+      Script: {instanceID: 5220}
     - Class: 114
-      Script: {instanceID: 5250}
+      Script: {instanceID: 5236}
     - Class: 114
-      Script: {instanceID: 5596}
+      Script: {instanceID: 5294}
     - Class: 114
-      Script: {instanceID: 5638}
+      Script: {instanceID: 5642}
     - Class: 114
-      Script: {instanceID: 5826}
+      Script: {instanceID: 5684}
     - Class: 114
-      Script: {instanceID: 5976}
+      Script: {instanceID: 5874}
     - Class: 114
-      Script: {instanceID: 6300}
+      Script: {instanceID: 6028}
     - Class: 114
-      Script: {instanceID: 6308}
+      Script: {instanceID: 6354}
     - Class: 114
-      Script: {instanceID: 6898}
+      Script: {instanceID: 6362}
     - Class: 114
-      Script: {instanceID: 7406}
+      Script: {instanceID: 6956}
     - Class: 114
-      Script: {instanceID: 7758}
+      Script: {instanceID: 7152}
     - Class: 114
-      Script: {instanceID: 7882}
+      Script: {instanceID: 7472}
     - Class: 114
-      Script: {instanceID: 8180}
+      Script: {instanceID: 7828}
     - Class: 114
-      Script: {instanceID: 8534}
+      Script: {instanceID: 7956}
+    - Class: 114
+      Script: {instanceID: 8258}
+    - Class: 114
+      Script: {instanceID: 39074}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -275,43 +281,45 @@ ScriptsOnlyBuild:
     - Class: 108
       Script: {instanceID: 0}
     - Class: 114
+      Script: {instanceID: 1572}
+    - Class: 114
       Script: {instanceID: 1574}
     - Class: 114
-      Script: {instanceID: 1576}
+      Script: {instanceID: 1578}
     - Class: 114
-      Script: {instanceID: 1626}
+      Script: {instanceID: 1582}
     - Class: 114
-      Script: {instanceID: 2372}
+      Script: {instanceID: 1630}
     - Class: 114
-      Script: {instanceID: 2690}
+      Script: {instanceID: 2698}
     - Class: 114
-      Script: {instanceID: 2902}
+      Script: {instanceID: 2912}
     - Class: 114
-      Script: {instanceID: 3384}
+      Script: {instanceID: 3128}
     - Class: 114
-      Script: {instanceID: 4002}
+      Script: {instanceID: 4026}
     - Class: 114
-      Script: {instanceID: 4238}
+      Script: {instanceID: 4176}
     - Class: 114
-      Script: {instanceID: 5058}
+      Script: {instanceID: 4264}
     - Class: 114
-      Script: {instanceID: 5250}
+      Script: {instanceID: 5098}
     - Class: 114
-      Script: {instanceID: 5826}
+      Script: {instanceID: 5294}
     - Class: 114
-      Script: {instanceID: 5976}
+      Script: {instanceID: 5874}
     - Class: 114
-      Script: {instanceID: 6300}
+      Script: {instanceID: 5922}
     - Class: 114
-      Script: {instanceID: 6730}
+      Script: {instanceID: 6028}
     - Class: 114
-      Script: {instanceID: 7410}
+      Script: {instanceID: 6354}
     - Class: 114
-      Script: {instanceID: 8438}
+      Script: {instanceID: 6786}
     - Class: 114
-      Script: {instanceID: 42772}
+      Script: {instanceID: 7476}
     - Class: 114
-      Script: {instanceID: 42778}
+      Script: {instanceID: 34984}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -370,19 +378,19 @@ ScriptsOnlyBuild:
     - Class: 108
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 2654}
+      Script: {instanceID: 2660}
     - Class: 114
-      Script: {instanceID: 2690}
+      Script: {instanceID: 2698}
     - Class: 114
-      Script: {instanceID: 3046}
+      Script: {instanceID: 3056}
     - Class: 114
-      Script: {instanceID: 4194}
+      Script: {instanceID: 4220}
     - Class: 114
-      Script: {instanceID: 6300}
+      Script: {instanceID: 6354}
     - Class: 114
-      Script: {instanceID: 8518}
+      Script: {instanceID: 8402}
     - Class: 114
-      Script: {instanceID: 29000}
+      Script: {instanceID: 30514}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 136
@@ -404,16 +412,22 @@ ScriptsOnlyBuild:
     className: OnJoinedInstantiate
   - hash:
       serializedVersion: 2
-      Hash: b5007673bbbdb9d12597a1d8201370f5
-    assemblyName: UnityEngine.UI
-    namespaceName: UnityEngine.UI
-    className: Text
-  - hash:
-      serializedVersion: 2
       Hash: 915204dac8acad99f076d6e72ada0a0f
     assemblyName: UnityEngine.UI
     namespaceName: UnityEngine.UI
     className: Button
+  - hash:
+      serializedVersion: 2
+      Hash: d41ab9b5ea92474f9c0a6937a0607ce1
+    assemblyName: UnityEngine.UI
+    namespaceName: UnityEngine.UI
+    className: ContentSizeFitter
+  - hash:
+      serializedVersion: 2
+      Hash: b5007673bbbdb9d12597a1d8201370f5
+    assemblyName: UnityEngine.UI
+    namespaceName: UnityEngine.UI
+    className: Text
   - hash:
       serializedVersion: 2
       Hash: 8dff8e9853297d341afa0c11f9091b59
@@ -426,6 +440,12 @@ ScriptsOnlyBuild:
     assemblyName: UnityEngine.UI
     namespaceName: UnityEngine.UI
     className: HorizontalLayoutGroup
+  - hash:
+      serializedVersion: 2
+      Hash: 1ab136900c0edaeeb49424c852595030
+    assemblyName: UnityEngine.UI
+    namespaceName: UnityEngine.UI
+    className: RawImage
   - hash:
       serializedVersion: 2
       Hash: e5ced545fd8a42a1f50e04211216ab80
@@ -494,6 +514,12 @@ ScriptsOnlyBuild:
     className: PlayerOverviewPanel
   - hash:
       serializedVersion: 2
+      Hash: d0caa48b5fe6778ce3f0de7aec45c4e6
+    assemblyName: Assembly-CSharp
+    namespaceName: TMPro.Examples
+    className: SkewTextExample
+  - hash:
+      serializedVersion: 2
       Hash: 8703b6ae2b0eefd9dafbc44d8d333fb1
     assemblyName: UnityEngine.UI
     namespaceName: UnityEngine.UI
@@ -516,6 +542,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.VisualScripting.Core
     namespaceName: Unity.VisualScripting
     className: UnityOnMouseExitMessageListener
+  - hash:
+      serializedVersion: 2
+      Hash: 11a492830b189fafb9ed2f7afa464c56
+    assemblyName: Assembly-CSharp
+    namespaceName: TMPro.Examples
+    className: SimpleScript
   - hash:
       serializedVersion: 2
       Hash: e3de760309394b2a697b349f0306eff7
@@ -614,12 +646,6 @@ ScriptsOnlyBuild:
     className: ChatAppIdCheckerUI
   - hash:
       serializedVersion: 2
-      Hash: 1ab136900c0edaeeb49424c852595030
-    assemblyName: UnityEngine.UI
-    namespaceName: UnityEngine.UI
-    className: RawImage
-  - hash:
-      serializedVersion: 2
       Hash: 427a1df063398550774eb89c9beeb864
     assemblyName: PhotonUnityNetworking.Demos
     namespaceName: Photon.Pun.Demo.Cockpit
@@ -668,6 +694,12 @@ ScriptsOnlyBuild:
     className: QuixoCube
   - hash:
       serializedVersion: 2
+      Hash: c9b1ea3bf987a2e780a24849503ca72e
+    assemblyName: Assembly-CSharp
+    namespaceName: TMPro.Examples
+    className: Benchmark01_UGUI
+  - hash:
+      serializedVersion: 2
       Hash: e987953190eb4c12cf19df790566dc2c
     assemblyName: UnityEngine.UI
     namespaceName: UnityEngine.EventSystems
@@ -714,6 +746,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.VisualScripting.Core
     namespaceName: Unity.VisualScripting
     className: UnityMessageListener
+  - hash:
+      serializedVersion: 2
+      Hash: ed8bac09ffacadca9994789e381c69ce
+    assemblyName: Assembly-CSharp
+    namespaceName: TMPro.Examples
+    className: TMP_TextSelector_A
   - hash:
       serializedVersion: 2
       Hash: 3b873ff514a54a1e675af235b1c824ab
@@ -830,6 +868,12 @@ ScriptsOnlyBuild:
     className: CurrentRoomIsOfflineProperty
   - hash:
       serializedVersion: 2
+      Hash: 1d830bc5cfaaf24301dffea2877f4bea
+    assemblyName: Assembly-CSharp
+    namespaceName: TMPro.Examples
+    className: VertexShakeA
+  - hash:
+      serializedVersion: 2
       Hash: 14685e30126c37231f2a2f753516d1bd
     assemblyName: PhotonUnityNetworking.Demos
     namespaceName: Photon.Pun.Demo.Cockpit
@@ -840,6 +884,12 @@ ScriptsOnlyBuild:
     assemblyName: UnityEngine.UI
     namespaceName: UnityEngine.UI
     className: ToggleGroup
+  - hash:
+      serializedVersion: 2
+      Hash: 593a641cd7822a10b9a54aa9eb5c3d5e
+    assemblyName: Assembly-CSharp
+    namespaceName: TMPro.Examples
+    className: Benchmark04
   - hash:
       serializedVersion: 2
       Hash: d90629714fa6b0145fcaffc87f5c6559
@@ -890,12 +940,6 @@ ScriptsOnlyBuild:
     className: CullingHandler
   - hash:
       serializedVersion: 2
-      Hash: d41ab9b5ea92474f9c0a6937a0607ce1
-    assemblyName: UnityEngine.UI
-    namespaceName: UnityEngine.UI
-    className: ContentSizeFitter
-  - hash:
-      serializedVersion: 2
       Hash: c6369b4cc3be620d6c9300e920bc3d52
     assemblyName: Unity.VisualScripting.Core
     namespaceName: Unity.VisualScripting
@@ -926,6 +970,12 @@ ScriptsOnlyBuild:
     className: PlayerQuitHandler
   - hash:
       serializedVersion: 2
+      Hash: d3bece132a2b48e63d78047dece48ba7
+    assemblyName: Assembly-CSharp
+    namespaceName: 
+    className: ChatController
+  - hash:
+      serializedVersion: 2
       Hash: cf32d98954e63b8e30e9334b152e9b8e
     assemblyName: UnityEngine.UI
     namespaceName: UnityEngine.EventSystems
@@ -936,6 +986,12 @@ ScriptsOnlyBuild:
     assemblyName: PhotonUnityNetworking.Demos
     namespaceName: Photon.Pun.Demo.Cockpit
     className: BoolInputField
+  - hash:
+      serializedVersion: 2
+      Hash: 418b67019f13f9684552f2693bae3971
+    assemblyName: Assembly-CSharp
+    namespaceName: TMPro.Examples
+    className: TextMeshProFloatingText
   - hash:
       serializedVersion: 2
       Hash: e6f8333cc8a800e2866870a5ef7efc35
@@ -980,6 +1036,12 @@ ScriptsOnlyBuild:
     className: ScriptGraphAsset
   - hash:
       serializedVersion: 2
+      Hash: 72561d2e822b466169cd12a3b9f9ae0c
+    assemblyName: Assembly-CSharp
+    namespaceName: TMPro.Examples
+    className: VertexShakeB
+  - hash:
+      serializedVersion: 2
       Hash: 8d8ae7a41b7ee613084011b4a71e2b8b
     assemblyName: PhotonUnityNetworking.Demos
     namespaceName: Photon.Pun.Demo.Cockpit
@@ -1010,10 +1072,22 @@ ScriptsOnlyBuild:
     className: Bullet
   - hash:
       serializedVersion: 2
+      Hash: 1deda86fe7ffd8587afcfe68a02d034c
+    assemblyName: Assembly-CSharp
+    namespaceName: 
+    className: EnvMapAnimator
+  - hash:
+      serializedVersion: 2
       Hash: 80b3eb41f2200ce39776db113c875a9e
     assemblyName: PhotonUnityNetworking.Demos
     namespaceName: Photon.Pun.Demo.PunBasics
     className: PlayerAnimatorManager
+  - hash:
+      serializedVersion: 2
+      Hash: 665da785348a8806bf1524fe10742a60
+    assemblyName: Assembly-CSharp
+    namespaceName: TMPro.Examples
+    className: TMP_UiFrameRateCounter
   - hash:
       serializedVersion: 2
       Hash: 3b8680eaf961a1e89edd59c1a2f3fdf4
@@ -1094,6 +1168,12 @@ ScriptsOnlyBuild:
     className: PhotonLagSimulationGui
   - hash:
       serializedVersion: 2
+      Hash: 038acd1604a6029c2ba94293cbc1e7d1
+    assemblyName: Assembly-CSharp
+    namespaceName: 
+    className: CreateAndJoin
+  - hash:
+      serializedVersion: 2
       Hash: 68b6ce330e91d836b509eb36e61b8396
     assemblyName: PhotonUnityNetworking.Demos
     namespaceName: Photon.Pun.Demo.Cockpit
@@ -1142,6 +1222,12 @@ ScriptsOnlyBuild:
     className: UnityOnJointBreak2DMessageListener
   - hash:
       serializedVersion: 2
+      Hash: e416782d95a812c5b5b00e9b103a8e94
+    assemblyName: Assembly-CSharp
+    namespaceName: TMPro.Examples
+    className: CameraController
+  - hash:
+      serializedVersion: 2
       Hash: 9ebc0a3016506a0cbb7e0306dfcb9497
     assemblyName: Unity.VisualScripting.Core
     namespaceName: Unity.VisualScripting
@@ -1178,16 +1264,34 @@ ScriptsOnlyBuild:
     className: UnityOnCancelMessageListener
   - hash:
       serializedVersion: 2
+      Hash: 52840a82fb83b3a7df342e354c4815e4
+    assemblyName: Assembly-CSharp
+    namespaceName: TMPro.Examples
+    className: TMPro_InstructionOverlay
+  - hash:
+      serializedVersion: 2
       Hash: e5ceae0052bccb16f5dce33aa8bca6c5
     assemblyName: PhotonUnityNetworking.Demos
     namespaceName: Photon.Pun.Demo.Cockpit
     className: ToggleExpand
   - hash:
       serializedVersion: 2
+      Hash: a75a568ce902366f4e82fc98ca6108f5
+    assemblyName: Assembly-CSharp
+    namespaceName: TMPro.Examples
+    className: TMP_ExampleScript_01
+  - hash:
+      serializedVersion: 2
       Hash: fc6868ce11e336254304d5a9bd1d37bc
     assemblyName: PhotonUnityNetworking.Demos
     namespaceName: Photon.Pun.Demo.Cockpit
     className: PropertyCell
+  - hash:
+      serializedVersion: 2
+      Hash: dc31d211c7459841fe4f406ae2e51480
+    assemblyName: Assembly-CSharp
+    namespaceName: TMPro.Examples
+    className: TextConsoleSimulator
   - hash:
       serializedVersion: 2
       Hash: ef5bdbd21b92ab90752c49f5ea108025
@@ -1200,6 +1304,12 @@ ScriptsOnlyBuild:
     assemblyName: PhotonUnityNetworking.Demos
     namespaceName: Photon.Pun.Demo.Cockpit
     className: StringInputField
+  - hash:
+      serializedVersion: 2
+      Hash: 5a1710e1ce9ddf5eb06e0d2693171f49
+    assemblyName: Assembly-CSharp
+    namespaceName: TMPro.Examples
+    className: ObjectSpin
   - hash:
       serializedVersion: 2
       Hash: 7e9cad7f71f9cc52f699bbd2d2a75734
@@ -1224,6 +1334,12 @@ ScriptsOnlyBuild:
     assemblyName: PhotonUnityNetworking.Demos
     namespaceName: UnityStandardAssets.Characters.ThirdPerson.PunDemos
     className: ThirdPersonUserControl
+  - hash:
+      serializedVersion: 2
+      Hash: aa349b22cd61b9e8488d736f82590d6b
+    assemblyName: Assembly-CSharp
+    namespaceName: TMPro.Examples
+    className: TMP_TextInfoDebugTool
   - hash:
       serializedVersion: 2
       Hash: 96fca2e97d92dfc21b971fc8eaf8eac6
@@ -1260,6 +1376,12 @@ ScriptsOnlyBuild:
     assemblyName: UnityEngine.UI
     namespaceName: UnityEngine.UI
     className: GridLayoutGroup
+  - hash:
+      serializedVersion: 2
+      Hash: ceeb6c51b89f022a3deb7b3408c66745
+    assemblyName: Assembly-CSharp
+    namespaceName: TMPro.Examples
+    className: TMP_TextEventCheck
   - hash:
       serializedVersion: 2
       Hash: 5f0ba524d783e2fff7d9cea3e39eec96
@@ -1334,6 +1456,12 @@ ScriptsOnlyBuild:
     className: Line
   - hash:
       serializedVersion: 2
+      Hash: ab3d19695db8289414a06e6d45fd6c8e
+    assemblyName: Assembly-CSharp
+    namespaceName: TMPro.Examples
+    className: ShaderPropAnimator
+  - hash:
+      serializedVersion: 2
       Hash: 10c17b309bdca62b4d7fbaf113ed4ca0
     assemblyName: UnityEngine.UI
     namespaceName: UnityEngine.UI
@@ -1382,6 +1510,12 @@ ScriptsOnlyBuild:
     className: UnityOnTriggerExitMessageListener
   - hash:
       serializedVersion: 2
+      Hash: 1981decccddfde3e97fcfd6689332a6f
+    assemblyName: Assembly-CSharp
+    namespaceName: TMPro.Examples
+    className: WarpTextExample
+  - hash:
+      serializedVersion: 2
       Hash: c5b40234d18aa0f58d9ba908f8e9b694
     assemblyName: PhotonUnityNetworking.Demos
     namespaceName: Photon.Pun.Demo.Cockpit
@@ -1404,6 +1538,12 @@ ScriptsOnlyBuild:
     assemblyName: PhotonUnityNetworking.Demos
     namespaceName: Photon.Pun.Demo.Cockpit
     className: CountOfPlayersInRoomProperty
+  - hash:
+      serializedVersion: 2
+      Hash: 0dd14e314956b0d0d83ffcffe60aa46f
+    assemblyName: Assembly-CSharp
+    namespaceName: TMPro
+    className: TMP_DigitValidator
   - hash:
       serializedVersion: 2
       Hash: 02b153d5fbad55f1b95aa76df70dc2e0
@@ -1490,6 +1630,12 @@ ScriptsOnlyBuild:
     className: PhotonHandler
   - hash:
       serializedVersion: 2
+      Hash: 35e0b31791c377513b6fc7b9568c50cd
+    assemblyName: Assembly-CSharp
+    namespaceName: TMPro.Examples
+    className: Benchmark02
+  - hash:
+      serializedVersion: 2
       Hash: 1dfda5298d660f881c93a54f702662a8
     assemblyName: Assembly-CSharp
     namespaceName: Photon.Chat.Demo
@@ -1512,6 +1658,18 @@ ScriptsOnlyBuild:
     assemblyName: UnityEngine.UI
     namespaceName: UnityEngine.UI
     className: CanvasScaler
+  - hash:
+      serializedVersion: 2
+      Hash: 4166580c620718548959a77fa7b43fc1
+    assemblyName: Assembly-CSharp
+    namespaceName: TMPro.Examples
+    className: TextMeshSpawner
+  - hash:
+      serializedVersion: 2
+      Hash: 7332cc88a04d852b043aeb1bae6dc917
+    assemblyName: Assembly-CSharp
+    namespaceName: 
+    className: RoomList
   - hash:
       serializedVersion: 2
       Hash: ef38c1407dba8c1f5d69f5db61a694fe
@@ -1554,6 +1712,12 @@ ScriptsOnlyBuild:
     assemblyName: PhotonRealtime
     namespaceName: Photon.Realtime
     className: SupportLogger
+  - hash:
+      serializedVersion: 2
+      Hash: fc0a9a681d29388386a9abf3f08b024a
+    assemblyName: Assembly-CSharp
+    namespaceName: TMPro.Examples
+    className: Benchmark03
   - hash:
       serializedVersion: 2
       Hash: 67e0a64d8e8288a38ce8514f7e135354
@@ -1634,6 +1798,12 @@ ScriptsOnlyBuild:
     className: PingProperty
   - hash:
       serializedVersion: 2
+      Hash: 7fdd3ee28e9042c3ec83463d0bb3b230
+    assemblyName: Assembly-CSharp
+    namespaceName: TMPro.Examples
+    className: TMP_FrameRateCounter
+  - hash:
+      serializedVersion: 2
       Hash: e8c59d6e8f5e169dae74af3365e221c3
     assemblyName: PhotonUnityNetworking.Demos
     namespaceName: UnityStandardAssets.Characters.ThirdPerson.PunDemos
@@ -1712,6 +1882,12 @@ ScriptsOnlyBuild:
     className: UnityOnTriggerEnter2DMessageListener
   - hash:
       serializedVersion: 2
+      Hash: 8668b70b18eb7f5cd2dce04386848007
+    assemblyName: Assembly-CSharp
+    namespaceName: TMPro.Examples
+    className: VertexJitter
+  - hash:
+      serializedVersion: 2
       Hash: 06161487d001819821a6054ef2e5dc77
     assemblyName: PhotonUnityNetworking.Demos
     namespaceName: Photon.Pun.Demo.Cockpit
@@ -1772,6 +1948,12 @@ ScriptsOnlyBuild:
     className: UnityOnPointerDownMessageListener
   - hash:
       serializedVersion: 2
+      Hash: 04f2d6a4db8a670aeb2c87d9ffd08865
+    assemblyName: Assembly-CSharp
+    namespaceName: TMPro
+    className: TMP_TextEventHandler
+  - hash:
+      serializedVersion: 2
       Hash: 636527112e2178c25dc6ccca10909b76
     assemblyName: PhotonUnityNetworking.Demos
     namespaceName: Photon.Pun.Demo.Hub
@@ -1820,6 +2002,12 @@ ScriptsOnlyBuild:
     className: UnityOnSubmitMessageListener
   - hash:
       serializedVersion: 2
+      Hash: 38378ad608928d88d573cf091caf53ca
+    assemblyName: Assembly-CSharp
+    namespaceName: 
+    className: ConnectToServer
+  - hash:
+      serializedVersion: 2
       Hash: 67f6cb8ac7b194c76aa1314e80170cc9
     assemblyName: PhotonUnityNetworking.Demos
     namespaceName: Photon.Pun.Demo.Cockpit
@@ -1836,6 +2024,12 @@ ScriptsOnlyBuild:
     assemblyName: PhotonUnityNetworking.Demos
     namespaceName: Photon.Pun.Demo.Cockpit
     className: AutoSyncSceneToggle
+  - hash:
+      serializedVersion: 2
+      Hash: e2734bcc7b3e94776ade5d59f54fec1e
+    assemblyName: Assembly-CSharp
+    namespaceName: TMPro.Examples
+    className: TMP_TextSelector_B
   - hash:
       serializedVersion: 2
       Hash: 4728e3d21cc2a12e391e71ec9b7eed0b
@@ -1970,6 +2164,12 @@ ScriptsOnlyBuild:
     className: LobbyTopPanel
   - hash:
       serializedVersion: 2
+      Hash: 502a0d788634601faaefeacfda55e23a
+    assemblyName: Assembly-CSharp
+    namespaceName: 
+    className: DropdownSample
+  - hash:
+      serializedVersion: 2
       Hash: 203b319722c18f871bf32b60c01bd4ce
     assemblyName: PhotonUnityNetworking.Demos
     namespaceName: Photon.Pun.Demo.Procedural
@@ -1982,10 +2182,22 @@ ScriptsOnlyBuild:
     className: StateMachine
   - hash:
       serializedVersion: 2
+      Hash: c4de0ff7e075dd89c9fed5913dd775d2
+    assemblyName: Assembly-CSharp
+    namespaceName: TMPro
+    className: TMP_PhoneNumberValidator
+  - hash:
+      serializedVersion: 2
       Hash: 429e659c846601e123ebde9292440c3d
     assemblyName: PhotonUnityNetworking
     namespaceName: Photon.Pun
     className: PhotonTransformView
+  - hash:
+      serializedVersion: 2
+      Hash: c4ae0ec287bc3cde0bc98e1a65f9cef7
+    assemblyName: Assembly-CSharp
+    namespaceName: TMPro.Examples
+    className: VertexColorCycler
   - hash:
       serializedVersion: 2
       Hash: dfc7ad6682eceb400c088438a7d86c12
@@ -2006,6 +2218,12 @@ ScriptsOnlyBuild:
     className: TMP_ScrollbarEventHandler
   - hash:
       serializedVersion: 2
+      Hash: 9eccc4340fcd994586e0dcb134c4612e
+    assemblyName: Assembly-CSharp
+    namespaceName: TMPro.Examples
+    className: TeleType
+  - hash:
+      serializedVersion: 2
       Hash: 837e4cd9aff1f9700e130a4dfc31a524
     assemblyName: PhotonUnityNetworking.Demos
     namespaceName: Photon.Pun.Demo.Procedural
@@ -2022,6 +2240,12 @@ ScriptsOnlyBuild:
     assemblyName: PhotonUnityNetworking
     namespaceName: Photon.Pun
     className: ServerSettings
+  - hash:
+      serializedVersion: 2
+      Hash: 9fb1c3ab48b256d508ecddd967f98652
+    assemblyName: Assembly-CSharp
+    namespaceName: TMPro.Examples
+    className: VertexZoom
   - hash:
       serializedVersion: 2
       Hash: b57935dcd4d222219ee12cc0948328f8
@@ -2064,6 +2288,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.VisualScripting.Core
     namespaceName: Unity.VisualScripting
     className: UnityOnMouseEnterMessageListener
+  - hash:
+      serializedVersion: 2
+      Hash: 216f6c07bfa250e44b3e8d62572474e8
+    assemblyName: Assembly-CSharp
+    namespaceName: TMPro.Examples
+    className: Benchmark01
   - hash:
       serializedVersion: 2
       Hash: 83f8a5338e8d5b85bd59bf57d9518105
@@ -2114,130 +2344,10 @@ ScriptsOnlyBuild:
     className: UnityOnSliderValueChangedMessageListener
   - hash:
       serializedVersion: 2
-      Hash: ed8bac09ffacadca9994789e381c69ce
-    assemblyName: Assembly-CSharp
-    namespaceName: TMPro.Examples
-    className: TMP_TextSelector_A
-  - hash:
-      serializedVersion: 2
-      Hash: e2734bcc7b3e94776ade5d59f54fec1e
-    assemblyName: Assembly-CSharp
-    namespaceName: TMPro.Examples
-    className: TMP_TextSelector_B
-  - hash:
-      serializedVersion: 2
-      Hash: aa349b22cd61b9e8488d736f82590d6b
-    assemblyName: Assembly-CSharp
-    namespaceName: TMPro.Examples
-    className: TMP_TextInfoDebugTool
-  - hash:
-      serializedVersion: 2
-      Hash: c4ae0ec287bc3cde0bc98e1a65f9cef7
-    assemblyName: Assembly-CSharp
-    namespaceName: TMPro.Examples
-    className: VertexColorCycler
-  - hash:
-      serializedVersion: 2
-      Hash: 9fb1c3ab48b256d508ecddd967f98652
-    assemblyName: Assembly-CSharp
-    namespaceName: TMPro.Examples
-    className: VertexZoom
-  - hash:
-      serializedVersion: 2
-      Hash: 04f2d6a4db8a670aeb2c87d9ffd08865
-    assemblyName: Assembly-CSharp
-    namespaceName: TMPro
-    className: TMP_TextEventHandler
-  - hash:
-      serializedVersion: 2
-      Hash: dc31d211c7459841fe4f406ae2e51480
-    assemblyName: Assembly-CSharp
-    namespaceName: TMPro.Examples
-    className: TextConsoleSimulator
-  - hash:
-      serializedVersion: 2
-      Hash: d3bece132a2b48e63d78047dece48ba7
-    assemblyName: Assembly-CSharp
-    namespaceName: 
-    className: ChatController
-  - hash:
-      serializedVersion: 2
-      Hash: c4de0ff7e075dd89c9fed5913dd775d2
-    assemblyName: Assembly-CSharp
-    namespaceName: TMPro
-    className: TMP_PhoneNumberValidator
-  - hash:
-      serializedVersion: 2
-      Hash: 52840a82fb83b3a7df342e354c4815e4
-    assemblyName: Assembly-CSharp
-    namespaceName: TMPro.Examples
-    className: TMPro_InstructionOverlay
-  - hash:
-      serializedVersion: 2
       Hash: 6ec481239d099b39abf2f28953f10224
     assemblyName: Assembly-CSharp
     namespaceName: 
     className: ClickAnimation
-  - hash:
-      serializedVersion: 2
-      Hash: 9eccc4340fcd994586e0dcb134c4612e
-    assemblyName: Assembly-CSharp
-    namespaceName: TMPro.Examples
-    className: TeleType
-  - hash:
-      serializedVersion: 2
-      Hash: 665da785348a8806bf1524fe10742a60
-    assemblyName: Assembly-CSharp
-    namespaceName: TMPro.Examples
-    className: TMP_UiFrameRateCounter
-  - hash:
-      serializedVersion: 2
-      Hash: 038acd1604a6029c2ba94293cbc1e7d1
-    assemblyName: Assembly-CSharp
-    namespaceName: 
-    className: CreateAndJoin
-  - hash:
-      serializedVersion: 2
-      Hash: 418b67019f13f9684552f2693bae3971
-    assemblyName: Assembly-CSharp
-    namespaceName: TMPro.Examples
-    className: TextMeshProFloatingText
-  - hash:
-      serializedVersion: 2
-      Hash: 1deda86fe7ffd8587afcfe68a02d034c
-    assemblyName: Assembly-CSharp
-    namespaceName: 
-    className: EnvMapAnimator
-  - hash:
-      serializedVersion: 2
-      Hash: d0caa48b5fe6778ce3f0de7aec45c4e6
-    assemblyName: Assembly-CSharp
-    namespaceName: TMPro.Examples
-    className: SkewTextExample
-  - hash:
-      serializedVersion: 2
-      Hash: 72561d2e822b466169cd12a3b9f9ae0c
-    assemblyName: Assembly-CSharp
-    namespaceName: TMPro.Examples
-    className: VertexShakeB
-  - hash:
-      serializedVersion: 2
-      Hash: 4166580c620718548959a77fa7b43fc1
-    assemblyName: Assembly-CSharp
-    namespaceName: TMPro.Examples
-    className: TextMeshSpawner
-  - hash:
-      serializedVersion: 2
-      Hash: ab3d19695db8289414a06e6d45fd6c8e
-    assemblyName: Assembly-CSharp
-    namespaceName: TMPro.Examples
-    className: ShaderPropAnimator
-  - hash:
-      serializedVersion: 2
-      Hash: fc0a9a681d29388386a9abf3f08b024a
-    assemblyName: Assembly-CSharp
-    namespaceName: TMPro.Examples
-    className: Benchmark03
   - hash:
       serializedVersion: 2
       Hash: 1d7bbce9f9d0c0aed579ae506b440f51
@@ -2246,88 +2356,10 @@ ScriptsOnlyBuild:
     className: Demo
   - hash:
       serializedVersion: 2
-      Hash: ceeb6c51b89f022a3deb7b3408c66745
-    assemblyName: Assembly-CSharp
-    namespaceName: TMPro.Examples
-    className: TMP_TextEventCheck
-  - hash:
-      serializedVersion: 2
-      Hash: 1d830bc5cfaaf24301dffea2877f4bea
-    assemblyName: Assembly-CSharp
-    namespaceName: TMPro.Examples
-    className: VertexShakeA
-  - hash:
-      serializedVersion: 2
-      Hash: 7fdd3ee28e9042c3ec83463d0bb3b230
-    assemblyName: Assembly-CSharp
-    namespaceName: TMPro.Examples
-    className: TMP_FrameRateCounter
-  - hash:
-      serializedVersion: 2
-      Hash: 35e0b31791c377513b6fc7b9568c50cd
-    assemblyName: Assembly-CSharp
-    namespaceName: TMPro.Examples
-    className: Benchmark02
-  - hash:
-      serializedVersion: 2
-      Hash: 1981decccddfde3e97fcfd6689332a6f
-    assemblyName: Assembly-CSharp
-    namespaceName: TMPro.Examples
-    className: WarpTextExample
-  - hash:
-      serializedVersion: 2
-      Hash: 216f6c07bfa250e44b3e8d62572474e8
-    assemblyName: Assembly-CSharp
-    namespaceName: TMPro.Examples
-    className: Benchmark01
-  - hash:
-      serializedVersion: 2
-      Hash: 0dd14e314956b0d0d83ffcffe60aa46f
-    assemblyName: Assembly-CSharp
-    namespaceName: TMPro
-    className: TMP_DigitValidator
-  - hash:
-      serializedVersion: 2
-      Hash: 502a0d788634601faaefeacfda55e23a
-    assemblyName: Assembly-CSharp
-    namespaceName: 
-    className: DropdownSample
-  - hash:
-      serializedVersion: 2
-      Hash: 593a641cd7822a10b9a54aa9eb5c3d5e
-    assemblyName: Assembly-CSharp
-    namespaceName: TMPro.Examples
-    className: Benchmark04
-  - hash:
-      serializedVersion: 2
-      Hash: e416782d95a812c5b5b00e9b103a8e94
-    assemblyName: Assembly-CSharp
-    namespaceName: TMPro.Examples
-    className: CameraController
-  - hash:
-      serializedVersion: 2
-      Hash: 8668b70b18eb7f5cd2dce04386848007
-    assemblyName: Assembly-CSharp
-    namespaceName: TMPro.Examples
-    className: VertexJitter
-  - hash:
-      serializedVersion: 2
       Hash: 40a071f288f6fcb2e645b706fbb57ed4
     assemblyName: Assembly-CSharp
     namespaceName: 
     className: backgroundMusicScript
-  - hash:
-      serializedVersion: 2
-      Hash: c9b1ea3bf987a2e780a24849503ca72e
-    assemblyName: Assembly-CSharp
-    namespaceName: TMPro.Examples
-    className: Benchmark01_UGUI
-  - hash:
-      serializedVersion: 2
-      Hash: 11a492830b189fafb9ed2f7afa464c56
-    assemblyName: Assembly-CSharp
-    namespaceName: TMPro.Examples
-    className: SimpleScript
   - hash:
       serializedVersion: 2
       Hash: e6604a91b0b9d14772f46a6a89d7659d
@@ -2336,34 +2368,16 @@ ScriptsOnlyBuild:
     className: HoverAnimation
   - hash:
       serializedVersion: 2
-      Hash: 38378ad608928d88d573cf091caf53ca
-    assemblyName: Assembly-CSharp
-    namespaceName: 
-    className: ConnectToServer
-  - hash:
-      serializedVersion: 2
-      Hash: 5a1710e1ce9ddf5eb06e0d2693171f49
-    assemblyName: Assembly-CSharp
-    namespaceName: TMPro.Examples
-    className: ObjectSpin
-  - hash:
-      serializedVersion: 2
-      Hash: a75a568ce902366f4e82fc98ca6108f5
-    assemblyName: Assembly-CSharp
-    namespaceName: TMPro.Examples
-    className: TMP_ExampleScript_01
-  - hash:
-      serializedVersion: 2
-      Hash: 7332cc88a04d852b043aeb1bae6dc917
-    assemblyName: Assembly-CSharp
-    namespaceName: 
-    className: RoomList
-  - hash:
-      serializedVersion: 2
       Hash: 304e87045b8ea48d1ef5ddfe9563c98c
     assemblyName: Assembly-CSharp
     namespaceName: 
     className: Room
+  - hash:
+      serializedVersion: 2
+      Hash: da6eb662490d6c262e334d5448dfd658
+    assemblyName: Assembly-CSharp
+    namespaceName: 
+    className: TestConnect
   platform: 19
   scenePathNames:
   - Assets/Scenes/Loading.unity

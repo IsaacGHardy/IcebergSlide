@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine.UI;
 using TMPro;
 
-public class Room : MonoBehaviour
+public class Room : MonoBehaviourPunCallbacks
 {
     public TMP_Text Name;
 
@@ -12,4 +14,5 @@ public class Room : MonoBehaviour
     {
         GameObject.Find("CreateAndJoin").GetComponent<CreateAndJoin>().JoinRoomInList(Name.text);
     }
+
 }

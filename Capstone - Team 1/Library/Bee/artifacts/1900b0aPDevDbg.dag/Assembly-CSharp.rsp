@@ -345,6 +345,7 @@
 "Assets/Scripts/2tryNetworking/CreateAndJoin.cs"
 "Assets/Scripts/2tryNetworking/Room.cs"
 "Assets/Scripts/2tryNetworking/RoomList.cs"
+"Assets/Scripts/2tryNetworking/TestConnect.cs"
 "Assets/Scripts/Game Core/QuixoClass.cs"
 "Assets/Scripts/Game Core/QuixoCube.cs"
 "Assets/TextMesh Pro/Examples & Extras/Scripts/Benchmark01.cs"
