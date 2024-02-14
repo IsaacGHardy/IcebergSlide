@@ -163,7 +163,6 @@ def next_move_or_match_end(board, player_turn):
     else:
         return change_turn(player_turn)
 
-
 #CONST VARS
 EDGES_OF_THE_BOARD = init_safe_pickup_spots()
 
@@ -173,10 +172,11 @@ row3 = [" ", "X", " ", "O", " "]
 row4 = [" ", "X", "O", "X", " "]
 row5 = [" ", " ", " ", " ", " "]
 grid = [row1, row2, row3, row4, row5]
+#grid
 
 max_moves = 1000
 def start_match():
-    board = grid# init_board()
+    board = init_board()
     moves_had = 0
     player_turn = "X"
     has_winner = False
@@ -197,6 +197,7 @@ def start_match():
         print_board(board)
         player_turn = next_move_or_match_end(board, player_turn)
         moves_had += 1
+        time.sleep(10)
 
     print("Declared tie")
 

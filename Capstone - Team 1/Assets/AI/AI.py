@@ -97,12 +97,13 @@ def score_placement(board, playing_as, pickup_row, pickup_col, placement_row, pl
     if (is_a_corner(placement_row, placement_col)):
         placement_score = 10
 
+    #win_multiplier = check_for_streaks(future_board, opponent_as)[0]
     if (check_for_streaks(board, opponent_as)[0] > check_for_streaks(future_board, opponent_as)[0]):
-        placement_score += 100
+        placement_score += 40
 
-    if (check_for_streaks(board, playing_as)[0] > check_for_streaks(future_board, playing_as)[0]):
+    if (check_for_streaks(future_board, playing_as)[0] > check_for_streaks(board, playing_as)[0]):
         placement_score += 15
-        if (check_for_streaks(board, opponent_as)[0] < check_for_streaks(future_board, opponent_as)[0]):
+        if (check_for_streaks(future_board, opponent_as)[0] < check_for_streaks(board, opponent_as)[0]):
             placement_score -= 15
 
     if (check_for_streaks(future_board, playing_as)[0] == 5 and check_for_streaks(future_board, opponent_as)[0] != 5):
@@ -146,13 +147,13 @@ def request_ai_move(board, EDGES_OF_THE_BOARD, playing_as):
     possible_moves = get_all_moves(board, EDGES_OF_THE_BOARD, playing_as)
     best_move_set = max(possible_moves.items(), key=lambda item: item[1])[0]
 
-    #for key, value in sorted(possible_moves.items(), key=lambda item: item[1]):
-    #    print(f'{key}: {value}')
-    #print()
+    for key, value in sorted(possible_moves.items(), key=lambda item: item[1]):
+        print(f'{key}: {value}')
+    print()
 
     spot_data = best_move_set.split(" ")
 
-    #print(spot_data)
-    #print()
+    print(spot_data)
+    print()
 
     return spot_data[0], spot_data[1]
