@@ -76,7 +76,7 @@ def score_pickup(spot_contains):
     pickup_score = 0
 
     if (spot_contains == " "):
-       pickup_score += 25
+       pickup_score += 100
        
     return pickup_score
 
@@ -97,10 +97,11 @@ def score_placement(board, playing_as, pickup_row, pickup_col, placement_row, pl
     if (is_a_corner(placement_row, placement_col)):
         placement_score = 10
 
-    #win_multiplier = check_for_streaks(future_board, opponent_as)[0]
+    #Checking to see if the move hurts your opponents max streak
     if (check_for_streaks(board, opponent_as)[0] > check_for_streaks(future_board, opponent_as)[0]):
         placement_score += 40
 
+    #Checking to see if you build a streak without bulding your opps streaks
     if (check_for_streaks(future_board, playing_as)[0] > check_for_streaks(board, playing_as)[0]):
         placement_score += 15
         if (check_for_streaks(future_board, opponent_as)[0] < check_for_streaks(board, opponent_as)[0]):

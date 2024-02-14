@@ -189,15 +189,14 @@ def start_match():
             move_block_from, move_block_to = request_ai_move(board, EDGES_OF_THE_BOARD, player_turn)
             apply_move(board, move_block_from, move_block_to, player_turn)
         else:
-            #move_block_from = pickup_block(board, player_turn)
-            #move_block_to = place_block(board, player_turn, move_block_from)
-            move_block_from, move_block_to = request_ai_move(board, EDGES_OF_THE_BOARD, player_turn)
+            move_block_from = pickup_block(board, player_turn)
+            move_block_to = place_block(board, player_turn, move_block_from)
+            #move_block_from, move_block_to = request_ai_move(board, EDGES_OF_THE_BOARD, player_turn)
             apply_move(board, move_block_from, move_block_to, player_turn)
             
         print_board(board)
         player_turn = next_move_or_match_end(board, player_turn)
         moves_had += 1
-        time.sleep(10)
 
     print("Declared tie")
 
