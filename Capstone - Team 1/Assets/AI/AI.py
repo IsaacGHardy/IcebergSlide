@@ -72,12 +72,16 @@ def check_for_streaks(board, team_looking_at):
     streaks.sort(reverse = True)
     return streaks
 
-def score_pickup(spot_contains):
+def score_pickup(spot_contains, pickup_row, pickup_col):
     pickup_score = 0
 
     if (spot_contains == " "):
        pickup_score += 100
        
+    #If you are trying to take a corner, do it with a piece thats not on a corner, X, O, X, O, O
+    if (is_a_corner(pickup_row, pickup_col)):
+        pickup_score -= 5
+        
     return pickup_score
 
 def generate_future_board(board, player_turn, pickup_row, pickup_col, placement_row, placement_col):
@@ -101,14 +105,20 @@ def score_placement(board, playing_as, pickup_row, pickup_col, placement_row, pl
     if (check_for_streaks(board, opponent_as)[0] > check_for_streaks(future_board, opponent_as)[0]):
         placement_score += 40
 
+    #This needs to be more advanced, a tier system for building opps streaks 10, 100, 1000 danger levels
     #Checking to see if you build a streak without bulding your opps streaks
     if (check_for_streaks(future_board, playing_as)[0] > check_for_streaks(board, playing_as)[0]):
         placement_score += 15
-        if (check_for_streaks(future_board, opponent_as)[0] < check_for_streaks(board, opponent_as)[0]):
-            placement_score -= 15
+        #Lets not give away a 4 in a row for easy opp win
+        if (check_for_streaks(future_board, opponent_as)[0] == 4):
+            placement_score -= 1000
 
+    if (check_for_streaks(future_board, opponent_as)[0] < check_for_streaks(board, opponent_as)[0]):
+        placement_score += 10
+
+    #Win
     if (check_for_streaks(future_board, playing_as)[0] == 5 and check_for_streaks(future_board, opponent_as)[0] != 5):
-        placement_score += 1000
+        placement_score += 10000
 
     return placement_score
 
@@ -132,7 +142,7 @@ def get_all_moves(board, EDGES_OF_THE_BOARD, playing_as):
 
         if (spot_contents == " " or spot_contents == playing_as):
             pickup_score = 0
-            pickup_score += score_pickup(spot_contents)
+            pickup_score += score_pickup(spot_contents, pickup_row, pickup_col)
 
             for spot in get_placements(pickup_row, pickup_col):
                 placement_row, placement_col = str_to_int_spot_data(spot)
