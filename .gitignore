@@ -70,3 +70,6 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+Capstone - Team 1/Library/ArtifactDB
+*.db
+Capstone - Team 1/Library/SourceAssetDB
