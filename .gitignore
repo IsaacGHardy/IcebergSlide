@@ -73,3 +73,8 @@ crashlytics-build.properties
 Capstone - Team 1/Library/ArtifactDB
 *.db
 Capstone - Team 1/Library/SourceAssetDB
+*.json
+*.db
+*.map
+*.state
+*.digestcache
