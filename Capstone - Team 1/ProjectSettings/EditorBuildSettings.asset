@@ -15,6 +15,6 @@ EditorBuildSettings:
     path: Assets/Scenes/Chat.unity
     guid: 9a2bfd65f37b48c4493b9b2f426a0de5
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
+    path: Assets/Scenes/Game Scene.unity
     guid: 7c3815e5f2aa1f544b2647f6a7d27013
   m_configObjects: {}

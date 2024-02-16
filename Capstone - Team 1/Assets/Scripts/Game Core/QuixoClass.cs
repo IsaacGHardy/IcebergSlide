@@ -10,8 +10,6 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Permissions;
 using UnityEngine;
-using Python.Runtime;
-using UnityEditor.Scripting.Python;
 
 public struct Point
 {
@@ -675,31 +673,6 @@ public class QuixoClass : MonoBehaviour
     }
 
 
-    public static void RequestAIMove()
-    {
-        PythonRunner.EnsureInitialized();
-
-        using (Py.GIL()) // Grab the GIL
-        {
-            try
-            {
-                dynamic ai = Py.Import("../../AI/AI.py"); // Import your AI.py module
-
-                // Prepare your parameters
-                string board;
-                object team_playing_as = ...; // Team playing as
-
-                // Call the request_ai_move function from Python
-                var move = ai.request_ai_move(board, team_playing_as);
-
-                // Use the returned move in your Unity project
-                UnityEngine.Debug.Log($"AI Move: {move}");
-            }
-            catch (PythonException e)
-            {
-                Debug.LogException(e);
-            }
-        }
-    }
+    
 
 }

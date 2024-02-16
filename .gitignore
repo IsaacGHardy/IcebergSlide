@@ -78,3 +78,8 @@ Capstone - Team 1/Library/SourceAssetDB
 *.map
 *.state
 *.digestcache
+Capstone - Team 1/Library/ArtifactDB
+*.meta
+*.dll
+*.traceevents
+*.json
