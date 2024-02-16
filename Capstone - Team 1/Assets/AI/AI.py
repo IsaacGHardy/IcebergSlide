@@ -154,6 +154,9 @@ def get_all_moves(board, EDGES_OF_THE_BOARD, playing_as):
 
     return possible_moves
 
+def invoke_python():
+    print("yay")
+
 def request_ai_move(board, EDGES_OF_THE_BOARD, playing_as):
     possible_moves = get_all_moves(board, EDGES_OF_THE_BOARD, playing_as)
     best_move_set = max(possible_moves.items(), key=lambda item: item[1])[0]
