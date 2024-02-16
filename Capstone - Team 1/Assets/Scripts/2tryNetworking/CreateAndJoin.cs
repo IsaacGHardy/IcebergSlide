@@ -36,7 +36,7 @@ public class CreateAndJoin : MonoBehaviourPunCallbacks
     {
         Debug.Log($"You have joined the room '{PhotonNetwork.CurrentRoom.Name}'");
         Debug.Log($"Players in this room: {PhotonNetwork.CurrentRoom.PlayerCount}");
-        PhotonNetwork.LoadLevel("SampleScene");
+        PhotonNetwork.LoadLevel("Chat");
 
     }
 
