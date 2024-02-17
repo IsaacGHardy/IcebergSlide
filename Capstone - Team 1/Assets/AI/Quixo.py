@@ -200,4 +200,4 @@ def start_match():
 
     print("Declared tie")
 
-start_match()
+start_match() 
