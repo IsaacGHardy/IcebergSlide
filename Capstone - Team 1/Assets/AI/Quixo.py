@@ -7,7 +7,6 @@ def init_board():
     board = [[str(" ") for i in range(5)] for j in range(5)]
     return board
 
-#meow
 def init_safe_pickup_spots():
     edges_of_The_board = []
     for i in range(5):
@@ -19,6 +18,9 @@ def init_safe_pickup_spots():
     for i in range(5):
         edges_of_The_board.append("("+str(i)+",4)")
     return edges_of_The_board
+
+#CONST VARS
+EDGES_OF_THE_BOARD = init_safe_pickup_spots()
 
 #Validations
 def request_input(prompt, acceptable_responses):
@@ -163,41 +165,23 @@ def next_move_or_match_end(board, player_turn):
     else:
         return change_turn(player_turn)
 
-
-#CONST VARS
-EDGES_OF_THE_BOARD = init_safe_pickup_spots()
-
-row1 = [" ", " ", " ", " ", " "]
-row2 = [" ", "X", "O", "O", " "]
-row3 = [" ", "X", " ", "O", " "]
-row4 = [" ", "X", "O", "X", " "]
-row5 = [" ", " ", " ", " ", " "]
-grid = [row1, row2, row3, row4, row5]
-
-max_moves = 1000
 def start_match():
-    board = grid# init_board()
-    moves_had = 0
+    board = init_board()
     player_turn = "X"
-    has_winner = False
     
-    player_count = 2
     x_or_o = request_input("Type your team: X or O ", {'X', 'O'})
 
-    while (player_turn != None and max_moves > moves_had):
+    while (player_turn != None):
         if (player_turn != x_or_o):
-            move_block_from, move_block_to = request_ai_move(board, EDGES_OF_THE_BOARD, player_turn)
+            move_block_from, move_block_to = request_ai_move(board, player_turn)
             apply_move(board, move_block_from, move_block_to, player_turn)
         else:
-            #move_block_from = pickup_block(board, player_turn)
-            #move_block_to = place_block(board, player_turn, move_block_from)
-            move_block_from, move_block_to = request_ai_move(board, EDGES_OF_THE_BOARD, player_turn)
+            move_block_from = pickup_block(board, player_turn)
+            move_block_to = place_block(board, player_turn, move_block_from)
+            #move_block_from, move_block_to = request_ai_move(board, player_turn)
             apply_move(board, move_block_from, move_block_to, player_turn)
             
         print_board(board)
         player_turn = next_move_or_match_end(board, player_turn)
-        moves_had += 1
-
-    print("Declared tie")
 
 start_match() 
