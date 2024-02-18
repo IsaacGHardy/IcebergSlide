@@ -23,10 +23,14 @@ public class Chat : MonoBehaviour
 
     [PunRPC]
     public void GetMessage(string ReceiveMessage)
+
     {
-       GameObject M = Instantiate(Message, Vector3.zero, Quaternion.identity, Content.transform);
+
+        GameObject M = Instantiate(Message, GameObject.Find("Content").transform.position, Quaternion.identity, Content.transform);
         M.GetComponent<Message>().MyMessage.text = ReceiveMessage;
-      
+        Debug.Log("Position of Content: " + Content.transform.localPosition);
+        Debug.Log("Position of instantiated Message: " + M.transform.localPosition);
+
     }
 
 
