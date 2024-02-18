@@ -1,4 +1,3 @@
-using System;
 using System.Diagnostics;
 using System.IO;
 
@@ -8,13 +7,16 @@ public class AI : MonoBehaviour
 {
     void Start()
     {
-        string filePath = Path.Combine(Application.dataPath, "AI", "AI.py");
-        string pythonInterpreter = @"C:\Users\99\AppData\Local\Programs\Python\Python310\python.exe";
+        //Editible Vars
+        string pythonInterpreter = @"C:\Users\99\AppData\Local\Programs\Python\Python310\python.exe"; 
+        string charDataToSend = "O                        X"; //25 Chars, either "X" "O" " " and the last char (26th) is the team you are generating for
 
+        //Proccesses and paths
+        string filePath = Path.Combine(Application.dataPath, "AI", "PythonMoveRequestReceiver.py");
         ProcessStartInfo startInfo = new ProcessStartInfo
         {
             FileName = pythonInterpreter,
-            Arguments = $"\"{filePath}\"", // Enclose the file path in double quotes
+            Arguments = $"\"{filePath}\"",
             RedirectStandardInput = true,
             RedirectStandardOutput = true,
             UseShellExecute = false,
@@ -30,15 +32,13 @@ public class AI : MonoBehaviour
         StreamReader errorReader = process.StandardError;
 
         // Sending data to Python
-        string dataToSend = "OOOOOOOOOOOOOOOOOOOOOOOOX";
-        sw.WriteLine(dataToSend);
+        sw.WriteLine(charDataToSend);
         sw.Flush();
-        sw.Close(); // Close the StandardInput stream to signal the end of input
+        sw.Close();
 
         string dataFromPython = sr.ReadToEnd();
         string errors = errorReader.ReadToEnd();
 
-        UnityEngine.Debug.Log("Hello, Unity!");
         UnityEngine.Debug.Log("Python Output: " + dataFromPython);
 
         if (!string.IsNullOrEmpty(errors))

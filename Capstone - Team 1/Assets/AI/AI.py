@@ -2,6 +2,22 @@
 
 import copy
 
+#Reused Function, will break out into a module later
+def init_safe_pickup_spots():
+    edges_of_The_board = []
+    for i in range(5):
+        edges_of_The_board.append("(0,"+str(i)+")")
+    for i in range(5):
+        edges_of_The_board.append("("+str(i)+",0)")
+    for i in range(5):
+        edges_of_The_board.append("(4,"+str(i)+")")
+    for i in range(5):
+        edges_of_The_board.append("("+str(i)+",4)")
+    return edges_of_The_board
+
+#CONST VARS
+EDGES_OF_THE_BOARD = init_safe_pickup_spots()
+
 #Refactor function
 def apply_move(board, move_block_from, move_block_to, player_turn):
     if (move_block_to[1] != move_block_from[1]):
@@ -121,7 +137,7 @@ def get_placements(row, col):
 
     return spots
 
-def get_all_moves(board, EDGES_OF_THE_BOARD, playing_as):
+def get_all_moves(board, playing_as):
     possible_moves = {}
 
     for x in EDGES_OF_THE_BOARD:
@@ -142,8 +158,8 @@ def get_all_moves(board, EDGES_OF_THE_BOARD, playing_as):
 
     return possible_moves
 
-def request_ai_move(board, EDGES_OF_THE_BOARD, playing_as):
-    possible_moves = get_all_moves(board, EDGES_OF_THE_BOARD, playing_as)
+def request_ai_move(board, playing_as):
+    possible_moves = get_all_moves(board, playing_as)
     best_move_set = max(possible_moves.items(), key=lambda item: item[1])[0]
  
     #for key, value in sorted(possible_moves.items(), key=lambda item: item[1]):
@@ -156,34 +172,3 @@ def request_ai_move(board, EDGES_OF_THE_BOARD, playing_as):
     #print()
 
     return spot_data[0], spot_data[1]
-
-
-
-
-
-
-
-
-#Called from C#, This should run
-import string
-
-board_and_team_playing = "OOOOOOOOOOOOOOOOOOOOOOOOOX" #input()
-team_playing_for = board_and_team_playing[25:26:1]
-string_to_generate_board = board_and_team_playing[0:25:1]
-
-print(team_playing_for)
-print(string_to_generate_board)
-
-def string_to_board(string):
-    grid = [['' for _ in range(5)] for _ in range(5)]
-
-    for i in range(5):
-        for j in range(5):
-            grid[i][j] = string[i * 5 + j]
-
-    return grid
-
-generated_board = string_to_board(string_to_generate_board)
-
-request_ai_move(generated_board, team_playing_for)
-#print("Python Script is Running!")
