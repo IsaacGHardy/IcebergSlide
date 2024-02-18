@@ -12,7 +12,7 @@ public class mainmenu : MonoBehaviour
 
     public void MultiPlayGame()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 2);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1); //changed
     }
 
     public void WalkThroughGame()
