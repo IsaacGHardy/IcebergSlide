@@ -145,7 +145,7 @@ def get_all_moves(board, EDGES_OF_THE_BOARD, playing_as):
 def request_ai_move(board, EDGES_OF_THE_BOARD, playing_as):
     possible_moves = get_all_moves(board, EDGES_OF_THE_BOARD, playing_as)
     best_move_set = max(possible_moves.items(), key=lambda item: item[1])[0]
-
+ 
     #for key, value in sorted(possible_moves.items(), key=lambda item: item[1]):
     #    print(f'{key}: {value}')
     #print()
@@ -156,3 +156,34 @@ def request_ai_move(board, EDGES_OF_THE_BOARD, playing_as):
     #print()
 
     return spot_data[0], spot_data[1]
+
+
+
+
+
+
+
+
+#Called from C#, This should run
+import string
+
+board_and_team_playing = "OOOOOOOOOOOOOOOOOOOOOOOOOX" #input()
+team_playing_for = board_and_team_playing[25:26:1]
+string_to_generate_board = board_and_team_playing[0:25:1]
+
+print(team_playing_for)
+print(string_to_generate_board)
+
+def string_to_board(string):
+    grid = [['' for _ in range(5)] for _ in range(5)]
+
+    for i in range(5):
+        for j in range(5):
+            grid[i][j] = string[i * 5 + j]
+
+    return grid
+
+generated_board = string_to_board(string_to_generate_board)
+
+request_ai_move(generated_board, team_playing_for)
+#print("Python Script is Running!")
