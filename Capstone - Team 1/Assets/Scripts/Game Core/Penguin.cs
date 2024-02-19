@@ -16,8 +16,8 @@ public class Penguin : MonoBehaviour, IPointerClickHandler
     public int row = 0;
     public int col = 0;
     public char face = '_';
-    public Material xmat; // the color of a penguin owned by the x player
-    public Material omat; // the color of a penguin owned by the y player
+    public GameObject xhat; // the hat worn by a penguin owned by the x player
+    public GameObject ohat; // the hat worn by a penguin owned by the y player
     private Point _toPoint;
     public Point toPoint
     {
@@ -34,6 +34,7 @@ public class Penguin : MonoBehaviour, IPointerClickHandler
         get { return _toPos; } 
     }
 
+    public GameObject hat;
     public void resetTarget()
     {
         toPoint = new Point(0, 0); 
@@ -51,6 +52,13 @@ public class Penguin : MonoBehaviour, IPointerClickHandler
                 Game.moveInProgress = true;
                 Game.from = loc();
                 Game.poss = Game.GetPossibleMoves();
+                if (Game.isXTurn && hat == null && xhat != null){
+                    GameObject newHat = Instantiate(xhat, Game.getPos(loc()), Quaternion.identity);
+                    hat = xhat;
+                }
+                else if (!Game.isXTurn && hat == null && ohat != null){
+                    hat = ohat;
+                }
             }
             else
             {
@@ -69,7 +77,7 @@ public class Penguin : MonoBehaviour, IPointerClickHandler
     public void Face(char f)
     {
         if (f == '_') return; // Do nothing if the face character is '_'
-        //penguin.GetComponent<MeshRenderer>().material = f == 'X' ? xmat : omat;
+        
         face = f;
         
     }
@@ -77,6 +85,7 @@ public class Penguin : MonoBehaviour, IPointerClickHandler
     public void snap()
     {
         penguin.transform.position = toPos;
+        
         row = _toPoint.row;
         col = _toPoint.col;
         resetTarget();
