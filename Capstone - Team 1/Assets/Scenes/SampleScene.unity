@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.43748862, g: 0.4853127, b: 0.56558615, a: 1}
+  m_IndirectSpecularColor: {r: 0.43748912, g: 0.48531318, b: 0.5655871, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -16046,8 +16046,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43c34fc2bd291a04b874b490939c5b80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CubePrefab: {fileID: 3584599820630843841, guid: add5ab1cca4ee994d9f396d44d51bc66, type: 3}
+  penguinPrefab: {fileID: 20825676955050050, guid: 35427bf7548e5a240b1e7ab1c463b940, type: 3}
   boardObject: {fileID: 834369295}
+  spd: 5
+  trnspd: 25
   isXTurn: 1
   moveInProgress: 0
   gameOver: 0

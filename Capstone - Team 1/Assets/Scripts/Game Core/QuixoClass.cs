@@ -26,6 +26,7 @@ public struct Point
     {
         return $"({row}, {col})";
     }
+    public static readonly Point zero = new Point(0, 0);
 }
 
 
@@ -34,23 +35,25 @@ public class QuixoClass : MonoBehaviour
     //####################################################################################################################################
     //# Unity Objects ####################################################################################################################
     //####################################################################################################################################
-    public GameObject CubePrefab;
+    public GameObject penguinPrefab;
     public GameObject boardObject;
 
     //####################################################################################################################################
     //# Game Constants ###################################################################################################################
     //####################################################################################################################################
     public const int boardSize = 5;                         // the number of rows & cols in the board
-    public const float cubeSize = 1;                 // size of cubes
-    public const float cubeSep = 0.0f;               // separation between cubes
-    public const float spd = 10f;                    // the speed at which penguins move
+    public const int boardCenter = (boardSize - 1) / 2;     // the centerpoint of the edge of the board
+    public const float penguinSpace = 1;                 // amount of space a penguin takes up
+    public const float penguinSep = 0.0f;               // separation between penguins
+    public float spd = 1f;                    // the speed at which penguins move
+    public float trnspd = 2f;                    // the speed at which penguins turn
     public const float acceptableOffset = 0.00001f;  // how far a penguin can be off from its target at the end of a slide
-    private const float boardHeight = cubeSize / 2;  // the y coordinate of the cubes in unity
+    private const float boardHeight = penguinSpace / 2;  // the y coordinate of the penguins in unity
 
     //####################################################################################################################################
     //# Game Logic Variables #############################################################################################################
     //####################################################################################################################################
-    public QuixoCube[,] gameBoard;
+    public Penguin[,] gameBoard;
     public Point from, to;
     public List<Point> poss;
     public bool isXTurn = true;
@@ -64,22 +67,22 @@ public class QuixoClass : MonoBehaviour
     //####################################################################################################################################
     void Start()
     {
-        gameBoard = new QuixoCube[boardSize, boardSize]; 
+        gameBoard = new Penguin[boardSize, boardSize]; 
         for (int r = 0; r < boardSize; ++r)
         {
             for (int c = 0; c < boardSize; ++c)
             {
                 Vector3 pos = getPos(r, c);
-                GameObject ncube = Instantiate(CubePrefab, pos, Quaternion.identity);
-                QuixoCube ncubeScript = ncube.GetComponent<QuixoCube>();
+                GameObject nPenguin = Instantiate(penguinPrefab, pos, Quaternion.identity);
+                Penguin nPenguinScript = nPenguin.GetComponent<Penguin>();
                 
-                ncubeScript.Game = boardObject.GetComponent<QuixoClass>();
-                ncubeScript.cube = ncube;
+                nPenguinScript.Game = boardObject.GetComponent<QuixoClass>();
+                nPenguinScript.penguin = nPenguin;
 
-                ncubeScript.row = r;
-                ncubeScript.col = c;
+                nPenguinScript.row = r;
+                nPenguinScript.col = c;
                 
-                gameBoard[r, c] = ncubeScript;
+                gameBoard[r, c] = nPenguinScript;
             }
         }
     }
@@ -95,7 +98,7 @@ public class QuixoClass : MonoBehaviour
     {
         return p.row >= 0 && p.row<boardSize && p.col >= 0 && p.col<boardSize;
     }
-    private bool bounds(QuixoCube p)
+    private bool bounds(Penguin p)
     {
         return p.row >= 0 && p.row < boardSize && p.col >= 0 && p.col < boardSize;
     }
@@ -108,18 +111,27 @@ public class QuixoClass : MonoBehaviour
     private Func<int, int, bool> PointTester(int r, int c) { return (row, col) => r == row && c == col; }
     private Func<Point, bool> PointTester(Point p) { return (Point np) => np.row == p.row && np.col == p.col; }
 
+    private int rebound(int i){
+        if (i == -1) return 0;
+        else if (i == boardSize) return boardSize - 1;
+        else return i;
+    }
+    private Point rebound(Point p){
+        return new Point(rebound(p.row), rebound(p.col));
+    }
     // Checks if a given point is on one of the board's corners
-    private bool isCorner(Point p) { return isCorner(p.row, p.col); }
+    private bool isCorner(Point p) {    
+        return isCorner(rebound(p.row), rebound(p.col)); 
+    }
     private bool isCorner(int row, int col)
     {
-        if (row == 0)
-            return col == 0 || col == boardSize - 1;
-        else if (row == boardSize - 1)
-            return col == 0 || col == boardSize - 1;
+        row = rebound(row); // if row is out of bounds, bring it back in-bounds
+        col = rebound(col); // if col is out of bounds, bring it back in-bounds
+        if (row == 0 || row == boardSize - 1) return col == 0 || col == boardSize - 1;
         return false;
     }
 
-    // Checks if a given cube is valid for starting a move:
+    // Checks if a given penguin is valid for starting a move:
     public bool canPickPiece(int row, int col)
     {
         if (gameOver)
@@ -139,7 +151,7 @@ public class QuixoClass : MonoBehaviour
                     }
                     else
                     {
-                        UnityEngine.Debug.Log($"({row},{col}) is owned by the other player, please select a different cube.");
+                        UnityEngine.Debug.Log($"({row},{col}) is owned by the other player, please select a different penguin.");
                         return false;
                     }
 
@@ -152,13 +164,13 @@ public class QuixoClass : MonoBehaviour
                     }
                     else
                     {
-                        UnityEngine.Debug.Log($"({row},{col}) is owned by the other player, please select a different cube.");
+                        UnityEngine.Debug.Log($"({row},{col}) is owned by the other player, please select a different penguin.");
                         return false;
                     }
                 }
             }
         }
-        UnityEngine.Debug.Log($"({row},{col}) is not a valid move, please select a cube on the edge of the board.");
+        UnityEngine.Debug.Log($"({row},{col}) is not a valid move, please select a penguin on the edge of the board.");
         return false;
     }
 
@@ -169,7 +181,7 @@ public class QuixoClass : MonoBehaviour
 
 
     // takes a row or column, and translates it into its unity coordinate value
-    private float real(float l) { return l * (cubeSep + cubeSize); }
+    private float real(float l) { return l * (penguinSep + penguinSpace); }
 
     // Take a point and return the coresponding unity coordinates
     public Vector3 getPos(Point p)
@@ -189,35 +201,35 @@ public class QuixoClass : MonoBehaviour
 
 
     // returns the GameObject associated with a point on the board
-    public GameObject Cube(Point p)
+    public GameObject Penguin(Point p)
     {
-        return gameBoard[p.row, p.col].cube;
+        return gameBoard[p.row, p.col].penguin;
     }
-    public GameObject Cube(int row, int col)
+    public GameObject Penguin(int row, int col)
     {
-        return gameBoard[row, col].cube;
+        return gameBoard[row, col].penguin;
     }
-    public GameObject Cube(QuixoCube p)
+    public GameObject Penguin(Penguin p)
     {
-        return p.cube;
+        return p.penguin;
     }
 
-    // returns the QuixoCube associated with a point on the board, or a GameObject
-    public QuixoCube Data(int row, int col)
+    // returns the Penguin associated with a point on the board, or a GameObject
+    public Penguin Data(int row, int col)
     {
         return gameBoard[row, col];
     }
-    public QuixoCube Data(Point p)
+    public Penguin Data(Point p)
     {
         return gameBoard[p.row, p.col];
     }
-    public QuixoCube Data(GameObject p)
+    public Penguin Data(GameObject p)
     {
-        return p.GetComponent<QuixoCube>();
+        return p.GetComponent<Penguin>();
     }
 
-    // returns a functor that takes a point, and returns a Quixo cube that represents the next cube to slide after the one at the point
-    private Func<Point, QuixoCube> getNextToSlide()
+    // returns a functor that takes a point, and returns a penguin that represents the next penguin to slide after the one at the point
+    private Func<Point, Penguin> getNextToSlide()
     {
         if (from.row == to.row)
         {
@@ -307,7 +319,7 @@ public class QuixoClass : MonoBehaviour
     }
 
     //returns list of all possible moves based off given piece selected to move,
-    //assumes cube has already been checked to make sure it is a valid move
+    //assumes penguin has already been checked to make sure it is a valid move
     public List<Point> GetPossibleMoves()
     {
         List<Point> possible = new List<Point>();
@@ -369,41 +381,41 @@ public class QuixoClass : MonoBehaviour
     //####################################################################################################################################
 
 
-    // Moves a cube into position to start a move animation
-    private Vector3 prepSlide()
+    // Moves a penguin into position to start a move animation
+    private void prepSlide()
     {
         if (from.row == to.row)
         {
             Data(from).row = to.row;
             Data(from).col = to.col == 0 ? -1 : boardSize;
-            return getPos(to.row, to.col == 0 ? -1 : boardSize);
+            //return getPos(to.row, to.col == 0 ? -1 : boardSize);
         }
         else
         {
             Data(from).row = to.row == 0 ? -1 : boardSize;
             Data(from).col = to.col;
-            return getPos(to.row == 0 ? -1 : boardSize, to.col);
+            //return getPos(to.row == 0 ? -1 : boardSize, to.col);
         }
     }
 
-    // Returns a list of all of the cubes that will need to be involved in the current move's animation
-    private List<QuixoCube> getCubesToSlide()
+    // Returns a list of all of the penguins that will need to be involved in the current move's animation
+    private List<Penguin> getPenguinsToSlide()
     {
-        List<QuixoCube> toslide = new List<QuixoCube>();
+        List<Penguin> toslide = new List<Penguin>();
         Point cur = from;
 
         UnityEngine.Debug.Log($"Plan To Slide ({cur.row},{cur.col})");
         UnityEngine.Debug.Log($"TO: ({to.row},{to.col})");
         toslide.Add(Data(cur));
 
-        var getNextCube = getNextToSlide();
-        QuixoCube nextCube = getNextCube(cur);
-        while (nextCube != null && bounds(nextCube))
+        var getNextPenguin = getNextToSlide();
+        Penguin nextPenguin = getNextPenguin(cur);
+        while (nextPenguin != null && bounds(nextPenguin))
         {
-            toslide.Add(nextCube);
-            //UnityEngine.Debug.Log($"Plan To Slide ({nextCube.row},{nextCube.col})");
-            cur = nextCube.loc();
-            nextCube = getNextCube(cur);
+            toslide.Add(nextPenguin);
+            //UnityEngine.Debug.Log($"Plan To Slide ({nextPenguin.row},{nextPenguin.col})");
+            cur = nextPenguin.loc();
+            nextPenguin = getNextPenguin(cur);
         }
         string log = "Plan To Slide: ";
         for (int i = 0; i < toslide.Count; i++)
@@ -415,49 +427,263 @@ public class QuixoClass : MonoBehaviour
         return toslide;
     }
 
-    // Animates the move
-    private IEnumerator doSlide(List<QuixoCube> toSlide)
+    private IEnumerator RotatePenguins(List<Penguin> penguins)
     {
+        Vector3 targetDirection;
+        if (from.row == to.row)
+        {
+            targetDirection = to.col > from.col ? Vector3.back : Vector3.forward; 
+        }
+        else
+        {
+            targetDirection = to.row > from.row ? Vector3.right : Vector3.left;
+        }
 
+        // Ensure targetDirection is calculated based on the movement direction
+        Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
+
+        bool allPenguinsRotated = false;
+        while (!allPenguinsRotated)
+        {
+            allPenguinsRotated = true; // Assume all penguins have finished rotating until checked
+
+            foreach (Penguin penguin in penguins)
+            {
+                // Rotate each penguin towards the target rotation
+                penguin.transform.rotation = Quaternion.RotateTowards(penguin.transform.rotation, targetRotation, trnspd * 30 * Time.deltaTime);
+
+                // If any penguin hasn't reached the target rotation, set flag to false
+                if (Quaternion.Angle(penguin.transform.rotation, targetRotation) > acceptableOffset)
+                {
+                    allPenguinsRotated = false;
+                }
+            }
+
+            // Log rotation values for the first penguin for debugging
+            if (penguins.Count > 0)
+            {
+                Penguin firstPenguin = penguins[0];
+                //UnityEngine.Debug.Log($"Current Rotation: {firstPenguin.transform.rotation.eulerAngles}");
+                UnityEngine.Debug.Log($"Target Rotation: {targetRotation.eulerAngles}");
+            }
+
+            // Wait for the next frame before continuing the loop
+            yield return null;
+        }
+    }
+    private IEnumerator RotatePenguins(List<Penguin> penguins, Quaternion targetRotation)
+    {
+        bool allPenguinsRotated = false;
+        while (!allPenguinsRotated)
+        {
+            allPenguinsRotated = true;
+
+            foreach (Penguin penguin in penguins)
+            {
+                penguin.transform.rotation = Quaternion.RotateTowards(penguin.transform.rotation, targetRotation, trnspd * 30 * Time.deltaTime);
+
+                if (Quaternion.Angle(penguin.transform.rotation, targetRotation) > acceptableOffset)
+                {
+                    allPenguinsRotated = false;
+                }
+            }
+
+            yield return null;
+        }
+    }
+
+
+
+    public IEnumerator RotatePenguin(Point lookAt)
+    {
+        Penguin penguin = Data(from);
+        Vector3 lookAtPosition = getPos(lookAt); // Target position to look at
+        Quaternion targetRotation = Quaternion.LookRotation(lookAtPosition - penguin.transform.position); // Calculate the rotation needed to look at the target
+
+        // Rotate the penguin to face the target position
+        while (Quaternion.Angle(penguin.transform.rotation, targetRotation) > acceptableOffset)
+        {
+            penguin.transform.rotation = Quaternion.RotateTowards(penguin.transform.rotation, targetRotation, trnspd * 30 * Time.deltaTime);
+            yield return null; // Wait until the next frame to continue
+        }
+    }
+
+    private IEnumerator PenguinWalkAround()
+    {
+        
+        Point final; 
+        Point firstTo; 
+        List<Point> path = new List<Point>(); 
+
+        bool AddCornerToPath()
+        {
+            Point last = path.Last();
+
+            if (!isCorner(last)){ // if last is on an edge
+                Point corner1, corner2;
+                int index;
+                if (last.row == -1 || last.row == boardSize) // Last is on a top or bottom edge
+                {
+                    corner1 = new Point(last.row, -1); // Left corner
+                    corner2 = new Point(last.row, boardSize); // Right corner
+                    index = last.col;
+                }
+                else // Last is on a left or right edge
+                {
+                    corner1 = new Point(-1, last.col); // Top corner
+                    corner2 = new Point(boardSize, last.col); // Bottom corner
+                    index = last.row;
+                }
+
+                // Check if final aligns with either of the corners
+                if (final.row == corner1.row || final.col == corner1.col)
+                {
+                    // corner1 one alligns with final
+                    path.Add(corner1);
+                    return false;
+                }
+                else if (final.row == corner2.row || final.col == corner2.col)
+                {
+                    // corner2 alligns with final
+                    path.Add(corner2);
+                    return false;
+                }
+                else{
+                    if (index >= 1 && index <= boardCenter){
+                        // corner1 is closer to last, or neither corner is closer to last
+                        path.Add(corner1);
+                        return true;
+                    }
+                    else {
+                        // corner2 is closer to last
+                        path.Add(corner2);
+                        return true;
+                    }
+                }
+            }
+            else{ // if last is on a corner
+                if (from.row == to.row){
+                    path.Add(new Point(last.row, final.col));
+                }
+                else{
+                    path.Add(new Point(final.row, last.col));
+                }
+                return false;
+            }
+        }
+        // Step 1. calculate to points of walk around based on to and from points
+
+        if (from.row == to.row) // move line is along a row
+        {
+            final = new Point(to.row, to.col == 0 ? -1 : boardSize);
+            if (!isCorner(from)) { 
+                if (from.col == 0 || from.col == boardSize - 1)
+                    firstTo = new Point(from.row, from.col == 0 ? -1 : boardSize); 
+                else
+                    firstTo = new Point(from.row == 0 ? -1 : boardSize, from.col);
+            }
+            else { 
+                firstTo = new Point(from.row == 0 ? -1 : boardSize, from.col);
+            }
+        }
+        else // move line is along a col 
+        {
+            final = new Point(to.row == 0 ? -1 : boardSize, to.col);
+            if (!isCorner(from)) { 
+                if (from.col == 0 || from.col == boardSize - 1)
+                    firstTo = new Point(from.row, from.col == 0 ? -1 : boardSize); 
+                else
+                    firstTo = new Point(from.row == 0 ? -1 : boardSize, from.col);
+            }
+            else { 
+                firstTo = new Point(from.row, from.col == 0 ? -1 : boardSize); 
+            }
+        }
+        path.Add(firstTo);
+        while (AddCornerToPath()) { } // Keep adding corners until no more are needed
+        path.Add(final);
+        
+        Penguin penguin = Data(from);
+        penguin.Play("Walk");
+
+        foreach (Point p in path) 
+        {
+            yield return StartCoroutine(RotatePenguin(p));
+            
+            while (Vector3.Distance(penguin.transform.position, getPos(p)) > acceptableOffset)
+            {
+                penguin.step(spd, getPos(p));
+                yield return null; // Wait until next frame to continue
+            }
+        }
+        
+        penguin.Play("Idle_A");
+    }
+
+    // Animates the move
+    private IEnumerator doSlide(List<Penguin> toSlide)
+    {
+        // Start the walking animation for each penguin
+        foreach (Penguin penguin in toSlide)
+        {
+            penguin.Play("Walk");
+        }
+
+        // Rotate penguins to face the direction they will move
+        yield return StartCoroutine(RotatePenguins(toSlide));
+
+        // Move penguins towards their target positions
         bool moveDone = false;
-
-        foreach (QuixoCube cube in toSlide)
+        foreach (Penguin penguin in toSlide)
         {
             if (from.row == to.row)
             {
                 int c = to.col < from.col ? 1 : -1;
-                cube.toPoint = (new Point(cube.row, cube.col + c));
+                penguin.toPoint = (new Point(penguin.row, penguin.col + c));
             }
             else
             {
                 int r = to.row < from.row ? 1 : -1;
-                cube.toPoint = (new Point(cube.row + r, cube.col));
+                penguin.toPoint = (new Point(penguin.row + r, penguin.col));
             }
         }
         while (!moveDone)
         {
             moveDone = true; 
 
-            foreach (QuixoCube cube in toSlide)
+            foreach (Penguin penguin in toSlide)
             {
 
-                cube.step(spd);
+                penguin.step(spd);
 
-                if (cube.dist() >= acceptableOffset) { moveDone = false; }
+                if (penguin.dist() >= acceptableOffset) { moveDone = false; }
+
+                penguin.Play("Idle_A");
 
             }
 
             yield return null; 
         }
 
+        // Finalize the move
         finalizeMove(toSlide);
 
+        // Rotate penguins back to their original direction after moving
+        Quaternion originalRotation = Quaternion.identity; // Default orientation; adjust if needed
+        yield return StartCoroutine(RotatePenguins(toSlide, originalRotation));
+
+        // Set penguins to idle animation after rotating back
+        foreach (Penguin penguin in toSlide)
+        {
+            penguin.GetComponent<Animator>().Play("Idle_A");
+        }
     }
+
     
     // Ties up any loose ends so that everything is in place for the next move
-    private void finalizeMove(List<QuixoCube> toSlide)
+    private void finalizeMove(List<Penguin> toSlide)
     {
-        QuixoCube[,] tempBoard = new QuixoCube[boardSize, boardSize];
+        Penguin[,] tempBoard = new Penguin[boardSize, boardSize];
         for (int i = 0; i < boardSize; i++)
         {
             for (int j = 0; j < boardSize; j++)
@@ -466,10 +692,10 @@ public class QuixoClass : MonoBehaviour
             }
         }
 
-        foreach (QuixoCube cube in toSlide)
+        foreach (Penguin penguin in toSlide)
         {
-            cube.snap();
-            tempBoard[cube.row, cube.col] = cube;
+            penguin.snap();
+            tempBoard[penguin.row, penguin.col] = penguin;
         }
         gameBoard = tempBoard;
 
@@ -565,17 +791,15 @@ public class QuixoClass : MonoBehaviour
     {
         char blockVal = isXTurn ? 'X' : 'O';
 
-        Cube(from).SetActive(true);
+        Penguin(from).SetActive(true);
 
         Data(from).Face(blockVal);
 
-        List<QuixoCube> cubes = getCubesToSlide();
-        //UnityEngine.Debug.Log($"Cubes to slide: {cubes.Count}");
+        List<Penguin> penguins = getPenguinsToSlide();
+        //UnityEngine.Debug.Log($"Penguins to slide: {penguins.Count}");
 
 
-
-        Cube(from).transform.position = prepSlide();
-        StartCoroutine(doSlide(cubes));
+        StartCoroutine(ExecuteMoveSequence(penguins));
 
 
 
@@ -587,5 +811,17 @@ public class QuixoClass : MonoBehaviour
 
     }
 
+    private IEnumerator ExecuteMoveSequence(List<Penguin> penguins)
+    {
+        // First, execute the penguin walk around sequence
+        yield return StartCoroutine(PenguinWalkAround());
+
+
+        prepSlide();
+
+
+        // Once that's complete, start the slide sequence
+        yield return StartCoroutine(doSlide(penguins));
+    }
 
 }

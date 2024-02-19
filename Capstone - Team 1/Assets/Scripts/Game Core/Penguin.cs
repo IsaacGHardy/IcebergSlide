@@ -9,15 +9,15 @@ using UnityEngine.EventSystems;
 // source for clicking ability: https://www.youtube.com/watch?v=kkkmX3_fvfQ&ab_channel=Andrew
 
 
-public class QuixoCube : MonoBehaviour, IPointerClickHandler
+public class Penguin : MonoBehaviour, IPointerClickHandler
 {
-    public GameObject cube;
+    public GameObject penguin;
     public QuixoClass Game;
     public int row = 0;
     public int col = 0;
     public char face = '_';
-    public Material xmat; // the color of a cube owned by the x player
-    public Material omat; // the color of a cube owned by the y player
+    public Material xmat; // the color of a penguin owned by the x player
+    public Material omat; // the color of a penguin owned by the y player
     private Point _toPoint;
     public Point toPoint
     {
@@ -47,7 +47,7 @@ public class QuixoCube : MonoBehaviour, IPointerClickHandler
             //UnityEngine.Debug.Log($"Selected block ({row},{col})");
             if (!Game.moveInProgress)
             {
-                cube.SetActive(false);
+                //penguin.SetActive(false);
                 Game.moveInProgress = true;
                 Game.from = loc();
                 Game.poss = Game.GetPossibleMoves();
@@ -69,25 +69,41 @@ public class QuixoCube : MonoBehaviour, IPointerClickHandler
     public void Face(char f)
     {
         if (f == '_') return; // Do nothing if the face character is '_'
-        //cube.GetComponent<MeshRenderer>().material = f == 'X' ? xmat : omat;
+        //penguin.GetComponent<MeshRenderer>().material = f == 'X' ? xmat : omat;
         face = f;
         
     }
 
     public void snap()
     {
-        cube.transform.position = toPos;
+        penguin.transform.position = toPos;
         row = _toPoint.row;
         col = _toPoint.col;
         resetTarget();
     }
     public void step(float spd)
     {
-        cube.transform.position = Vector3.MoveTowards(cube.transform.position, toPos, spd * Time.deltaTime);
+        penguin.transform.position = Vector3.MoveTowards(penguin.transform.position, toPos, spd * Time.deltaTime);
+    }
+    public void step(float spd, Point tp)
+    {
+        Vector3 target = Game.getPos(tp);
+        penguin.transform.position = Vector3.MoveTowards(penguin.transform.position, target, spd * Time.deltaTime);
+    }
+    public void step(float spd, Vector3 target)
+    {
+        penguin.transform.position = Vector3.MoveTowards(penguin.transform.position, target, spd * Time.deltaTime);
     }
 
     public float dist()
     {
-        return Vector3.Distance(cube.transform.position, toPos);
+        return Vector3.Distance(penguin.transform.position, toPos);
+    }
+    public void Play(string animation){
+        Animator animator = penguin.GetComponent<Animator>();
+        if(animator.HasState(0, Animator.StringToHash(animation))){
+            animator.Play(animation);
+            
+        }
     }
 }
