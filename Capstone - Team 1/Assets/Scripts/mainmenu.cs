@@ -12,7 +12,7 @@ public class mainmenu : MonoBehaviour
 
     public void MultiPlayGame()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1); //changed
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 2); //changed by CED
     }
 
     public void WalkThroughGame()
