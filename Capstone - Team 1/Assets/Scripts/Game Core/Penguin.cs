@@ -12,6 +12,8 @@ using UnityEngine.EventSystems;
 public class Penguin : MonoBehaviour, IPointerClickHandler
 {
     public GameObject penguin;
+    public GameObject head;
+    public GameObject hair;
     public QuixoClass Game;
     public int row = 0;
     public int col = 0;
@@ -34,7 +36,7 @@ public class Penguin : MonoBehaviour, IPointerClickHandler
         get { return _toPos; } 
     }
 
-    public GameObject hat;
+    public Hat hat;
     public void resetTarget()
     {
         toPoint = new Point(0, 0); 
@@ -64,13 +66,20 @@ public class Penguin : MonoBehaviour, IPointerClickHandler
     }
 
     private void setHat(){
+        GameObject newHat;
         if (Game.isXTurn && hat == null && xhat != null){
-            GameObject newHat = Instantiate(xhat, Game.getPos(loc()), Quaternion.identity);
-            hat = xhat;
+            newHat = Instantiate(xhat, Game.getPos(loc()), Quaternion.identity);
+            hat = newHat.GetComponent<Hat>();
+            hat.Setup(this, head);
         }
         else if (!Game.isXTurn && hat == null && ohat != null){
-            hat = ohat;
+            newHat = Instantiate(ohat, Game.getPos(loc()), Quaternion.identity);
+            hat = newHat.GetComponent<Hat>();
+            hat.Setup(this, head);
         }
+        
+        if  (hat.hideHair) 
+            hair.SetActive(false);
     }
     public Point loc() { return new Point(row, col); }
 

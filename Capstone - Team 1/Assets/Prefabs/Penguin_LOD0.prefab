@@ -93,12 +93,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   penguin: {fileID: 20825676955050050}
+  head: {fileID: 1644941905979550459}
+  hair: {fileID: 8978688515977958422}
   Game: {fileID: 0}
   row: 0
   col: 0
   face: 95
-  xmat: {fileID: 0}
-  omat: {fileID: 0}
+  xhat: {fileID: 7105223288171661914, guid: 5af950b4842f42a49a9faea2ad646ad9, type: 3}
+  ohat: {fileID: 5218222298377500684, guid: db1a7cd4aa32a4e4fac5d7a8de68a2ca, type: 3}
+  hat: {fileID: 0}
 --- !u!1 &1637056311546381998
 GameObject:
   m_ObjectHideFlags: 0
