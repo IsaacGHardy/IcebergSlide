@@ -45,20 +45,12 @@ public class Penguin : MonoBehaviour, IPointerClickHandler
     {
         if (Game.canPickPiece(row, col))
         {
-            //UnityEngine.Debug.Log($"Selected block ({row},{col})");
             if (!Game.moveInProgress)
             {
-                //penguin.SetActive(false);
                 Game.moveInProgress = true;
                 Game.from = loc();
                 Game.poss = Game.GetPossibleMoves();
-                if (Game.isXTurn && hat == null && xhat != null){
-                    GameObject newHat = Instantiate(xhat, Game.getPos(loc()), Quaternion.identity);
-                    hat = xhat;
-                }
-                else if (!Game.isXTurn && hat == null && ohat != null){
-                    hat = ohat;
-                }
+                setHat();
             }
             else
             {
@@ -69,9 +61,17 @@ public class Penguin : MonoBehaviour, IPointerClickHandler
                 }
             }
         }
-        
     }
 
+    private void setHat(){
+        if (Game.isXTurn && hat == null && xhat != null){
+            GameObject newHat = Instantiate(xhat, Game.getPos(loc()), Quaternion.identity);
+            hat = xhat;
+        }
+        else if (!Game.isXTurn && hat == null && ohat != null){
+            hat = ohat;
+        }
+    }
     public Point loc() { return new Point(row, col); }
 
     public void Face(char f)

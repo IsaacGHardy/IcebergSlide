@@ -18,7 +18,7 @@ EditorBuildSettings:
     path: Assets/Scenes/Chat.unity
     guid: c95e71b97232392499283bc77255bdfe
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
+    path: Assets/Scenes/GameScene.unity
     guid: 7c3815e5f2aa1f544b2647f6a7d27013
   - enabled: 1
     path: Assets/Scenes/Help Menu.unity
