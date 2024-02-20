@@ -12,12 +12,12 @@ using UnityEngine.EventSystems;
 public class Penguin : MonoBehaviour, IPointerClickHandler
 {
     public GameObject penguin;
+    public GameObject head;
+    public GameObject hair;
     public QuixoClass Game;
     public int row = 0;
     public int col = 0;
     public char face = '_';
-    public Material xmat; // the color of a penguin owned by the x player
-    public Material omat; // the color of a penguin owned by the y player
     private Point _toPoint;
     public Point toPoint
     {
@@ -34,6 +34,7 @@ public class Penguin : MonoBehaviour, IPointerClickHandler
         get { return _toPos; } 
     }
 
+    public Hat hat;
     public void resetTarget()
     {
         toPoint = new Point(0, 0); 
@@ -44,13 +45,12 @@ public class Penguin : MonoBehaviour, IPointerClickHandler
     {
         if (Game.canPickPiece(row, col))
         {
-            //UnityEngine.Debug.Log($"Selected block ({row},{col})");
             if (!Game.moveInProgress)
             {
-                //penguin.SetActive(false);
                 Game.moveInProgress = true;
                 Game.from = loc();
                 Game.poss = Game.GetPossibleMoves();
+                setHat();
             }
             else
             {
@@ -61,15 +61,30 @@ public class Penguin : MonoBehaviour, IPointerClickHandler
                 }
             }
         }
-        
     }
 
+    public void setHat(){
+        GameObject newHat;
+        if (Game.isXTurn && hat == null && Game.xhat != null){
+            newHat = Instantiate(Game.xhat, Game.getPos(loc()), Quaternion.identity);
+            hat = newHat.GetComponent<Hat>();
+            hat.Setup(this, head);
+        }
+        else if (!Game.isXTurn && hat == null && Game.ohat != null){
+            newHat = Instantiate(Game.ohat, Game.getPos(loc()), Quaternion.identity);
+            hat = newHat.GetComponent<Hat>();
+            hat.Setup(this, head);
+        }
+        
+        if  (hat.hideHair) 
+            hair.SetActive(false);
+    }
     public Point loc() { return new Point(row, col); }
 
     public void Face(char f)
     {
         if (f == '_') return; // Do nothing if the face character is '_'
-        //penguin.GetComponent<MeshRenderer>().material = f == 'X' ? xmat : omat;
+        
         face = f;
         
     }
@@ -77,6 +92,7 @@ public class Penguin : MonoBehaviour, IPointerClickHandler
     public void snap()
     {
         penguin.transform.position = toPos;
+        
         row = _toPoint.row;
         col = _toPoint.col;
         resetTarget();
