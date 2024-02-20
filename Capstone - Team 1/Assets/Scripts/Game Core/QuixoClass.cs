@@ -670,8 +670,6 @@ public class QuixoClass : MonoBehaviour
             yield return null; 
         }
 
-        // Finalize the move
-        finalizeMove(toSlide);
 
         // Rotate penguins back to their original direction after moving
         Quaternion originalRotation = Quaternion.identity; // Default orientation; adjust if needed
@@ -824,7 +822,8 @@ public class QuixoClass : MonoBehaviour
         List<string> endCheck = doWinCheck();
 
         UnityEngine.Debug.Log($"Move complete! ({from.row},{from.col}) >> ({to.row},{to.col})");
-
+        
+        finalizeMove(penguins);
 
         if (AIgame && !autoMove){
             string AImove = ai.makeMove(translateBoard() + blockVal);
@@ -850,28 +849,28 @@ public class QuixoClass : MonoBehaviour
 
     }
     private void readAImove(string move)
-{
-    // Regular expression to match two instances of coordinates in the format (0,0)
-    var regex = new Regex(@"\((\d+),(\d+)\).*\((\d+),(\d+)\)");
-    var match = regex.Match(move);
-
-    if (match.Success)
     {
-        // Extracting row and column values for the first point
-        int row1 = int.Parse(match.Groups[1].Value);
-        int col1 = int.Parse(match.Groups[2].Value);
-        from = new Point(row1, col1);
+        // Regular expression to match two instances of coordinates in the format (0,0)
+        var regex = new Regex(@"\((\d+),(\d+)\).*\((\d+),(\d+)\)");
+        var match = regex.Match(move);
 
-        // Extracting row and column values for the second point
-        int row2 = int.Parse(match.Groups[3].Value);
-        int col2 = int.Parse(match.Groups[4].Value);
-        to = new Point(row2, col2);
+        if (match.Success)
+        {
+            // Extracting row and column values for the first point
+            int row1 = int.Parse(match.Groups[1].Value);
+            int col1 = int.Parse(match.Groups[2].Value);
+            from = new Point(row1, col1);
+
+            // Extracting row and column values for the second point
+            int row2 = int.Parse(match.Groups[3].Value);
+            int col2 = int.Parse(match.Groups[4].Value);
+            to = new Point(row2, col2);
+        }
+        else
+        {
+            UnityEngine.Debug.LogError("The AI output string does not match the expected format.");
+        }
     }
-    else
-    {
-        UnityEngine.Debug.LogError("The AI output string does not match the expected format.");
-    }
-}
 
 
 

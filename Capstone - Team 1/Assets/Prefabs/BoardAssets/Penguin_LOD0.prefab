@@ -92,9 +92,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29ecac20cc95ea548b3059befff2cea0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  penguin: {fileID: 0}
-  head: {fileID: 0}
-  hair: {fileID: 0}
+  penguin: {fileID: 20825676955050050}
+  head: {fileID: 1644941905979550459}
+  hair: {fileID: 8978688515977958422}
   Game: {fileID: 0}
   row: 0
   col: 0
