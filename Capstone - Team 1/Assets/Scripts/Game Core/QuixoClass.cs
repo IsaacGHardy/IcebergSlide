@@ -829,6 +829,7 @@ public class QuixoClass : MonoBehaviour
         if (AIgame && !autoMove){
             string AImove = ai.makeMove(translateBoard() + blockVal);
             readAImove(AImove);
+            Data(from).setHat();
             makeMove(true);
         }
     }
@@ -849,27 +850,29 @@ public class QuixoClass : MonoBehaviour
 
     }
     private void readAImove(string move)
-    {
-        // Regular expression to match the pattern of points in the output string
-        var regex = new Regex(@"\('(\d+),(\d+)'\),\s'\((\d+),(\d+)'\)");
-        var match = regex.Match(move);
-        UnityEngine.Debug.Log(move);
-        if (match.Success)
-        {
-            // Extracting row and column values for the first point
-            int row1 = int.Parse(match.Groups[1].Value);
-            int col1 = int.Parse(match.Groups[2].Value);
-            from = new Point(row1, col1);
+{
+    // Regular expression to match two instances of coordinates in the format (0,0)
+    var regex = new Regex(@"\((\d+),(\d+)\).*\((\d+),(\d+)\)");
+    var match = regex.Match(move);
 
-            // Extracting row and column values for the second point
-            int row2 = int.Parse(match.Groups[3].Value);
-            int col2 = int.Parse(match.Groups[4].Value);
-            to = new Point(row2, col2);
-        }
-        else
-        {
-            UnityEngine.Debug.LogError("The AI output string does not match the expected format.");
-        }
+    if (match.Success)
+    {
+        // Extracting row and column values for the first point
+        int row1 = int.Parse(match.Groups[1].Value);
+        int col1 = int.Parse(match.Groups[2].Value);
+        from = new Point(row1, col1);
+
+        // Extracting row and column values for the second point
+        int row2 = int.Parse(match.Groups[3].Value);
+        int col2 = int.Parse(match.Groups[4].Value);
+        to = new Point(row2, col2);
     }
+    else
+    {
+        UnityEngine.Debug.LogError("The AI output string does not match the expected format.");
+    }
+}
+
+
 
 }

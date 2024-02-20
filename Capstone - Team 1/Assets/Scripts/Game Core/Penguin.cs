@@ -63,7 +63,7 @@ public class Penguin : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    private void setHat(){
+    public void setHat(){
         GameObject newHat;
         if (Game.isXTurn && hat == null && Game.xhat != null){
             newHat = Instantiate(Game.xhat, Game.getPos(loc()), Quaternion.identity);
