@@ -5,11 +5,12 @@ using UnityEngine;
 
 public class AI : MonoBehaviour
 {
-    void Start()
+    public string makeMove(string mov)
     {
         //Editible Vars
-        string pythonInterpreter = @"C:\Users\99\AppData\Local\Programs\Python\Python310\python.exe"; 
-        string charDataToSend = "O                        X"; //25 Chars, either "X" "O" " " and the last char (26th) is the team you are generating for
+        string pythonInterpreter = System.IO.Path.Combine(Application.dataPath, "AI/python.exe");
+
+        string charDataToSend = mov; //25 Chars, either "X" "O" " " and the last char (26th) is the team you are generating for
 
         //Proccesses and paths
         string filePath = Path.Combine(Application.dataPath, "AI", "PythonMoveRequestReceiver.py");
@@ -48,5 +49,7 @@ public class AI : MonoBehaviour
 
         process.WaitForExit();
         process.Close();
+
+        return dataFromPython;
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Text.RegularExpressions;
 using System.CodeDom.Compiler;
 using System.Collections;
 using System.Collections.Generic;
@@ -408,8 +409,8 @@ public class QuixoClass : MonoBehaviour
         List<Penguin> toslide = new List<Penguin>();
         Point cur = from;
 
-        UnityEngine.Debug.Log($"Plan To Slide ({cur.row},{cur.col})");
-        UnityEngine.Debug.Log($"TO: ({to.row},{to.col})");
+        //UnityEngine.Debug.Log($"Plan To Slide ({cur.row},{cur.col})");
+        //UnityEngine.Debug.Log($"TO: ({to.row},{to.col})");
         toslide.Add(Data(cur));
 
         var getNextPenguin = getNextToSlide();
@@ -421,13 +422,13 @@ public class QuixoClass : MonoBehaviour
             cur = nextPenguin.loc();
             nextPenguin = getNextPenguin(cur);
         }
-        string log = "Plan To Slide: ";
-        for (int i = 0; i < toslide.Count; i++)
+        //string log = "Plan To Slide: ";
+        /*for (int i = 0; i < toslide.Count; i++)
         {
             log += $"({toslide[i].row},{toslide[i].col})";
             if (i < toslide.Count - 1) { log += ", "; } // Add a comma unless this is the last element
-        } 
-        UnityEngine.Debug.Log(log);
+        } */
+        //UnityEngine.Debug.Log(log);
         return toslide;
     }
 
@@ -468,7 +469,7 @@ public class QuixoClass : MonoBehaviour
             {
                 Penguin firstPenguin = penguins[0];
                 //UnityEngine.Debug.Log($"Current Rotation: {firstPenguin.transform.rotation.eulerAngles}");
-                UnityEngine.Debug.Log($"Target Rotation: {targetRotation.eulerAngles}");
+                //UnityEngine.Debug.Log($"Target Rotation: {targetRotation.eulerAngles}");
             }
 
             // Wait for the next frame before continuing the loop
@@ -782,7 +783,7 @@ public class QuixoClass : MonoBehaviour
     }
     
     // uses the other primary move functions to carry out a move in its entirety
-    public void makeMove(Point From, Point To)
+    public void makeMove(Point From, Point To, bool AiMove = false)
     {
         from = From; 
         to = To;
@@ -791,8 +792,9 @@ public class QuixoClass : MonoBehaviour
             makeMove();
         }
     }
-    public void makeMove()
+    public void makeMove(bool autoMove = false)
     {
+        UnityEngine.Debug.Log($"Moving: ({from.row},{from.col}) >> ({to.row},{to.col})");
         char blockVal = isXTurn ? 'X' : 'O';
 
         Penguin(from).SetActive(true);
@@ -803,26 +805,10 @@ public class QuixoClass : MonoBehaviour
         //UnityEngine.Debug.Log($"Penguins to slide: {penguins.Count}");
 
 
-        StartCoroutine(ExecuteMoveSequence(penguins));
-
-
-
-        List<string> endCheck = doWinCheck();
-
-
-
-        UnityEngine.Debug.Log($"Move complete! ({from.row},{from.col}) >> ({to.row},{to.col})");
-
-
-        if (AIgame){
-            //string AImove = ai.MakeAIMove(translateBoard() + blockVal);
-            isXTurn = !isXTurn;
-
-        }
-
+        StartCoroutine(ExecuteMoveSequence(penguins, blockVal, autoMove));
     }
 
-    private IEnumerator ExecuteMoveSequence(List<Penguin> penguins)
+    private IEnumerator ExecuteMoveSequence(List<Penguin> penguins, char blockVal, bool autoMove)
     {
         // First, execute the penguin walk around sequence
         yield return StartCoroutine(PenguinWalkAround());
@@ -833,6 +819,18 @@ public class QuixoClass : MonoBehaviour
 
         // Once that's complete, start the slide sequence
         yield return StartCoroutine(doSlide(penguins));
+
+
+        List<string> endCheck = doWinCheck();
+
+        UnityEngine.Debug.Log($"Move complete! ({from.row},{from.col}) >> ({to.row},{to.col})");
+
+
+        if (AIgame && !autoMove){
+            string AImove = ai.makeMove(translateBoard() + blockVal);
+            readAImove(AImove);
+            makeMove(true);
+        }
     }
 
 
@@ -845,8 +843,33 @@ public class QuixoClass : MonoBehaviour
         foreach  (Penguin penguin in gameBoard){
             board += penguin.face;
         }
+        board = board.Replace('_', ' ');
+        UnityEngine.Debug.Log("Translated Board: " + board);
         return board;
+
     }
-    //private void readAImove(string move){
+    private void readAImove(string move)
+    {
+        // Regular expression to match the pattern of points in the output string
+        var regex = new Regex(@"\('(\d+),(\d+)'\),\s'\((\d+),(\d+)'\)");
+        var match = regex.Match(move);
+        UnityEngine.Debug.Log(move);
+        if (match.Success)
+        {
+            // Extracting row and column values for the first point
+            int row1 = int.Parse(match.Groups[1].Value);
+            int col1 = int.Parse(match.Groups[2].Value);
+            from = new Point(row1, col1);
+
+            // Extracting row and column values for the second point
+            int row2 = int.Parse(match.Groups[3].Value);
+            int col2 = int.Parse(match.Groups[4].Value);
+            to = new Point(row2, col2);
+        }
+        else
+        {
+            UnityEngine.Debug.LogError("The AI output string does not match the expected format.");
+        }
+    }
 
 }
