@@ -145,7 +145,7 @@ def score_placement(board, playing_as, pickup_row, pickup_col, placement_row, pl
     
         for key, value in sorted(possible_moves.items(), key=lambda item: item[1]):
             if (value[0] > 990):
-                placement_score += 500
+                #placement_score += 500
                 reasoning += " " + "Setups Win" + " "
 
     return placement_score, reasoning
