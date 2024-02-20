@@ -70,9 +70,22 @@ def valid_placement(board, player_turn, move_from, move_to):
 #Functionality
 def print_board(board):
     print("\nCurrent Board State:")
+
+    print("   0, 1, 2, 3, 4,")
+    print("   _  _  _  _  _ ")
+    row_iterator = 0
     for row in board:
-        print(row)
-    print()
+        print(str(row_iterator) + "| ", end="")
+        row_iterator += 1
+        for item in row:
+            if (item == "X"):
+                print("\u001b[31m" + item, end= "\u001b[0m, ")
+            elif (item == "O"):
+                print("\u001b[35m" + item, end= "\u001b[0m, ")
+            else:
+                print("\u001b[0m" + item, end= ", ")
+        print()
+    print("\u001b[0m")
 
 def change_turn(player_turn):
     if (player_turn == "X"):
@@ -162,7 +175,8 @@ def next_move_or_match_end(board, player_turn):
     wins_list = check_for_win(board, player_turn)
 
     if ("X" in wins_list or "O" in wins_list):
-        print(wins_list[0]+" has won.")
+        print_board(board)
+        print("\n"+wins_list[0]+" has won.")
         return None
     else:
         return change_turn(player_turn)
@@ -192,20 +206,39 @@ def get_player_move(board, player_turn):
 
     return move_block_from, move_block_to
 
+#MATCH CONFIGS
+ai_only_mode = True
+
+row1 = ["X", "O", "O", "X", "X"]
+row2 = ["O", " ", "X", "O", "O"]
+row3 = ["X", " ", " ", " ", "X"]
+row4 = ["O", " ", " ", " ", "O"]
+row5 = ["X", "X", "O", "X", "X"]
+grid = [row1, row2, row3, row4, row5]
+
 def start_match():
-    board = init_board()
+    board = grid #init_board()
     player_turn = "X"
     
-    x_or_o = request_input("Type your team: X or O ", {'X', 'O'})
+    if (ai_only_mode):
+        x_or_o = "X"
+    else:
+        x_or_o = request_input("\u001b[0mType your team: X or O ", {'X', 'O'})
 
     while (player_turn != None):
         move_block_from, move_block_to = None, None
         if (player_turn != x_or_o):
             move_block_from, move_block_to = request_ai_move(board, player_turn)
         else:
-            move_block_from, move_block_to = get_player_move(board, player_turn)
+            if (ai_only_mode):
+                move_block_from, move_block_to = request_ai_move(board, player_turn)
+            else:
+                move_block_from, move_block_to = get_player_move(board, player_turn)
 
         apply_move(board, move_block_from, move_block_to, player_turn)
         player_turn = next_move_or_match_end(board, player_turn)
+        if (ai_only_mode):
+            print_board(board)
+            time.sleep(1)
 
 start_match()

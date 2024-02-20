@@ -88,14 +88,18 @@ def check_for_streaks(board, team_looking_at):
     streaks.sort(reverse = True)
     return streaks
 
-def score_pickup(spot_contains, reasoning):
+def score_pickup(spot_contains, player_turn, pickup_row, pickup_col, reasoning):
     pickup_score = 0
 
     reasoning = "Reasoning:"
 
     if (spot_contains == " "):
-       pickup_score += 25
+       pickup_score += 250
        reasoning += " " + "Unclaimed piece" + " "
+
+    if (is_a_corner(pickup_row, pickup_col) and spot_contains == player_turn):
+        pickup_score -= 1
+        reasoning += " " + "Don't give up own corner" + " "
 
     return pickup_score, reasoning
 
@@ -108,7 +112,9 @@ def generate_future_board(board, player_turn, pickup_row, pickup_col, placement_
 
     return future_board
 
-def score_placement(board, playing_as, pickup_row, pickup_col, placement_row, placement_col, reasoning):
+max_depth_allowed = 2
+
+def score_placement(board, playing_as, pickup_row, pickup_col, placement_row, placement_col, reasoning, recursive_counter):
     placement_score = 0
     opponent_as = get_opponent(playing_as)
     future_board = generate_future_board(board, playing_as, pickup_row, pickup_col, placement_row, placement_col)
@@ -121,13 +127,26 @@ def score_placement(board, playing_as, pickup_row, pickup_col, placement_row, pl
         placement_score += 100
         reasoning += " " + "Hurts Opponents Max Streak" + " "
 
-    if (check_for_streaks(board, playing_as)[0] > check_for_streaks(future_board, playing_as)[0]):
-        placement_score += 15
-        reasoning += " " + "Builds Streak" + " "
+    your_max_streak_inc = check_for_streaks(board, playing_as)[0] < check_for_streaks(future_board, playing_as)[0]
+    opps_max_streak_does_not_inc = check_for_streaks(future_board, opponent_as)[0] < 4
+    if (your_max_streak_inc and opps_max_streak_does_not_inc):
+        placement_score += 150
+        reasoning += " " + "Builds Streak and does not give opp 4 in a row" + " "
 
     if (check_for_streaks(future_board, playing_as)[0] == 5 and check_for_streaks(future_board, opponent_as)[0] != 5):
         placement_score += 1000
         reasoning += " " + "Wins" + " "
+
+    #Future thinking
+    #Check if the given move will have in its dictionary a > 999 score
+    recursive_counter += 1
+    if (recursive_counter != max_depth_allowed):
+        possible_moves = get_all_moves(future_board, playing_as, recursive_counter)
+    
+        for key, value in sorted(possible_moves.items(), key=lambda item: item[1]):
+            if (value[0] > 990):
+                placement_score += 500
+                reasoning += " " + "Setups Win" + " "
 
     return placement_score, reasoning
 
@@ -146,7 +165,7 @@ def get_placements(row, col):
 
     return spots
 
-def get_all_moves(board, playing_as):
+def get_all_moves(board, playing_as, recursive_counter):
     possible_moves = {}
 
     for x in EDGES_OF_THE_BOARD:
@@ -156,13 +175,13 @@ def get_all_moves(board, playing_as):
         if (spot_contents == " " or spot_contents == playing_as):
             pickup_score = 0
             pickup_reasoning = ""
-            pickup_score, pickup_reasoning = score_pickup(spot_contents, pickup_reasoning)
+            pickup_score, pickup_reasoning = score_pickup(spot_contents, playing_as, pickup_row, pickup_col, pickup_reasoning)
 
             for spot in get_placements(pickup_row, pickup_col):
                 placement_row, placement_col = str_to_int_spot_data(spot)
                 placement_score = 0
                 placement_reasoning = ""
-                placement_score, placement_reasoning = score_placement(board, playing_as, pickup_row, pickup_col, placement_row, placement_col, placement_reasoning)
+                placement_score, placement_reasoning = score_placement(board, playing_as, pickup_row, pickup_col, placement_row, placement_col, placement_reasoning, recursive_counter)
 
                 combined_move = x + " " + spot
 
@@ -170,8 +189,12 @@ def get_all_moves(board, playing_as):
 
     return possible_moves
 
+#Make push for middle so it changes to an abnormal game state?
+#Notch score if exposes a new piece? (Doesnt seem neccesary rn)
+#If the past 3 moves from the AI are the same, change it up?
+
 def request_ai_move(board, playing_as):
-    possible_moves = get_all_moves(board, playing_as)
+    possible_moves = get_all_moves(board, playing_as, 0)
     best_move_set = max(possible_moves.items(), key=lambda item: item[1])[0]
  
     for key, value in sorted(possible_moves.items(), key=lambda item: item[1]):
