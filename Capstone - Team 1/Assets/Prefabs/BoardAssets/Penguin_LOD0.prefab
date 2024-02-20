@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3314413387029944385}
   - component: {fileID: 8311661690867684508}
   - component: {fileID: 361646569168218450}
-  - component: {fileID: 7015866547651329948}
+  - component: {fileID: 8858504569171418457}
   m_Layer: 0
   m_Name: Penguin_LOD0
   m_TagString: Untagged
@@ -80,7 +80,7 @@ CapsuleCollider:
   m_Height: 0.6724541
   m_Direction: 1
   m_Center: {x: 0, y: 0.39819992, z: 0.029793113}
---- !u!114 &7015866547651329948
+--- !u!114 &8858504569171418457
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -92,15 +92,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29ecac20cc95ea548b3059befff2cea0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  penguin: {fileID: 20825676955050050}
-  head: {fileID: 1644941905979550459}
-  hair: {fileID: 8978688515977958422}
+  penguin: {fileID: 0}
+  head: {fileID: 0}
+  hair: {fileID: 0}
   Game: {fileID: 0}
   row: 0
   col: 0
   face: 95
-  xhat: {fileID: 7105223288171661914, guid: 5af950b4842f42a49a9faea2ad646ad9, type: 3}
-  ohat: {fileID: 5218222298377500684, guid: db1a7cd4aa32a4e4fac5d7a8de68a2ca, type: 3}
   hat: {fileID: 0}
 --- !u!1 &1637056311546381998
 GameObject:
