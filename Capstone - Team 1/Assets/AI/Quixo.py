@@ -8,8 +8,6 @@ def init_board():
     board = [[str(" ") for i in range(5)] for j in range(5)]
     return board
 
-#
-
 def init_safe_pickup_spots():
     edges_of_The_board = []
     for i in range(5):
@@ -211,15 +209,8 @@ def get_player_move(board, player_turn):
 #MATCH CONFIGS
 ai_only_mode = True
 
-row1 = ["X", "O", "O", "X", "X"]
-row2 = ["O", " ", "X", "O", "O"]
-row3 = ["X", " ", " ", " ", "X"]
-row4 = ["O", " ", " ", " ", "O"]
-row5 = ["X", "X", "O", "X", "X"]
-grid = [row1, row2, row3, row4, row5]
-
 def start_match():
-    board = grid #init_board()
+    board = init_board()
     player_turn = "X"
     
     if (ai_only_mode):
