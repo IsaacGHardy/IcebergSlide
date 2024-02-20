@@ -190,8 +190,6 @@ def get_all_moves(board, playing_as, recursive_counter):
     return possible_moves
 
 #Make push for middle so it changes to an abnormal game state?
-#Notch score if exposes a new piece? (Doesnt seem neccesary rn)
-#If the past 3 moves from the AI are the same, change it up?
 
 def request_ai_move(board, playing_as):
     possible_moves = get_all_moves(board, playing_as, 0)
