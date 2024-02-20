@@ -8,6 +8,8 @@ def init_board():
     board = [[str(" ") for i in range(5)] for j in range(5)]
     return board
 
+#
+
 def init_safe_pickup_spots():
     edges_of_The_board = []
     for i in range(5):
