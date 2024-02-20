@@ -8,9 +8,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Main Menu.unity
     guid: a49dcd69bbb121845880b21a62ca0932
-  - enabled: 0
-    path: Assets/Scenes/SampleScene.unity
-    guid: 7c3815e5f2aa1f544b2647f6a7d27013
   - enabled: 1
     path: Assets/Scenes/Loading.unity
     guid: 66a6395c42b249341b534062cd4215f2
@@ -19,5 +16,8 @@ EditorBuildSettings:
     guid: cc1214d6c9bf47d41ab4238f85f0c0a0
   - enabled: 1
     path: Assets/Scenes/GameScene.unity
+    guid: 7c3815e5f2aa1f544b2647f6a7d27013
+  - enabled: 0
+    path: Assets/Scenes/oldGameScene.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
   m_configObjects: {}

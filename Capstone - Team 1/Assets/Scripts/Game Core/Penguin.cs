@@ -51,6 +51,7 @@ public class Penguin : MonoBehaviour, IPointerClickHandler
                 Game.from = loc();
                 Game.poss = Game.GetPossibleMoves();
                 setHat();
+                face = face == '_' ? Game.isXTurn ? 'X' : 'O' : face;
             }
             else
             {

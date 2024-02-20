@@ -824,9 +824,10 @@ public class QuixoClass : MonoBehaviour
         UnityEngine.Debug.Log($"Move complete! ({from.row},{from.col}) >> ({to.row},{to.col})");
         
         finalizeMove(penguins);
-
+        //isXTurn = !isXTurn;
+        blockVal = isXTurn ? 'X' : 'O';
         if (AIgame && !autoMove){
-            string AImove = ai.makeMove(translateBoard() + blockVal);
+            string AImove = ai.makeMove(translateBoard() + 'O');
             readAImove(AImove);
             Data(from).setHat();
             makeMove(true);
