@@ -1,6 +1,7 @@
 from AI import request_ai_move
 import numpy
 import time
+import copy
 
 #Inits
 def init_board():
@@ -68,6 +69,7 @@ def valid_placement(board, player_turn, move_from, move_to):
 
 #Functionality
 def print_board(board):
+    print("\nCurrent Board State:")
     for row in board:
         print(row)
     print()
@@ -84,15 +86,15 @@ def check_line(array, item_to_check_for):
     return False
 
 def place_block(board, player_moving, move_from):
-    move_to = request_input("Where would you like to place your piece? [EX: (1,1)] ", EDGES_OF_THE_BOARD)
+    move_to = request_input("Where would you like to place your piece? ", EDGES_OF_THE_BOARD)
     while (not valid_placement(board, player_moving, move_from, move_to)):
-        move_to = request_input("Where would you like to place your piece? [EX: (1,1)] ", EDGES_OF_THE_BOARD)
+        move_to = request_input("Where would you like to place your piece? ", EDGES_OF_THE_BOARD)
     return move_to
 
 def pickup_block(board, player_moving):
-    move_from = request_input("Where do you want to pick up a piece from? [EX: (2,1)] ", EDGES_OF_THE_BOARD)
+    move_from = request_input("Where do you want to pick up a piece from? ", EDGES_OF_THE_BOARD)
     while (not valid_pickup(board, player_moving, move_from)):
-        move_from = request_input("Where do you want to pick up a piece from? [EX: (2,1)] ", EDGES_OF_THE_BOARD)
+        move_from = request_input("Where do you want to pick up a piece from? ", EDGES_OF_THE_BOARD)
     return move_from
 
 def apply_move(board, move_block_from, move_block_to, player_turn):
@@ -165,6 +167,31 @@ def next_move_or_match_end(board, player_turn):
     else:
         return change_turn(player_turn)
 
+def check_for_undo(last_board_state, board):
+    undo_response = request_input("Undo? (U or C) ", {"U", "C"})
+    if (undo_response == "U"):
+        board = last_board_state
+        return "U"
+    return "C"
+
+def get_player_move(board, player_turn):
+    move_block_from, move_block_to = None, None
+    confirmed_move = False
+    last_board_state, cloned_original_board = copy.deepcopy(board), copy.deepcopy(board)
+
+    while (confirmed_move != "C"):
+        print_board(cloned_original_board)
+
+        move_block_from = pickup_block(cloned_original_board, player_turn)
+        move_block_to = place_block(cloned_original_board, player_turn, move_block_from)
+        apply_move(cloned_original_board, move_block_from, move_block_to, player_turn)
+        print_board(cloned_original_board)
+
+        confirmed_move = check_for_undo(last_board_state, cloned_original_board)
+        cloned_original_board = last_board_state
+
+    return move_block_from, move_block_to
+
 def start_match():
     board = init_board()
     player_turn = "X"
@@ -172,16 +199,13 @@ def start_match():
     x_or_o = request_input("Type your team: X or O ", {'X', 'O'})
 
     while (player_turn != None):
+        move_block_from, move_block_to = None, None
         if (player_turn != x_or_o):
             move_block_from, move_block_to = request_ai_move(board, player_turn)
-            apply_move(board, move_block_from, move_block_to, player_turn)
         else:
-            move_block_from = pickup_block(board, player_turn)
-            move_block_to = place_block(board, player_turn, move_block_from)
-            #move_block_from, move_block_to = request_ai_move(board, player_turn)
-            apply_move(board, move_block_from, move_block_to, player_turn)
-            
-        print_board(board)
+            move_block_from, move_block_to = get_player_move(board, player_turn)
+
+        apply_move(board, move_block_from, move_block_to, player_turn)
         player_turn = next_move_or_match_end(board, player_turn)
 
-start_match() 
+start_match()

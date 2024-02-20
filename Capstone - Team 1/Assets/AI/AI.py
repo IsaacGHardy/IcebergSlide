@@ -88,13 +88,16 @@ def check_for_streaks(board, team_looking_at):
     streaks.sort(reverse = True)
     return streaks
 
-def score_pickup(spot_contains):
+def score_pickup(spot_contains, reasoning):
     pickup_score = 0
+
+    reasoning = "Reasoning:"
 
     if (spot_contains == " "):
        pickup_score += 25
-       
-    return pickup_score
+       reasoning += " " + "Unclaimed piece" + " "
+
+    return pickup_score, reasoning
 
 def generate_future_board(board, player_turn, pickup_row, pickup_col, placement_row, placement_col):
     future_board = copy.deepcopy(board)
@@ -105,26 +108,28 @@ def generate_future_board(board, player_turn, pickup_row, pickup_col, placement_
 
     return future_board
 
-def score_placement(board, playing_as, pickup_row, pickup_col, placement_row, placement_col):
+def score_placement(board, playing_as, pickup_row, pickup_col, placement_row, placement_col, reasoning):
     placement_score = 0
     opponent_as = get_opponent(playing_as)
     future_board = generate_future_board(board, playing_as, pickup_row, pickup_col, placement_row, placement_col)
 
-    if (is_a_corner(placement_row, placement_col)):
-        placement_score = 10
+    if (is_a_corner(placement_row, placement_col) and board[placement_row][placement_col] != playing_as):
+        placement_score += 10
+        reasoning += " " + "Takes Corner" + " "
 
     if (check_for_streaks(board, opponent_as)[0] > check_for_streaks(future_board, opponent_as)[0]):
         placement_score += 100
+        reasoning += " " + "Hurts Opponents Max Streak" + " "
 
     if (check_for_streaks(board, playing_as)[0] > check_for_streaks(future_board, playing_as)[0]):
         placement_score += 15
-        if (check_for_streaks(board, opponent_as)[0] < check_for_streaks(future_board, opponent_as)[0]):
-            placement_score -= 15
+        reasoning += " " + "Builds Streak" + " "
 
     if (check_for_streaks(future_board, playing_as)[0] == 5 and check_for_streaks(future_board, opponent_as)[0] != 5):
         placement_score += 1000
+        reasoning += " " + "Wins" + " "
 
-    return placement_score
+    return placement_score, reasoning
 
 def get_placements(row, col):
     spots = []
@@ -134,6 +139,10 @@ def get_placements(row, col):
     spots.append("(" + str(0) + "," + str(col) + ")")
     spots.append("(" + str(4) + "," + str(col) + ")")
     spots.remove("(" + str(row) + "," + str(col) + ")")
+    
+    #Corners wll have their own spot twice, so we need an extra delete
+    if is_a_corner(row, col):
+        spots.remove("(" + str(row) + "," + str(col) + ")")
 
     return spots
 
@@ -146,15 +155,18 @@ def get_all_moves(board, playing_as):
 
         if (spot_contents == " " or spot_contents == playing_as):
             pickup_score = 0
-            pickup_score += score_pickup(spot_contents)
+            pickup_reasoning = ""
+            pickup_score, pickup_reasoning = score_pickup(spot_contents, pickup_reasoning)
 
             for spot in get_placements(pickup_row, pickup_col):
                 placement_row, placement_col = str_to_int_spot_data(spot)
                 placement_score = 0
-                placement_score += score_placement(board, playing_as, pickup_row, pickup_col, placement_row, placement_col)
+                placement_reasoning = ""
+                placement_score, placement_reasoning = score_placement(board, playing_as, pickup_row, pickup_col, placement_row, placement_col, placement_reasoning)
 
                 combined_move = x + " " + spot
-                possible_moves[combined_move] = pickup_score + placement_score
+
+                possible_moves[combined_move] = [(pickup_score + placement_score), (pickup_reasoning + placement_reasoning)]
 
     return possible_moves
 
@@ -162,13 +174,13 @@ def request_ai_move(board, playing_as):
     possible_moves = get_all_moves(board, playing_as)
     best_move_set = max(possible_moves.items(), key=lambda item: item[1])[0]
  
-    #for key, value in sorted(possible_moves.items(), key=lambda item: item[1]):
-    #    print(f'{key}: {value}')
-    #print()
+    for key, value in sorted(possible_moves.items(), key=lambda item: item[1]):
+        print(f'{key}: {value}')
+    print()
 
     spot_data = best_move_set.split(" ")
 
-    #print(spot_data)
-    #print()
+    print(spot_data)
+    print()
 
     return spot_data[0], spot_data[1]
