@@ -191,6 +191,8 @@ def get_all_moves(board, playing_as, recursive_counter):
 
 #Make push for middle so it changes to an abnormal game state?
 
+#Add bool for print mode, can never print if want gamecore to work
+#Get rid of parenthsis in code printouts for safety with Game core
 def request_ai_move(board, playing_as):
     possible_moves = get_all_moves(board, playing_as, 0)
     best_move_set = max(possible_moves.items(), key=lambda item: item[1])[0]
