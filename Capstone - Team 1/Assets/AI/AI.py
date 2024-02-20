@@ -195,13 +195,13 @@ def request_ai_move(board, playing_as):
     possible_moves = get_all_moves(board, playing_as, 0)
     best_move_set = max(possible_moves.items(), key=lambda item: item[1])[0]
  
-    for key, value in sorted(possible_moves.items(), key=lambda item: item[1]):
-        print(f'{key}: {value}')
-    print()
+    #for key, value in sorted(possible_moves.items(), key=lambda item: item[1]):
+    #    print(f'{key}: {value}')
+    #print()
 
     spot_data = best_move_set.split(" ")
 
-    print(spot_data)
-    print()
+    #print(spot_data)
+    #print()
 
     return spot_data[0], spot_data[1]
