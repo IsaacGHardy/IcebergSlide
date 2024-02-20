@@ -207,7 +207,7 @@ def get_player_move(board, player_turn):
     return move_block_from, move_block_to
 
 #MATCH CONFIGS
-ai_only_mode = True
+ai_only_mode = False
 
 def start_match():
     board = init_board()
