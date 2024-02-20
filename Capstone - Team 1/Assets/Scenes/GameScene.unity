@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.43748862, g: 0.4853127, b: 0.56558615, a: 1}
+  m_IndirectSpecularColor: {r: 0.43748912, g: 0.48531318, b: 0.5655871, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -15701,11 +15701,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   penguinPrefab: {fileID: 20825676955050050, guid: 35427bf7548e5a240b1e7ab1c463b940, type: 3}
   boardObject: {fileID: 834369295}
+  xhat: {fileID: 1040014940314809808, guid: 2d323132e7d137f49b3ce12cb73cca04, type: 3}
+  ohat: {fileID: 5218222298377500684, guid: db1a7cd4aa32a4e4fac5d7a8de68a2ca, type: 3}
+  ai: {fileID: 1941035188}
   spd: 5
   trnspd: 25
   isXTurn: 1
   moveInProgress: 0
   gameOver: 0
+  AIgame: 1
 --- !u!1 &842786148
 GameObject:
   m_ObjectHideFlags: 0
@@ -35462,8 +35466,9 @@ GameObject:
   - component: {fileID: 1941035187}
   - component: {fileID: 1941035186}
   - component: {fileID: 1941035185}
+  - component: {fileID: 1941035188}
   m_Layer: 0
-  m_Name: Cube (169)
+  m_Name: AI cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -35555,6 +35560,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1941035183}
   m_Mesh: {fileID: 4300002, guid: 8de9d39fc2df34846b685fe977168dbd, type: 3}
+--- !u!114 &1941035188
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1941035183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10eef05378373894ea6b7ecf25deb0ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1946373701
 GameObject:
   m_ObjectHideFlags: 0

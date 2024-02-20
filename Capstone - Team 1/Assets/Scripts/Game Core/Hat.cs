@@ -5,15 +5,12 @@ using UnityEngine;
 public class Hat : MonoBehaviour
 {
     public GameObject hat;
-    private Transform head; // Changed to Transform since we're only interested in the Transform component
+    private Transform head; 
     public Penguin wearer;
-    public Vector3 pos; // Using a Vector3 for cleaner code
-    public Vector3 rot; // Using a Vector3 for cleaner code
+    public Vector3 pos; 
+    public Vector3 rot; 
     public bool hideHair;
 
-    public void Start(){
-
-    }
     public void Setup(Penguin Wearer, GameObject hair)
     {
         wearer = Wearer;
@@ -22,7 +19,7 @@ public class Hat : MonoBehaviour
         if (head != null)
         {
             wear();
-            hat.transform.SetParent(head); // Make the hat a child of the head for automatic relative positioning
+            hat.transform.SetParent(head); 
         }
         else
         {
@@ -32,15 +29,15 @@ public class Hat : MonoBehaviour
 
     void Update()
     {
-        wear();
+        wear(); // Keep for real-time adjustments during development
     }
 
     private void wear()
     {
         if (head != null)
         {
-            hat.transform.localPosition = pos; // Assumes hat is a child of head
-            // Rotation is automatically inherited from the parent, so no need to set it explicitly
+            hat.transform.localPosition = pos; 
+            hat.transform.localRotation = Quaternion.Euler(rot);
         }
     }
 }

@@ -18,8 +18,6 @@ public class Penguin : MonoBehaviour, IPointerClickHandler
     public int row = 0;
     public int col = 0;
     public char face = '_';
-    public GameObject xhat; // the hat worn by a penguin owned by the x player
-    public GameObject ohat; // the hat worn by a penguin owned by the y player
     private Point _toPoint;
     public Point toPoint
     {
@@ -67,13 +65,13 @@ public class Penguin : MonoBehaviour, IPointerClickHandler
 
     private void setHat(){
         GameObject newHat;
-        if (Game.isXTurn && hat == null && xhat != null){
-            newHat = Instantiate(xhat, Game.getPos(loc()), Quaternion.identity);
+        if (Game.isXTurn && hat == null && Game.xhat != null){
+            newHat = Instantiate(Game.xhat, Game.getPos(loc()), Quaternion.identity);
             hat = newHat.GetComponent<Hat>();
             hat.Setup(this, head);
         }
-        else if (!Game.isXTurn && hat == null && ohat != null){
-            newHat = Instantiate(ohat, Game.getPos(loc()), Quaternion.identity);
+        else if (!Game.isXTurn && hat == null && Game.ohat != null){
+            newHat = Instantiate(Game.ohat, Game.getPos(loc()), Quaternion.identity);
             hat = newHat.GetComponent<Hat>();
             hat.Setup(this, head);
         }

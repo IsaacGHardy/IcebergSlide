@@ -123,3 +123,5 @@ MonoBehaviour:
   wearer: {fileID: 0}
   pos: {x: 0, y: 0.007, z: 0}
   rot: {x: -22.938, y: -11.405, z: -2.493}
+  scale: {x: 1, y: 1, z: 1}
+  hideHair: 1

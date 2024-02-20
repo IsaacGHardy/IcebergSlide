@@ -37,6 +37,9 @@ public class QuixoClass : MonoBehaviour
     //####################################################################################################################################
     public GameObject penguinPrefab;
     public GameObject boardObject;
+    public GameObject xhat; // the hat worn by a penguin owned by the x player
+    public GameObject ohat; // the hat worn by a penguin owned by the y player
+    public AI ai;
 
     //####################################################################################################################################
     //# Game Constants ###################################################################################################################
@@ -59,6 +62,7 @@ public class QuixoClass : MonoBehaviour
     public bool isXTurn = true;
     public bool moveInProgress = false;
     public bool gameOver = false;
+    public bool AIgame = true;
 
 
 
@@ -809,6 +813,13 @@ public class QuixoClass : MonoBehaviour
 
         UnityEngine.Debug.Log($"Move complete! ({from.row},{from.col}) >> ({to.row},{to.col})");
 
+
+        if (AIgame){
+            //string AImove = ai.MakeAIMove(translateBoard() + blockVal);
+            isXTurn = !isXTurn;
+
+        }
+
     }
 
     private IEnumerator ExecuteMoveSequence(List<Penguin> penguins)
@@ -823,5 +834,19 @@ public class QuixoClass : MonoBehaviour
         // Once that's complete, start the slide sequence
         yield return StartCoroutine(doSlide(penguins));
     }
+
+
+    //####################################################################################################################################
+    //# AI Interfacing Functions #########################################################################################################
+    //####################################################################################################################################
+
+    private string translateBoard(){
+        string board = "";
+        foreach  (Penguin penguin in gameBoard){
+            board += penguin.face;
+        }
+        return board;
+    }
+    //private void readAImove(string move){
 
 }
