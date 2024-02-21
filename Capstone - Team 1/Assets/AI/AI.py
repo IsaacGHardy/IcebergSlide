@@ -104,11 +104,11 @@ def score_pickup(spot_contains, player_turn, pickup_row, pickup_col, reasoning):
 
     if (spot_contains == " "):
        pickup_score += 250
-       reasoning += " " + "Unclaimed piece" + " "
+       reasoning += " " + "Unclaimed piece" + ", "
 
     if (is_a_corner(pickup_row, pickup_col) and spot_contains == player_turn):
         pickup_score -= 1
-        reasoning += " " + "Don't give up own corner" + " "
+        reasoning += " " + "Don't give up own corner" + ", "
 
     return pickup_score, reasoning
 
@@ -120,6 +120,23 @@ def generate_future_board(board, player_turn, pickup_row, pickup_col, placement_
     apply_move(future_board, move_block_from, move_block_to, player_turn)
 
     return future_board
+
+def get_open_spots(board):
+    total_open_spots = 0
+
+    for x in EDGES_OF_THE_BOARD:
+        pickup_row, pickup_col = str_to_int_spot_data(x)
+        if (board[pickup_row][pickup_col] == " "):
+            total_open_spots += 1
+
+    return total_open_spots
+    
+def simple_check_for_win(board, who_to_check_for):
+    possible_moves = get_all_moves(board, who_to_check_for, 10)
+    best_move_set = max(possible_moves.items(), key=lambda item: item[1])[0]
+    
+    max_score = possible_moves[best_move_set][0]
+    return int(max_score) > 990
 
 def score_placement(board, playing_as, pickup_row, pickup_col, placement_row, placement_col, reasoning, recursive_counter):
     opponent_as = get_opponent(playing_as)
@@ -135,42 +152,57 @@ def score_placement(board, playing_as, pickup_row, pickup_col, placement_row, pl
 
     placement_score = 0
 
+    if (future_board[2][2] == playing_as):
+        placement_score += 50
+        reasoning += " " + "Takes Middle Piece" + ", "
+
     if (is_a_corner(placement_row, placement_col) and board[placement_row][placement_col] != playing_as):
         placement_score += 5
-        reasoning += " " + "Takes Corner" + " "
+        reasoning += " " + "Takes Corner" + ", "
 
     if (opp_current_streaks > opp_future_streaks):
-        placement_score += 100
-        reasoning += " " + "Hurts Opponents Max Streak" + " "
+        placement_score += 25 * opp_current_streaks
+        reasoning += " " + "Hurts Opponents Max Streak" + ", "
 
     if (opp_current_streaks < 4 and is_on_crossbar(placement_row, placement_col)):
-        placement_score += 15
-        reasoning += " " + "Push Middle" + " "
+        placement_score += 95
+        reasoning += " " + "Push Middle" + ", "
 
     your_max_streak_inc = your_current_streaks < your_future_streaks
     opps_max_streak_does_not_get_scary = opp_future_streaks < 4
     if (your_max_streak_inc and opps_max_streak_does_not_get_scary):
         placement_score += 150
-        reasoning += " " + "Builds Streak and does not give opp 4 in a row" + " "
+        reasoning += " " + "Builds Streak and does not give opp 4 in a row" + ", "
 
-    if (recursive_counter == 0):
+    #make sure making a play doesnt give your opp a win on next play
+    if (get_open_spots(future_board) > get_open_spots(board) and get_open_spots(board) == 0):
+        placement_score -= 500
+        reasoning += " " + "Don't give up a free piece" + ", "
+
+    #NEVER EXPOSE AN UKTAKEN PIECE?? Its building a streak instead
+    #if (recursive_counter == 10 and simple_check_for_win(future_board, opponent_as)):
+    #    placement_score -= 10000
+    #    reasoning += " " + "Sets up loss" + ", "
+
+    #10 is the keycode for dont recursive I just want a simple check
+    if (recursive_counter == 0): #or recursive_counter == 10):
         if (your_future_streaks == 5 and opp_future_streaks != 5):
             placement_score += 1000
-            reasoning += " " + "Wins" + " "
+            reasoning += " " + "Wins" + ", "
     elif(recursive_counter == 1):
         if (your_future_streaks == 5 and opp_future_streaks < 4):
             placement_score += 1000
-            reasoning += " " + "Wins" + " "
+            reasoning += " " + "Wins" + ", "
 
     #Future thinking
     recursive_counter += 1
-    if (recursive_counter != AI_MAX_DEPTH):
+    if (recursive_counter <= AI_MAX_DEPTH):
         possible_moves = get_all_moves(future_board, playing_as, recursive_counter)
     
         for key, value in sorted(possible_moves.items(), key=lambda item: item[1]):
             if (value[0] > 990):
                 placement_score += 10
-                reasoning += " " + "Setups Win" + " "
+                reasoning += " " + "Setups Win" + ", "
 
     return placement_score, reasoning
 
@@ -210,16 +242,12 @@ def get_all_moves(board, playing_as, recursive_counter):
                 combined_move = x + " " + spot
                 combined_move = combined_move.replace("(" , "<") #Integration with Unity
                 combined_move = combined_move.replace(")" , ">") #Integration with Unity
+                if len(placement_reasoning) >= 2:
+                    placement_reasoning = placement_reasoning[:-2]
 
                 possible_moves[combined_move] = [(pickup_score + placement_score), (pickup_reasoning + placement_reasoning)]
 
     return possible_moves
-
-#NEVER EXPOSE AN UKTAKEN PIECE?? Its building a streak instead
-#Too many same moves in a row make a change (last 3 or some idk)
-#Reward for pushing a piece into the middle?
-
-#UNITTESTS SO ITS EASY MAYBE?
 
 def request_ai_move(board, playing_as):
     possible_moves = get_all_moves(board, playing_as, 0)
