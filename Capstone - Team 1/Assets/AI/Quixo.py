@@ -1,3 +1,4 @@
+from Settings import *
 from AI import request_ai_move
 import numpy
 import time
@@ -176,7 +177,7 @@ def next_move_or_match_end(board, player_turn):
 
     if ("X" in wins_list or "O" in wins_list):
         print_board(board)
-        print("\n"+wins_list[0]+" has won.")
+        print(wins_list[0]+" has won. \n")
         return None
     else:
         return change_turn(player_turn)
@@ -206,14 +207,11 @@ def get_player_move(board, player_turn):
 
     return move_block_from, move_block_to
 
-#MATCH CONFIGS
-ai_only_mode = False
-
 def start_match():
     board = init_board()
     player_turn = "X"
     
-    if (ai_only_mode):
+    if (BUILD_AI_ONLY_PLAY):
         x_or_o = "X"
     else:
         x_or_o = request_input("\u001b[0mType your team: X or O ", {'X', 'O'})
@@ -223,15 +221,15 @@ def start_match():
         if (player_turn != x_or_o):
             move_block_from, move_block_to = request_ai_move(board, player_turn)
         else:
-            if (ai_only_mode):
+            if (BUILD_AI_ONLY_PLAY):
                 move_block_from, move_block_to = request_ai_move(board, player_turn)
             else:
                 move_block_from, move_block_to = get_player_move(board, player_turn)
 
         apply_move(board, move_block_from, move_block_to, player_turn)
         player_turn = next_move_or_match_end(board, player_turn)
-        if (ai_only_mode):
+        if (BUILD_AI_ONLY_PLAY):
             print_board(board)
-            time.sleep(1)
+            time.sleep(AI_WAIT_SPEED)
 
 start_match()

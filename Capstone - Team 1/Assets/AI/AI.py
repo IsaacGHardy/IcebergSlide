@@ -1,6 +1,7 @@
 #Hi, I'm OX, the AI for Quixo
 
-import copy
+from Settings import *
+import copy, random
 
 #Reused Function, will break out into a module later
 def init_safe_pickup_spots():
@@ -88,6 +89,14 @@ def check_for_streaks(board, team_looking_at):
     streaks.sort(reverse = True)
     return streaks
 
+def is_on_crossbar(row, col):
+    #I bet other AIs build off the top or left early
+    if ((row == 0 and col == 2) or (row == 2 and col == 0)):
+        return False
+    if (row % 2 == 0 and col % 2 == 0 and not is_a_corner(row, col)):
+        return True
+    return False
+
 def score_pickup(spot_contains, player_turn, pickup_row, pickup_col, reasoning):
     pickup_score = 0
 
@@ -112,40 +121,55 @@ def generate_future_board(board, player_turn, pickup_row, pickup_col, placement_
 
     return future_board
 
-max_depth_allowed = 2
-
 def score_placement(board, playing_as, pickup_row, pickup_col, placement_row, placement_col, reasoning, recursive_counter):
-    placement_score = 0
     opponent_as = get_opponent(playing_as)
+
+    #Board States
     future_board = generate_future_board(board, playing_as, pickup_row, pickup_col, placement_row, placement_col)
+    
+    #Streak Status
+    your_current_streaks = check_for_streaks(board, playing_as)[0]
+    your_future_streaks = check_for_streaks(future_board, playing_as)[0]
+    opp_current_streaks = check_for_streaks(board, opponent_as)[0]
+    opp_future_streaks = check_for_streaks(future_board, opponent_as)[0]
+
+    placement_score = 0
 
     if (is_a_corner(placement_row, placement_col) and board[placement_row][placement_col] != playing_as):
-        placement_score += 10
+        placement_score += 5
         reasoning += " " + "Takes Corner" + " "
 
-    if (check_for_streaks(board, opponent_as)[0] > check_for_streaks(future_board, opponent_as)[0]):
+    if (opp_current_streaks > opp_future_streaks):
         placement_score += 100
         reasoning += " " + "Hurts Opponents Max Streak" + " "
 
-    your_max_streak_inc = check_for_streaks(board, playing_as)[0] < check_for_streaks(future_board, playing_as)[0]
-    opps_max_streak_does_not_inc = check_for_streaks(future_board, opponent_as)[0] < 4
-    if (your_max_streak_inc and opps_max_streak_does_not_inc):
+    if (opp_current_streaks < 4 and is_on_crossbar(placement_row, placement_col)):
+        placement_score += 15
+        reasoning += " " + "Push Middle" + " "
+
+    your_max_streak_inc = your_current_streaks < your_future_streaks
+    opps_max_streak_does_not_get_scary = opp_future_streaks < 4
+    if (your_max_streak_inc and opps_max_streak_does_not_get_scary):
         placement_score += 150
         reasoning += " " + "Builds Streak and does not give opp 4 in a row" + " "
 
-    if (check_for_streaks(future_board, playing_as)[0] == 5 and check_for_streaks(future_board, opponent_as)[0] != 5):
-        placement_score += 1000
-        reasoning += " " + "Wins" + " "
+    if (recursive_counter == 0):
+        if (your_future_streaks == 5 and opp_future_streaks != 5):
+            placement_score += 1000
+            reasoning += " " + "Wins" + " "
+    elif(recursive_counter == 1):
+        if (your_future_streaks == 5 and opp_future_streaks < 4):
+            placement_score += 1000
+            reasoning += " " + "Wins" + " "
 
     #Future thinking
-    #Check if the given move will have in its dictionary a > 999 score
     recursive_counter += 1
-    if (recursive_counter != max_depth_allowed):
+    if (recursive_counter != AI_MAX_DEPTH):
         possible_moves = get_all_moves(future_board, playing_as, recursive_counter)
     
         for key, value in sorted(possible_moves.items(), key=lambda item: item[1]):
             if (value[0] > 990):
-                #placement_score += 500
+                placement_score += 10
                 reasoning += " " + "Setups Win" + " "
 
     return placement_score, reasoning
@@ -184,26 +208,28 @@ def get_all_moves(board, playing_as, recursive_counter):
                 placement_score, placement_reasoning = score_placement(board, playing_as, pickup_row, pickup_col, placement_row, placement_col, placement_reasoning, recursive_counter)
 
                 combined_move = x + " " + spot
+                combined_move = combined_move.replace("(" , "<") #Integration with Unity
+                combined_move = combined_move.replace(")" , ">") #Integration with Unity
 
                 possible_moves[combined_move] = [(pickup_score + placement_score), (pickup_reasoning + placement_reasoning)]
 
     return possible_moves
 
-#Make push for middle so it changes to an abnormal game state?
+#NEVER EXPOSE AN UKTAKEN PIECE?? Its building a streak instead
+#Too many same moves in a row make a change (last 3 or some idk)
+#Reward for pushing a piece into the middle?
 
-#Add bool for print mode, can never print if want gamecore to work
-#Get rid of parenthsis in code printouts for safety with Game core
+#UNITTESTS SO ITS EASY MAYBE?
+
 def request_ai_move(board, playing_as):
     possible_moves = get_all_moves(board, playing_as, 0)
-    best_move_set = max(possible_moves.items(), key=lambda item: item[1])[0]
+    best_moves = [move for move, score in possible_moves.items() if score == max(possible_moves.values())]
+    random_best_move = random.choice(best_moves)
+    spot_data = random_best_move.split(" ")
  
-    #for key, value in sorted(possible_moves.items(), key=lambda item: item[1]):
-    #    print(f'{key}: {value}')
-    #print()
-
-    spot_data = best_move_set.split(" ")
-
-    #print(spot_data)
-    #print()
+    if (BUILD_OUTPUT_DATA_ON):
+        for key, value in sorted(possible_moves.items(), key=lambda item: item[1]):
+            print(f'{key}: {value}')
+        print("\n" + str(spot_data) + "\n")
 
     return spot_data[0], spot_data[1]
