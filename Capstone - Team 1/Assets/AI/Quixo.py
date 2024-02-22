@@ -4,6 +4,10 @@ import numpy
 import time
 import copy
 
+x_wins = 0
+o_wins = 0
+ties = 0
+
 #Inits
 def init_board():
     board = [[str(" ") for i in range(5)] for j in range(5)]
@@ -176,8 +180,16 @@ def next_move_or_match_end(board, player_turn):
     wins_list = check_for_win(board, player_turn)
 
     if ("X" in wins_list or "O" in wins_list):
-        print_board(board)
-        print(wins_list[0]+" has won. \n")
+        #print_board(board)
+        #print(wins_list[0]+" has won. \n")
+        if (BUILD_AI_ONLY_PLAY):
+        #    time.sleep(10000)
+            if (wins_list[0] == "X"):
+                global x_wins
+                x_wins += 1
+            else:
+                global o_wins
+                o_wins += 1
         return None
     else:
         return change_turn(player_turn)
@@ -211,12 +223,15 @@ def start_match():
     board = init_board()
     player_turn = "X"
     
+    #AI
+    turn_counter = 0
+
     if (BUILD_AI_ONLY_PLAY):
         x_or_o = "X"
     else:
         x_or_o = request_input("\u001b[0mType your team: X or O ", {'X', 'O'})
 
-    while (player_turn != None):
+    while (player_turn != None and turn_counter < AI_GAME_MAX_MOVES):
         move_block_from, move_block_to = None, None
         if (player_turn != x_or_o):
             move_block_from, move_block_to = request_ai_move(board, player_turn)
@@ -226,10 +241,24 @@ def start_match():
             else:
                 move_block_from, move_block_to = get_player_move(board, player_turn)
 
+        turn_counter += 1
         apply_move(board, move_block_from, move_block_to, player_turn)
         player_turn = next_move_or_match_end(board, player_turn)
         if (BUILD_AI_ONLY_PLAY):
-            print_board(board)
+            #print_board(board)
             time.sleep(AI_WAIT_SPEED)
+    
+    global ties
+    ties += 1
+    #print("Tie Declared")
+    #print_board(board)
 
-start_match()
+start = time.time()
+for i in range(250):
+    start_match()
+end = time.time()
+
+print("\u001b[31m X Wins: " + str(x_wins), end= "\u001b[0m, \n")
+print("\u001b[35m O Wins: " + str(o_wins), end= "\u001b[0m, \n")
+print("\u001b[0m Ties: " + str(ties), end= " ")
+print("Time Taken: " + str(round(end - start)))

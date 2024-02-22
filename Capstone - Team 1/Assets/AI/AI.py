@@ -157,7 +157,7 @@ def get_pieces_on_board(board):
                 total_pieces += 1
     return total_pieces
 
-#Baiting for 5 fo 5
+#Check for forks
 def score_placement(board, playing_as, pickup_row, pickup_col, placement_row, placement_col, reasoning):
     opponent_as = get_opponent(playing_as)
 
@@ -211,7 +211,7 @@ def score_placement(board, playing_as, pickup_row, pickup_col, placement_row, pl
     your_max_streak_inc = your_current_streaks < your_future_streaks
     opps_max_streak_does_not_get_scary = opp_future_streaks < 4
     if (your_max_streak_inc and opps_max_streak_does_not_get_scary):
-        placement_score += 150
+        placement_score += 100
         reasoning += " " + "Builds Streak and does not give opp 4 in a row" + ", "
 
     if (your_future_streaks == 5 and opp_future_streaks != 5):
