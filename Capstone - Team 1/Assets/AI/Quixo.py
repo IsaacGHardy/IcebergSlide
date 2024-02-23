@@ -255,7 +255,7 @@ def start_match():
 
 if (BUILD_AI_ONLY_PLAY):
     start = time.time()
-    for i in range(10):
+    for i in range(100):
         start_match()
     end = time.time()
 
