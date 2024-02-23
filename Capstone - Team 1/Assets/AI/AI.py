@@ -219,10 +219,10 @@ def score_placement(board, playing_as, pickup_row, pickup_col, placement_row, pl
         reasoning += " " + "Takes Middle Piece" + ", "
 
     if (is_a_corner(placement_row, placement_col) and board[placement_row][placement_col] != playing_as):
-        #if (get_pieces_on_board(board) < 8):
-        #    placement_score -= 5
-        #    reasoning += " " + "Takes Corner too early" + ", "
-        #else:
+        if (get_pieces_on_board(board) < 10):
+            placement_score -= 5
+            reasoning += " " + "Takes Corner too early" + ", "
+        else:
             placement_score += 5
             reasoning += " " + "Takes Corner" + ", "
 
