@@ -1,7 +1,12 @@
+from Settings import *
 from AI import request_ai_move
 import numpy
 import time
 import copy
+
+x_wins = 0
+o_wins = 0
+ties = 0
 
 #Inits
 def init_board():
@@ -176,7 +181,15 @@ def next_move_or_match_end(board, player_turn):
 
     if ("X" in wins_list or "O" in wins_list):
         print_board(board)
-        print("\n"+wins_list[0]+" has won.")
+        print(wins_list[0]+" has won. \n")
+        if (BUILD_AI_ONLY_PLAY):
+            #time.sleep(10000)
+            if (wins_list[0] == "X"):
+                global x_wins
+                x_wins += 1
+            else:
+                global o_wins
+                o_wins += 1
         return None
     else:
         return change_turn(player_turn)
@@ -206,32 +219,50 @@ def get_player_move(board, player_turn):
 
     return move_block_from, move_block_to
 
-#MATCH CONFIGS
-ai_only_mode = False
-
 def start_match():
     board = init_board()
     player_turn = "X"
     
-    if (ai_only_mode):
+    #AI
+    turn_counter = 0
+
+    if (BUILD_AI_ONLY_PLAY):
         x_or_o = "X"
     else:
         x_or_o = request_input("\u001b[0mType your team: X or O ", {'X', 'O'})
 
-    while (player_turn != None):
+    while (player_turn != None and turn_counter < AI_GAME_MAX_MOVES):
         move_block_from, move_block_to = None, None
         if (player_turn != x_or_o):
             move_block_from, move_block_to = request_ai_move(board, player_turn)
         else:
-            if (ai_only_mode):
+            if (BUILD_AI_ONLY_PLAY):
                 move_block_from, move_block_to = request_ai_move(board, player_turn)
             else:
                 move_block_from, move_block_to = get_player_move(board, player_turn)
 
+        turn_counter += 1
         apply_move(board, move_block_from, move_block_to, player_turn)
         player_turn = next_move_or_match_end(board, player_turn)
-        if (ai_only_mode):
-            print_board(board)
-            time.sleep(1)
+        if (BUILD_AI_ONLY_PLAY):
+            #print_board(board)
+            time.sleep(AI_WAIT_SPEED)
+    
+    global ties
+    ties += 1
+    #print("Tie Declared")
+    #print_board(board)
 
-start_match()
+if (BUILD_AI_ONLY_PLAY):
+    start = time.time()
+    for i in range(10):
+        start_match()
+    end = time.time()
+
+    print("\u001b[31m X Wins: " + str(x_wins), end= "\u001b[0m, \n")
+    print("\u001b[35m O Wins: " + str(o_wins), end= "\u001b[0m, \n")
+    print("\u001b[0m Ties: " + str(ties), end= " ")
+    print("Time Taken: " + str(round(end - start)))
+else:
+    start_match()
+
