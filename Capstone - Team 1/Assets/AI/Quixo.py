@@ -180,10 +180,10 @@ def next_move_or_match_end(board, player_turn):
     wins_list = check_for_win(board, player_turn)
 
     if ("X" in wins_list or "O" in wins_list):
-        #print_board(board)
-        #print(wins_list[0]+" has won. \n")
+        print_board(board)
+        print(wins_list[0]+" has won. \n")
         if (BUILD_AI_ONLY_PLAY):
-        #    time.sleep(10000)
+            #time.sleep(10000)
             if (wins_list[0] == "X"):
                 global x_wins
                 x_wins += 1
@@ -253,12 +253,16 @@ def start_match():
     #print("Tie Declared")
     #print_board(board)
 
-start = time.time()
-for i in range(250):
-    start_match()
-end = time.time()
+if (BUILD_AI_ONLY_PLAY):
+    start = time.time()
+    for i in range(10):
+        start_match()
+    end = time.time()
 
-print("\u001b[31m X Wins: " + str(x_wins), end= "\u001b[0m, \n")
-print("\u001b[35m O Wins: " + str(o_wins), end= "\u001b[0m, \n")
-print("\u001b[0m Ties: " + str(ties), end= " ")
-print("Time Taken: " + str(round(end - start)))
+    print("\u001b[31m X Wins: " + str(x_wins), end= "\u001b[0m, \n")
+    print("\u001b[35m O Wins: " + str(o_wins), end= "\u001b[0m, \n")
+    print("\u001b[0m Ties: " + str(ties), end= " ")
+    print("Time Taken: " + str(round(end - start)))
+else:
+    start_match()
+

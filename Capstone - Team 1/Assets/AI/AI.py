@@ -91,7 +91,7 @@ def check_for_streaks(board, team_looking_at):
 
 def is_on_crossbar(row, col):
     #I bet other AIs build off the top or left early
-    if ((row == 0 and col == 2) or (row == 2 and col == 0)):
+    if ((row == 0 and col == 2) or (row == 2 and col == 0) or (row == 4 and col == 2)):
         return False
     if (row % 2 == 0 and col % 2 == 0 and not is_a_corner(row, col)):
         return True
@@ -157,7 +157,24 @@ def get_pieces_on_board(board):
                 total_pieces += 1
     return total_pieces
 
-#Check for forks
+def maybe_create_fork(future_board, opponent_as):
+    top_streak = check_for_streaks(future_board, opponent_as)[0]
+    second_from_top_streak = check_for_streaks(future_board, opponent_as)[1]
+
+    if (top_streak == 4 and second_from_top_streak == 4):
+        return True
+    return False
+        
+def opp_pieces_on_edge(board, opponent_as):
+    total_opp_spots = 0
+
+    for x in EDGES_OF_THE_BOARD:
+        pickup_row, pickup_col = str_to_int_spot_data(x)
+        if (board[pickup_row][pickup_col] == opponent_as):
+            total_opp_spots += 1
+
+    return total_opp_spots
+
 def score_placement(board, playing_as, pickup_row, pickup_col, placement_row, placement_col, reasoning):
     opponent_as = get_opponent(playing_as)
 
@@ -187,22 +204,35 @@ def score_placement(board, playing_as, pickup_row, pickup_col, placement_row, pl
         placement_score -= 10000
         reasoning += " " + "Sets up loss" + ", "
 
+    if (maybe_create_fork(future_board, opponent_as)):
+        placement_score -= 500
+        reasoning += " " + "Creates fork?" + ", "
+
+    #Does not add another opp to the rim
+    if (opp_pieces_on_edge(board, opponent_as) < opp_pieces_on_edge(future_board, opponent_as)):
+        placement_score -= 50
+        reasoning += " " + "Gives opponent too much mobility" + ", "
+
     #POSITIVES
     if (board[2][2] == opponent_as and future_board[2][2] == playing_as):
         placement_score += 50
         reasoning += " " + "Takes Middle Piece" + ", "
 
     if (is_a_corner(placement_row, placement_col) and board[placement_row][placement_col] != playing_as):
-        if (get_pieces_on_board(board) < 12):
-            placement_score -= 5
-            reasoning += " " + "Takes Corner too early" + ", "
-        else:
+        #if (get_pieces_on_board(board) < 8):
+        #    placement_score -= 5
+        #    reasoning += " " + "Takes Corner too early" + ", "
+        #else:
             placement_score += 5
             reasoning += " " + "Takes Corner" + ", "
 
-    if (opp_current_streaks > opp_future_streaks):
-        placement_score += 25 * opp_current_streaks
-        reasoning += " " + "Hurts Opponents Max Streak" + ", "
+    #if (opp_current_streaks > opp_future_streaks):
+    #    placement_score += 25 * opp_current_streaks
+    #    reasoning += " " + "Hurts Opponents Max Streak" + ", "
+
+    if(future_board[2][2] == opponent_as):
+        placement_score -= 50
+        reasoning += " " + "Gives Opponent Middle" + ", "
 
     if (opp_current_streaks < 4 and is_on_crossbar(placement_row, placement_col) and board[2][2] != playing_as):
         placement_score += 95
@@ -215,7 +245,7 @@ def score_placement(board, playing_as, pickup_row, pickup_col, placement_row, pl
         reasoning += " " + "Builds Streak and does not give opp 4 in a row" + ", "
 
     if (your_future_streaks == 5 and opp_future_streaks != 5):
-        placement_score += 1000
+        placement_score += 1000000
         reasoning += " " + "Wins" + ", "
 
     return placement_score, reasoning
