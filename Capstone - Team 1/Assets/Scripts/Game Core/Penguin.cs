@@ -17,7 +17,8 @@ public class Penguin : MonoBehaviour, IPointerClickHandler
     public QuixoClass Game;
     public int row = 0;
     public int col = 0;
-    public char face = '_';
+    public char face;
+    public char oldFace;
     private Point _toPoint;
     public Point toPoint
     {
@@ -40,8 +41,13 @@ public class Penguin : MonoBehaviour, IPointerClickHandler
         toPoint = new Point(0, 0); 
     }
 
-
     public void OnPointerClick(PointerEventData eventData)
+    {
+        run();
+    }
+
+
+    public void run(bool ai = false)
     {
         if (Game.canPickPiece(row, col))
         {
@@ -50,22 +56,42 @@ public class Penguin : MonoBehaviour, IPointerClickHandler
                 Game.moveInProgress = true;
                 Game.from = loc();
                 Game.poss = Game.GetPossibleMoves();
-                setHat();
                 face = face == '_' ? Game.isXTurn ? 'X' : 'O' : face;
+                setHat();
+            }
+            else if (Game.from.eq(loc()))
+            {
+                Game.from = new Point(0, 0);
+                Game.moveInProgress = false;
+                face = oldFace;
+                setHat();
             }
             else
             {
                 Game.to = loc();
                 if (Game.IsValidMove())
                 {
-                    Game.makeMove();
+                    Game.Data(Game.from).oldFace = Game.Data(Game.from).face;
+                    Game.makeMove(ai);
                 }
             }
         }
     }
 
     public void setHat(){
+        // remove hat if penguin has been un-selected before its first time being moved
+        if (face == '_')
+        {
+            if (hat != null)
+            {
+                hat.remove();
+                hat = null;
+            }
+            return;
+        }
         GameObject newHat;
+        // if penguin has a hat already, leave it alone, otherwise, give it a hat that
+        // matches the curent player's turn
         if (Game.isXTurn && hat == null && Game.xhat != null){
             newHat = Instantiate(Game.xhat, Game.getPos(loc()), Quaternion.identity);
             hat = newHat.GetComponent<Hat>();
@@ -76,9 +102,6 @@ public class Penguin : MonoBehaviour, IPointerClickHandler
             hat = newHat.GetComponent<Hat>();
             hat.Setup(this, head);
         }
-        
-        if  (hat.hideHair) 
-            hair.SetActive(false);
     }
     public Point loc() { return new Point(row, col); }
 

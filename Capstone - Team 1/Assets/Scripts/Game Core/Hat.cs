@@ -9,7 +9,6 @@ public class Hat : MonoBehaviour
     public Penguin wearer;
     public Vector3 pos; 
     public Vector3 rot; 
-    public bool hideHair;
 
     public void Setup(Penguin Wearer, GameObject hair)
     {
@@ -31,7 +30,10 @@ public class Hat : MonoBehaviour
     {
         wear(); // Keep for real-time adjustments during development
     }
-
+    public void remove()
+    {
+        Destroy(hat);
+    }
     private void wear()
     {
         if (head != null)
