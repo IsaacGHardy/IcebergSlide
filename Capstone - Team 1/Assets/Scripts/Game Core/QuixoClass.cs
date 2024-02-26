@@ -28,6 +28,10 @@ public struct Point
         return $"({row}, {col})";
     }
     public static readonly Point zero = new Point(0, 0);
+    public bool eq(Point p)
+    {
+        return row == p.row && col == p.col;
+    }
 }
 
 
@@ -825,12 +829,14 @@ public class QuixoClass : MonoBehaviour
         
         finalizeMove(penguins);
         //isXTurn = !isXTurn;
+        string boardStr = translateBoard();
         blockVal = isXTurn ? 'X' : 'O';
         if (AIgame && !autoMove){
-            string AImove = ai.makeMove(translateBoard() + 'O');
+            string AImove = ai.makeMove(boardStr + 'O');
             readAImove(AImove);
-            Data(from).setHat();
-            makeMove(true);
+            Data(from).run(true);
+            Data(to).run(true);
+            moveInProgress = false;
         }
     }
 
@@ -841,8 +847,12 @@ public class QuixoClass : MonoBehaviour
 
     private string translateBoard(){
         string board = "";
-        foreach  (Penguin penguin in gameBoard){
-            board += penguin.face;
+        for (int i = 0; i < boardSize; ++i)
+        {
+            for (int j = 0; j < boardSize; ++j)
+            {
+                board += Data(i, j).face;
+            }
         }
         board = board.Replace('_', ' ');
         UnityEngine.Debug.Log("Translated Board: " + board);
@@ -852,7 +862,7 @@ public class QuixoClass : MonoBehaviour
     private void readAImove(string move)
     {
         // Regular expression to match two instances of coordinates in the format (0,0)
-        var regex = new Regex(@"\((\d+),(\d+)\).*\((\d+),(\d+)\)");
+        var regex = new Regex(@"\<(\d+),(\d+)\>.*\<(\d+),(\d+)\>");
         var match = regex.Match(move);
 
         if (match.Success)
