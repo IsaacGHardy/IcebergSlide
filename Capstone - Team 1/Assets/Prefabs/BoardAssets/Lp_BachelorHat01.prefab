@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6936750599151802007}
   - component: {fileID: 6228952629727605084}
   - component: {fileID: 6810611865102367726}
+  - component: {fileID: -8319323331985680745}
   m_Layer: 0
   m_Name: Lp_BachelorHat01
   m_TagString: Untagged
@@ -106,3 +107,20 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -8675217971768805205, guid: 1d056b4ff34ab854c9fcab6fe28c3ba9, type: 3}
+--- !u!114 &-8319323331985680745
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8200506422827905275}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7832c92feffde6439665250a340289c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hat: {fileID: 8200506422827905275}
+  wearer: {fileID: 0}
+  pos: {x: 0, y: 0, z: 0}
+  rot: {x: 0, y: 0, z: 0}
+  hideHair: 1
