@@ -89,11 +89,9 @@ def check_for_streaks(board, team_looking_at):
     streaks.sort(reverse = True)
     return streaks
 
-def is_on_crossbar(row, col):
-    #I bet other AIs build off the top or left early
-    if ((row == 0 and col == 2) or (row == 2 and col == 0) or (row == 4 and col == 2)):
-        return False
-    if (row % 2 == 0 and col % 2 == 0 and not is_a_corner(row, col)):
+#Previously pushing middle, but that is not optimal because its too hard to finish off
+def is_the_magic_bar(row, col):
+    if (row == 3 and col == 4 or row == 3 and col == 1):
         return True
     return False
 
@@ -103,7 +101,7 @@ def score_pickup(spot_contains, player_turn, pickup_row, pickup_col, reasoning):
     reasoning = "Reasoning:"
 
     if (spot_contains == " "):
-       pickup_score += 250
+       pickup_score += 1500
        reasoning += " " + "Unclaimed piece" + ", "
 
     if (is_a_corner(pickup_row, pickup_col) and spot_contains == player_turn):
@@ -208,6 +206,10 @@ def score_placement(board, playing_as, pickup_row, pickup_col, placement_row, pl
         placement_score -= 500
         reasoning += " " + "Creates fork?" + ", "
 
+    if (your_future_streaks < your_current_streaks):
+        placement_score -= 40
+        reasoning += " " + "Hurts own max streak" + ", "
+
     #Does not add another opp to the rim
     if (opp_pieces_on_edge(board, opponent_as) < opp_pieces_on_edge(future_board, opponent_as)):
         placement_score -= 50
@@ -226,15 +228,15 @@ def score_placement(board, playing_as, pickup_row, pickup_col, placement_row, pl
             placement_score += 5
             reasoning += " " + "Takes Corner" + ", "
 
-    #if (opp_current_streaks > opp_future_streaks):
-    #    placement_score += 25 * opp_current_streaks
-    #    reasoning += " " + "Hurts Opponents Max Streak" + ", "
+    if (opp_current_streaks > opp_future_streaks and opp_current_streaks == 3):
+        placement_score += 100
+        reasoning += " " + "Hurts Opponents Max Streak" + ", "
 
     if(future_board[2][2] == opponent_as):
         placement_score -= 50
         reasoning += " " + "Gives Opponent Middle" + ", "
 
-    if (opp_current_streaks < 4 and is_on_crossbar(placement_row, placement_col) and board[2][2] != playing_as):
+    if (opp_current_streaks < 4 and is_the_magic_bar(placement_row, placement_col) and board[2][2] != playing_as):
         placement_score += 95
         reasoning += " " + "Push Middle" + ", "
 

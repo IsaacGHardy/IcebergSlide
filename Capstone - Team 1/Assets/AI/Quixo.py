@@ -254,8 +254,10 @@ def start_match():
     #print_board(board)
 
 if (BUILD_AI_ONLY_PLAY):
+    print(time.asctime())
+
     start = time.time()
-    for i in range(100):
+    for i in range(250):
         start_match()
     end = time.time()
 
