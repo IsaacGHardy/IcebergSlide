@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3693028144799926168}
   - component: {fileID: 7578688253641178558}
   - component: {fileID: 4959715402469414324}
+  - component: {fileID: 2786118160137264634}
   m_Layer: 0
   m_Name: Lp_FBIHat01
   m_TagString: Untagged
@@ -106,3 +107,20 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 470745536357388965, guid: 1d056b4ff34ab854c9fcab6fe28c3ba9, type: 3}
+--- !u!114 &2786118160137264634
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6957685563779826673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7832c92feffde6439665250a340289c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hat: {fileID: 6957685563779826673}
+  wearer: {fileID: 0}
+  pos: {x: 0, y: 0, z: 0}
+  rot: {x: 0, y: 0, z: 0}
+  hideHair: 0

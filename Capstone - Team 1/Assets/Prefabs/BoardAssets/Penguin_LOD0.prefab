@@ -99,6 +99,7 @@ MonoBehaviour:
   row: 0
   col: 0
   face: 95
+  oldFace: 95
   hat: {fileID: 0}
 --- !u!1 &1637056311546381998
 GameObject:

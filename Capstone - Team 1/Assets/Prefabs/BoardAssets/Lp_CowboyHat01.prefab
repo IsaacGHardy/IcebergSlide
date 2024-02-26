@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1458845772046987072}
   - component: {fileID: 6780646706159098227}
   - component: {fileID: 7155677686836764558}
+  - component: {fileID: 6971690807305613153}
   m_Layer: 0
   m_Name: Lp_CowboyHat01
   m_TagString: Untagged
@@ -106,3 +107,20 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -8773427897199806443, guid: bcbbadea02c3698489ac1f4dd540e9a9, type: 3}
+--- !u!114 &6971690807305613153
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6244871649593745648}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7832c92feffde6439665250a340289c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hat: {fileID: 6244871649593745648}
+  wearer: {fileID: 0}
+  pos: {x: 0, y: 0, z: 0}
+  rot: {x: 0, y: 0, z: 0}
+  hideHair: 1
