@@ -308,6 +308,6 @@ def request_ai_move(board, playing_as):
             print("\n" + "\u001b[31m" + playing_as + " Move Chosen" + "\u001b[0m")
         elif (playing_as == "O"):
             print("\n" + "\u001b[35m" + playing_as + " Move Chosen" + "\u001b[0m")
-        print(str(spot_data))
+    print(str(spot_data))
 
     return spot_data[0], spot_data[1]
