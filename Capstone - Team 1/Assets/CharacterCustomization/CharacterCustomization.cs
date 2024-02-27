@@ -1,7 +1,3 @@
-using Palmmedia.ReportGenerator.Core.Reporting.Builders;
-using Photon.Realtime;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CharacterCustomization : MonoBehaviour
@@ -22,7 +18,7 @@ public class CharacterCustomization : MonoBehaviour
     {
         get
         {
-            Hat hat = getHat(p1);
+            Hat hat = getHat(p2);
             int index = getIndex(hat);
             return hatArray[index];
         }

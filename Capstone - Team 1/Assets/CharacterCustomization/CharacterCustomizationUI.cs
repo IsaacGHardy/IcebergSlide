@@ -11,11 +11,11 @@ public class CharacterCustomizationUI : MonoBehaviour
     [SerializeField] private CharacterCustomization characterCustomization;
     [SerializeField] private Button vsAiButton;
     [SerializeField] private Button vsFriendButton;
-    public static Hat XHat;
-    public static Hat OHat;
-    public static bool isAiGame;
+    public static Hat XHAT;
+    public static Hat OHAT;
+    public static bool IS_AI_GAME;
+    //[SerializeField] private GameData gameData;
     private bool vsAi = true;
-
     public void p1For()
     {
         //boolean indicates if it is the p1 penguin being changed
@@ -56,9 +56,9 @@ public class CharacterCustomizationUI : MonoBehaviour
 
     public void startGame()
     {
-        XHat = characterCustomization.p1Hat;
-        OHat = characterCustomization.p2Hat;
-        isAiGame = vsAi;
+        XHAT = characterCustomization.p1Hat;
+        OHAT = characterCustomization.p2Hat;
+        IS_AI_GAME = vsAi;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 

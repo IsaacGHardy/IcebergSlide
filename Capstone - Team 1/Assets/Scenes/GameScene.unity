@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.43748912, g: 0.48531318, b: 0.5655871, a: 1}
+  m_IndirectSpecularColor: {r: 0.43748894, g: 0.48531288, b: 0.5655866, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -13041,6 +13041,53 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 698662492}
   m_Mesh: {fileID: 4300002, guid: 8de9d39fc2df34846b685fe977168dbd, type: 3}
+--- !u!1 &701289355
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 701289357}
+  - component: {fileID: 701289356}
+  m_Layer: 0
+  m_Name: GameData
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &701289356
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 701289355}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80eff71edaa7aab4d9ce70208f6199a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  XHAT: {fileID: 0}
+  OHAT: {fileID: 0}
+  IS_AI_GAME: 0
+--- !u!4 &701289357
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 701289355}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 4.188174, y: 6.218789, z: -0.31932333}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &703270200
 GameObject:
   m_ObjectHideFlags: 0
@@ -15864,6 +15911,7 @@ MonoBehaviour:
   xhat: {fileID: 1040014940314809808, guid: 2d323132e7d137f49b3ce12cb73cca04, type: 3}
   ohat: {fileID: 5218222298377500684, guid: db1a7cd4aa32a4e4fac5d7a8de68a2ca, type: 3}
   ai: {fileID: 1941035188}
+  gameData: {fileID: 701289356}
   spd: 5
   trnspd: 25
   isXTurn: 1
@@ -39884,3 +39932,4 @@ SceneRoots:
   - {fileID: 452474969}
   - {fileID: 1486469876}
   - {fileID: 1076843643}
+  - {fileID: 701289357}

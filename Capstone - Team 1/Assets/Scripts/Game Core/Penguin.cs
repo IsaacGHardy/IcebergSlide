@@ -110,9 +110,6 @@ public class Penguin : MonoBehaviour, IPointerClickHandler
         newHat = Instantiate(hat, this.transform.position, Quaternion.identity);
         hat = newHat.GetComponent<Hat>();
         hat.Setup(this, head);
-
-        if (hat.hideHair)
-            hair.SetActive(false);
     }
     public Point loc() { return new Point(row, col); }
 

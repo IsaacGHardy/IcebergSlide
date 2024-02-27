@@ -76,6 +76,9 @@ public class QuixoClass : MonoBehaviour
     //####################################################################################################################################
     void Start()
     {
+        xhat = CharacterCustomizationUI.XHAT.gameObject;
+        ohat = CharacterCustomizationUI.OHAT.gameObject;
+        AIgame = CharacterCustomizationUI.IS_AI_GAME;
         gameBoard = new Penguin[boardSize, boardSize]; 
         for (int r = 0; r < boardSize; ++r)
         {

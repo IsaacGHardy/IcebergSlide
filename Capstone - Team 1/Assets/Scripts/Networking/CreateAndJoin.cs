@@ -12,6 +12,9 @@ public class CreateAndJoin : MonoBehaviourPunCallbacks
 {
     public TMP_InputField input_Create;
     public TMP_InputField input_Join;
+    [SerializeField] private Canvas lobby;
+    [SerializeField] private Canvas waiting;
+    private float waitTime = .5f;
 
     public void CreateRoom()
     {
@@ -36,9 +39,10 @@ public class CreateAndJoin : MonoBehaviourPunCallbacks
     {
         Debug.Log($"You have joined the room '{PhotonNetwork.CurrentRoom.Name}'");
         Debug.Log($"Players in this room: {PhotonNetwork.CurrentRoom.PlayerCount}");
-        PhotonNetwork.LoadLevel("GameScene");
+        lobby.gameObject.SetActive( false );
+        waiting.gameObject.SetActive( true );
 
-
+        StartCoroutine(checkPlayerCount());
 
     }
 
@@ -65,6 +69,24 @@ public class CreateAndJoin : MonoBehaviourPunCallbacks
     {
         print("Disconnected from server for reason " + cause.ToString());
     }
+
+
+    bool isRoomFull()
+    {
+        return PhotonNetwork.CurrentRoom.PlayerCount == 2;
+    }
+
+    IEnumerator checkPlayerCount()
+    {
+        yield return new WaitForSeconds(waitTime);
+
+        if(isRoomFull())
+        {
+            PhotonNetwork.LoadLevel("GameScene");
+        }
+    }
+
+
 
 
 }
