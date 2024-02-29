@@ -12,7 +12,7 @@ public class Room : MonoBehaviourPunCallbacks
 
     public void JoinRoom()
     {
-        GameObject.Find("CreateAndJoin").GetComponent<CreateAndJoin>().JoinRoomInList(Name.text);
+        GameObject.Find("PhotonLobby").GetComponent<PhotonLobby>().JoinRoomInList(Name.text);
     }
 
 }

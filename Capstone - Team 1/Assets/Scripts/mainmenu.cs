@@ -12,7 +12,7 @@ public class mainmenu : MonoBehaviour
 
     public void MultiPlayGame()
     {
-        SceneManager.LoadScene("Loading"); //changed by CED
+        SceneManager.LoadScene("Lobby"); 
     }
 
     public void WalkThroughGame()
