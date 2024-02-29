@@ -9042,7 +9042,7 @@ GameObject:
   - component: {fileID: 492747349}
   - component: {fileID: 492747348}
   - component: {fileID: 492747347}
-  - component: {fileID: 492747346}
+  - component: {fileID: 492747351}
   m_Layer: 0
   m_Name: Cube (56) (Board root)
   m_TagString: Untagged
@@ -9065,18 +9065,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1981636203}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &492747346
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 492747344}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a974a80dc64d3634ca9668a2cdab51a3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &492747347
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9094,12 +9082,14 @@ MonoBehaviour:
   xhat: {fileID: 1040014940314809808, guid: 2d323132e7d137f49b3ce12cb73cca04, type: 3}
   ohat: {fileID: 5218222298377500684, guid: db1a7cd4aa32a4e4fac5d7a8de68a2ca, type: 3}
   ai: {fileID: 1999185947}
+  photonView: {fileID: 492747351}
   spd: 5
   trnspd: 25
   isXTurn: 1
   moveInProgress: 0
   gameOver: 0
-  AIgame: 1
+  AIgame: 0
+  isOnline: 1
 --- !u!65 &492747348
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -9171,6 +9161,28 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 492747344}
   m_Mesh: {fileID: 4300002, guid: 8de9d39fc2df34846b685fe977168dbd, type: 3}
+--- !u!114 &492747351
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 492747344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 3
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &497758046
 GameObject:
   m_ObjectHideFlags: 0
@@ -29750,6 +29762,60 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1616622356}
   m_Mesh: {fileID: 4300002, guid: fcebadcacbe87064f8a93193d111e162, type: 3}
+--- !u!1 &1624926190
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1624926192}
+  - component: {fileID: 1624926191}
+  m_Layer: 0
+  m_Name: OnlineGame
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1624926191
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1624926190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 2
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
+--- !u!4 &1624926192
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1624926190}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 598.86395, y: 336.65564, z: 0.49081182}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1657981372
 GameObject:
   m_ObjectHideFlags: 0
@@ -39809,3 +39875,4 @@ SceneRoots:
   - {fileID: 1341004775}
   - {fileID: 418815333}
   - {fileID: 200791797}
+  - {fileID: 1624926192}

@@ -40,6 +40,20 @@ MonoBehaviour:
   - Fire
   - RespawnSpaceship
   - GetMessage
+  - makeMove
+  - onlineP1For
+  - p1For
+  - p1Back
+  - p1Rand
+  - p2Back
+  - p2For
+  - p2Rand
+  - startGame
+  - switchSides
+  - OnPointerEnter
+  - setPointerEnter
+  - setPointerExit
+  - onlineSetRandomHat
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

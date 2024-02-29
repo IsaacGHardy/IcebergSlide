@@ -46,6 +46,7 @@ public class QuixoClass : MonoBehaviour
     public GameObject xhat; // the hat worn by a penguin owned by the x player
     public GameObject ohat; // the hat worn by a penguin owned by the y player
     public AI ai;
+    [SerializeField] PhotonView photonView;
    
 
     //####################################################################################################################################
@@ -70,7 +71,7 @@ public class QuixoClass : MonoBehaviour
     public bool moveInProgress = false;
     public bool gameOver = false;
     public bool AIgame = false;
-    public bool isOnline = false;
+    public bool isOnline = true;
 
 
 
@@ -79,19 +80,20 @@ public class QuixoClass : MonoBehaviour
     //####################################################################################################################################
     void Start()
     {
-        if(isOnline)
-        {
-            int playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
-            string Xteam = (string)PhotonNetwork.LocalPlayer.CustomProperties["Xteam"];
-            string Oteam = (string)PhotonNetwork.LocalPlayer.CustomProperties["Oteam"];
-            UnityEngine.Debug.LogError(Xteam);
-            UnityEngine.Debug.LogError(Oteam);
-        }
 
         //HANDLE FOR ONLINE GAME
-        /*xhat = CharacterCustomizationUI.XHAT.gameObject;
-        ohat = CharacterCustomizationUI.OHAT.gameObject;
-        AIgame = CharacterCustomizationUI.IS_AI_GAME;*/
+        if(isOnline)
+        {
+            xhat = OnlineCharacterCustomizationUI.XHAT.gameObject;
+            ohat = OnlineCharacterCustomizationUI.OHAT.gameObject;
+        }
+        else
+        {
+            xhat = CharacterCustomizationUI.XHAT.gameObject;
+            ohat = CharacterCustomizationUI.OHAT.gameObject;
+            AIgame = CharacterCustomizationUI.IS_AI_GAME;
+        }
+    
         gameBoard = new Penguin[boardSize, boardSize]; 
         for (int r = 0; r < boardSize; ++r)
         {
@@ -799,20 +801,34 @@ public class QuixoClass : MonoBehaviour
 
         return EndConditions;
     }
-    
+
     // uses the other primary move functions to carry out a move in its entirety
-    public void makeMove(Point From, Point To, bool AiMove = false)
+
+    [PunRPC]
+    public void makeMove(int FromRow, int FromCol, int ToRow, int ToCol, bool AiMove = false)
     {
-        from = From; 
-        to = To;
-        if (IsValidMove())
+
+        from = new Point(FromRow, FromCol);
+        to = new Point(ToRow, ToCol);
+        Penguin penguin = gameBoard[from.row, from.col];
+        penguin.onlineSetHat();
+        makeMove();
+    }
+
+    public void passMove(bool autoMove = false)
+    {
+        UnityEngine.Debug.Log($"Moving: ({from.row},{from.col}) >> ({to.row},{to.col}) inside passMove");
+        char blockVal = isXTurn ? 'X' : 'O';
+
+        if (isOnline)
         {
-            makeMove();
+            photonView.RPC("makeMove", RpcTarget.Others, from.row, from.col, to.row, to.col, false);
         }
+        makeMove(autoMove);
     }
     public void makeMove(bool autoMove = false)
     {
-        UnityEngine.Debug.Log($"Moving: ({from.row},{from.col}) >> ({to.row},{to.col})");
+        UnityEngine.Debug.Log($"Moving: ({from.row},{from.col}) >> ({to.row},{to.col}) inside makeMove");
         char blockVal = isXTurn ? 'X' : 'O';
 
         Penguin(from).SetActive(true);

@@ -72,7 +72,7 @@ public class Penguin : MonoBehaviour, IPointerClickHandler
                 if (Game.IsValidMove())
                 {
                     Game.Data(Game.from).oldFace = Game.Data(Game.from).face;
-                    Game.makeMove(ai);
+                    Game.passMove(ai);
                 }
             }
         }
@@ -98,6 +98,25 @@ public class Penguin : MonoBehaviour, IPointerClickHandler
             hat.Setup(this, head);
         }
         else if (!Game.isXTurn && hat == null && Game.ohat != null){
+            newHat = Instantiate(Game.ohat, Game.getPos(loc()), Quaternion.identity);
+            hat = newHat.GetComponent<Hat>();
+            hat.Setup(this, head);
+        }
+    }
+
+    public void onlineSetHat()
+    {
+        GameObject newHat;
+        // if penguin has a hat already, leave it alone, otherwise, give it a hat that
+        // matches the curent player's turn
+        if (Game.isXTurn && hat == null && Game.xhat != null)
+        {
+            newHat = Instantiate(Game.xhat, Game.getPos(loc()), Quaternion.identity);
+            hat = newHat.GetComponent<Hat>();
+            hat.Setup(this, head);
+        }
+        else if (!Game.isXTurn && hat == null && Game.ohat != null)
+        {
             newHat = Instantiate(Game.ohat, Game.getPos(loc()), Quaternion.identity);
             hat = newHat.GetComponent<Hat>();
             hat.Setup(this, head);

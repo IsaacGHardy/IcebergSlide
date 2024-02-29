@@ -15864,12 +15864,14 @@ MonoBehaviour:
   xhat: {fileID: 1040014940314809808, guid: 2d323132e7d137f49b3ce12cb73cca04, type: 3}
   ohat: {fileID: 5218222298377500684, guid: db1a7cd4aa32a4e4fac5d7a8de68a2ca, type: 3}
   ai: {fileID: 1941035188}
+  photonView: {fileID: 0}
   spd: 5
   trnspd: 25
   isXTurn: 1
   moveInProgress: 0
   gameOver: 0
-  AIgame: 1
+  AIgame: 0
+  isOnline: 0
 --- !u!114 &834369301
 MonoBehaviour:
   m_ObjectHideFlags: 0

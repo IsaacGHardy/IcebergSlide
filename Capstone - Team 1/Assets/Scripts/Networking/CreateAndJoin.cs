@@ -108,7 +108,7 @@ public class CreateAndJoin : MonoBehaviourPunCallbacks
 
     void startGame()
     {
-        PhotonNetwork.LoadLevel("OnlineGame");
+        PhotonNetwork.LoadLevel("OnlineTeamSelection");
 
     }
 
