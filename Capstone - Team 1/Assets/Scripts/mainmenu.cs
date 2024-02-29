@@ -7,12 +7,12 @@ public class mainmenu : MonoBehaviour
 {
     public void PlayGame ()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 3);
+        SceneManager.LoadScene("TeamSelection");
     }
 
     public void MultiPlayGame()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1); //changed by CED
+        SceneManager.LoadScene("Loading"); //changed by CED
     }
 
     public void WalkThroughGame()
@@ -28,11 +28,11 @@ public class mainmenu : MonoBehaviour
 
     public void ReturnToMenu()
     {
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene("MainMenu");
     }
 
     public void HelpMenu()
     {
-        SceneManager.LoadScene(3);
+        SceneManager.LoadScene("Help Menu");
     }
 }

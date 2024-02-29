@@ -6,6 +6,8 @@ using Photon.Pun;
 using TMPro;
 using UnityEngine.SceneManagement;
 using Photon.Realtime;
+using ExitGames.Client.Photon;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 
 public class CreateAndJoin : MonoBehaviourPunCallbacks
@@ -78,14 +80,37 @@ public class CreateAndJoin : MonoBehaviourPunCallbacks
 
     IEnumerator checkPlayerCount()
     {
-        yield return new WaitForSeconds(waitTime);
 
-        if(isRoomFull())
+        while(!isRoomFull())
         {
-            PhotonNetwork.LoadLevel("GameScene");
+            yield return new WaitForSeconds(waitTime);
         }
+
+        setPlayerTeams();
+        startGame();
+
     }
 
+    void setPlayerTeams()
+    {
+        if (PhotonNetwork.LocalPlayer.CustomProperties.ContainsKey("Xteam"))
+        {
+           PhotonNetwork.LocalPlayer.CustomProperties["Oteam"] = PhotonNetwork.LocalPlayer.UserId;
+
+        }
+        else
+        {
+            PhotonNetwork.LocalPlayer.CustomProperties["Xteam"] = PhotonNetwork.LocalPlayer.UserId;
+        }
+      
+    }
+
+
+    void startGame()
+    {
+        PhotonNetwork.LoadLevel("OnlineGame");
+
+    }
 
 
 

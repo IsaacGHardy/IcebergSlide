@@ -11,6 +11,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Permissions;
 using UnityEngine;
+using Photon.Pun;
 
 
 public struct Point
@@ -45,6 +46,7 @@ public class QuixoClass : MonoBehaviour
     public GameObject xhat; // the hat worn by a penguin owned by the x player
     public GameObject ohat; // the hat worn by a penguin owned by the y player
     public AI ai;
+   
 
     //####################################################################################################################################
     //# Game Constants ###################################################################################################################
@@ -67,7 +69,8 @@ public class QuixoClass : MonoBehaviour
     public bool isXTurn = true;
     public bool moveInProgress = false;
     public bool gameOver = false;
-    public bool AIgame = true;
+    public bool AIgame = false;
+    public bool isOnline = false;
 
 
 
@@ -76,9 +79,19 @@ public class QuixoClass : MonoBehaviour
     //####################################################################################################################################
     void Start()
     {
-        xhat = CharacterCustomizationUI.XHAT.gameObject;
+        if(isOnline)
+        {
+            int playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
+            string Xteam = (string)PhotonNetwork.LocalPlayer.CustomProperties["Xteam"];
+            string Oteam = (string)PhotonNetwork.LocalPlayer.CustomProperties["Oteam"];
+            UnityEngine.Debug.LogError(Xteam);
+            UnityEngine.Debug.LogError(Oteam);
+        }
+
+        //HANDLE FOR ONLINE GAME
+        /*xhat = CharacterCustomizationUI.XHAT.gameObject;
         ohat = CharacterCustomizationUI.OHAT.gameObject;
-        AIgame = CharacterCustomizationUI.IS_AI_GAME;
+        AIgame = CharacterCustomizationUI.IS_AI_GAME;*/
         gameBoard = new Penguin[boardSize, boardSize]; 
         for (int r = 0; r < boardSize; ++r)
         {
