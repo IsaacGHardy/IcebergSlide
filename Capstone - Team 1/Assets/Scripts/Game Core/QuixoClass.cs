@@ -12,6 +12,7 @@ using System.Security.Cryptography;
 using System.Security.Permissions;
 using UnityEngine;
 using Photon.Pun;
+using Photon.Realtime;
 
 
 public struct Point

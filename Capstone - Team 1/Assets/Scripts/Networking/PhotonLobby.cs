@@ -30,7 +30,9 @@ public class PhotonLobby : MonoBehaviourPunCallbacks
 
     public override void OnConnectedToMaster()
     {
+       
         PhotonNetwork.JoinLobby();
+      
     }
 
     public override void OnJoinedLobby()
@@ -118,6 +120,7 @@ public class PhotonLobby : MonoBehaviourPunCallbacks
 
     void startGame()
     {
+        PhotonNetwork.AutomaticallySyncScene = true;
         PhotonNetwork.LoadLevel("OnlineGame");
 
     }
