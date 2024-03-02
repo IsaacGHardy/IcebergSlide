@@ -86,29 +86,20 @@ public class CreateAndJoin : MonoBehaviourPunCallbacks
             yield return new WaitForSeconds(waitTime);
         }
 
-        setPlayerTeams();
         startGame();
 
     }
 
-    void setPlayerTeams()
-    {
-        if (PhotonNetwork.LocalPlayer.CustomProperties.ContainsKey("Xteam"))
-        {
-           PhotonNetwork.LocalPlayer.CustomProperties["Oteam"] = PhotonNetwork.LocalPlayer.UserId;
-
-        }
-        else
-        {
-            PhotonNetwork.LocalPlayer.CustomProperties["Xteam"] = PhotonNetwork.LocalPlayer.UserId;
-        }
-      
-    }
-
-
     void startGame()
     {
         PhotonNetwork.LoadLevel("OnlineTeamSelection");
+
+    }
+
+    public void backToMenu()
+    {
+        PhotonNetwork.Disconnect();
+        SceneManager.LoadScene("Main Menu");
 
     }
 

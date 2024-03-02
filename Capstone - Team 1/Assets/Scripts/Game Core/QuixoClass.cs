@@ -82,12 +82,12 @@ public class QuixoClass : MonoBehaviour
     {
 
         //HANDLE FOR ONLINE GAME
-        if(isOnline)
+        if(isOnline && OnlineCharacterCustomizationUI.XHAT != null && OnlineCharacterCustomizationUI.OHAT != null)
         {
             xhat = OnlineCharacterCustomizationUI.XHAT.gameObject;
             ohat = OnlineCharacterCustomizationUI.OHAT.gameObject;
         }
-        else
+        else if(CharacterCustomizationUI.XHAT != null && CharacterCustomizationUI.OHAT != null)
         {
             xhat = CharacterCustomizationUI.XHAT.gameObject;
             ohat = CharacterCustomizationUI.OHAT.gameObject;

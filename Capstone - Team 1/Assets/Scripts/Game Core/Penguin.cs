@@ -9,7 +9,7 @@ using UnityEngine.EventSystems;
 // source for clicking ability: https://www.youtube.com/watch?v=kkkmX3_fvfQ&ab_channel=Andrew
 
 
-public class Penguin : MonoBehaviour, IPointerClickHandler
+public class Penguin : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
     public GameObject penguin;
     public GameObject head;
@@ -20,6 +20,7 @@ public class Penguin : MonoBehaviour, IPointerClickHandler
     public char face;
     public char oldFace;
     private Point _toPoint;
+    public static Point clickedPenguin;
     public Point toPoint
     {
         get { return _toPoint; }
@@ -46,7 +47,6 @@ public class Penguin : MonoBehaviour, IPointerClickHandler
         run();
     }
 
-
     public void run(bool ai = false)
     {
         if (Game.canPickPiece(row, col))
@@ -58,6 +58,8 @@ public class Penguin : MonoBehaviour, IPointerClickHandler
                 Game.poss = Game.GetPossibleMoves();
                 face = face == '_' ? Game.isXTurn ? 'X' : 'O' : face;
                 setHat();
+                Play("Bounce");
+                clickedPenguin = new Point(this.row, this.col);
             }
             else if (Game.from.eq(loc()))
             {
@@ -65,10 +67,13 @@ public class Penguin : MonoBehaviour, IPointerClickHandler
                 Game.moveInProgress = false;
                 face = oldFace;
                 setHat();
+                Play("Idle_A");
+                clickedPenguin = new Point(-1, -1);
             }
             else
             {
                 Game.to = loc();
+                clickedPenguin = new Point(-1, -1);
                 if (Game.IsValidMove())
                 {
                     Game.Data(Game.from).oldFace = Game.Data(Game.from).face;
@@ -171,6 +176,36 @@ public class Penguin : MonoBehaviour, IPointerClickHandler
         if(animator.HasState(0, Animator.StringToHash(animation))){
             animator.Play(animation);
             
+        }
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if(Game.canPickPiece(row, col))
+        {
+            if(Game.moveInProgress)
+            {
+                if(this.row == Penguin.clickedPenguin.row || this.col == Penguin.clickedPenguin.col)
+                {
+                    Play("Bounce");
+                }
+            }
+            else
+            {
+                Play("Bounce");
+            }
+        }
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        if(this.row == Penguin.clickedPenguin.row && this.col == Penguin.clickedPenguin.col)
+        {
+            Play("Bounce");
+        }
+        else
+        {
+            Play("Idle_A");
         }
     }
 }

@@ -7,6 +7,7 @@ public class Hat : MonoBehaviour
     public GameObject hat;
     private Transform head; 
     public Penguin wearer;
+    private GameObject hairToSave;
     public Vector3 pos; 
     public Vector3 rot; 
 
@@ -14,6 +15,8 @@ public class Hat : MonoBehaviour
     {
         wearer = Wearer;
         head = hair.transform;
+        hairToSave = hair;
+        Destroy(wearer.hair.gameObject);
 
         if (head != null)
         {

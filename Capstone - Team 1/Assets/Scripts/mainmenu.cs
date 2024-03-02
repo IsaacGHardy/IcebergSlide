@@ -24,11 +24,11 @@ public class mainmenu : MonoBehaviour
     {
         Debug.Log("Quit");
         Application.Quit();
-    }
+    } 
 
     public void ReturnToMenu()
     {
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene("Main chatMenu");
     }
 
     public void HelpMenu()
