@@ -15872,6 +15872,7 @@ MonoBehaviour:
   gameOver: 0
   AIgame: 0
   isOnline: 0
+  isLocked: 0
 --- !u!114 &834369301
 MonoBehaviour:
   m_ObjectHideFlags: 0

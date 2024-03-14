@@ -13,7 +13,10 @@ public class CubeScript : MonoBehaviour, IPointerClickHandler
     }
     public void OnPointerClick(PointerEventData eventData)
     {
-        penguin.run();
+        if (!Game.isLocked)
+        {
+            penguin.run();
+        }
     }
 
     public Point loc() { return new Point(row, col); }

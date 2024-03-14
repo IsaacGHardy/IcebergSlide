@@ -44,7 +44,10 @@ public class Penguin : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        run();
+        if (!Game.isLocked)
+        {
+            run();
+        }
     }
 
     public void run(bool ai = false)
@@ -76,6 +79,7 @@ public class Penguin : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
                 clickedPenguin = new Point(-1, -1);
                 if (Game.IsValidMove())
                 {
+                    Game.isLocked = true;
                     Game.Data(Game.from).oldFace = Game.Data(Game.from).face;
                     Game.passMove(ai);
                 }
@@ -181,31 +185,37 @@ public class Penguin : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if(Game.canPickPiece(row, col))
+        if (!Game.gameOver && !Game.isLocked)
         {
-            if(Game.moveInProgress)
+            if (Game.canPickPiece(row, col))
             {
-                if(this.row == Penguin.clickedPenguin.row || this.col == Penguin.clickedPenguin.col)
+                if (Game.moveInProgress)
+                {
+                    if (this.row == Penguin.clickedPenguin.row || this.col == Penguin.clickedPenguin.col)
+                    {
+                        Play("Bounce");
+                    }
+                }
+                else
                 {
                     Play("Bounce");
                 }
-            }
-            else
-            {
-                Play("Bounce");
             }
         }
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if(this.row == Penguin.clickedPenguin.row && this.col == Penguin.clickedPenguin.col)
+        if (!Game.gameOver && !Game.isLocked)
         {
-            Play("Bounce");
-        }
-        else
-        {
-            Play("Idle_A");
+            if (this.row == Penguin.clickedPenguin.row && this.col == Penguin.clickedPenguin.col)
+            {
+                Play("Bounce");
+            }
+            else
+            {
+                Play("Idle_A");
+            }
         }
     }
 }

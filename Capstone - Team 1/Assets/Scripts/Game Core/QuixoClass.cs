@@ -12,7 +12,8 @@ using System.Security.Cryptography;
 using System.Security.Permissions;
 using UnityEngine;
 using Photon.Pun;
-
+using Photon.Pun.Demo.PunBasics;
+using UnityEngine.SceneManagement;
 
 public struct Point
 {
@@ -47,7 +48,7 @@ public class QuixoClass : MonoBehaviour
     public GameObject ohat; // the hat worn by a penguin owned by the y player
     public AI ai;
     [SerializeField] PhotonView photonView;
-   
+
 
     //####################################################################################################################################
     //# Game Constants ###################################################################################################################
@@ -72,6 +73,10 @@ public class QuixoClass : MonoBehaviour
     public bool gameOver = false;
     public bool AIgame = false;
     public bool isOnline = true;
+    public static bool isXWin = false;
+    public static bool isOWin = false;
+    public bool isLocked = false;
+    public static bool isPlayer1 = false;
 
 
 
@@ -80,21 +85,22 @@ public class QuixoClass : MonoBehaviour
     //####################################################################################################################################
     void Start()
     {
-
+        isXWin = false;
+        isOWin = false;
         //HANDLE FOR ONLINE GAME
-        if(isOnline && OnlineCharacterCustomizationUI.XHAT != null && OnlineCharacterCustomizationUI.OHAT != null)
+        if (isOnline && OnlineCharacterCustomizationUI.XHAT != null && OnlineCharacterCustomizationUI.OHAT != null)
         {
             xhat = OnlineCharacterCustomizationUI.XHAT.gameObject;
             ohat = OnlineCharacterCustomizationUI.OHAT.gameObject;
         }
-        else if(CharacterCustomizationUI.XHAT != null && CharacterCustomizationUI.OHAT != null)
+        else if (CharacterCustomizationUI.XHAT != null && CharacterCustomizationUI.OHAT != null)
         {
             xhat = CharacterCustomizationUI.XHAT.gameObject;
             ohat = CharacterCustomizationUI.OHAT.gameObject;
             AIgame = CharacterCustomizationUI.IS_AI_GAME;
         }
-    
-        gameBoard = new Penguin[boardSize, boardSize]; 
+
+        gameBoard = new Penguin[boardSize, boardSize];
         for (int r = 0; r < boardSize; ++r)
         {
             for (int c = 0; c < boardSize; ++c)
@@ -102,13 +108,13 @@ public class QuixoClass : MonoBehaviour
                 Vector3 pos = getPos(r, c);
                 GameObject nPenguin = Instantiate(penguinPrefab, pos, Quaternion.identity);
                 Penguin nPenguinScript = nPenguin.GetComponent<Penguin>();
-                
+
                 nPenguinScript.Game = boardObject.GetComponent<QuixoClass>();
                 nPenguinScript.penguin = nPenguin;
 
                 nPenguinScript.row = r;
                 nPenguinScript.col = c;
-                
+
                 gameBoard[r, c] = nPenguinScript;
             }
         }
@@ -118,12 +124,12 @@ public class QuixoClass : MonoBehaviour
     //####################################################################################################################################
     //# Boolean Checks ###################################################################################################################
     //####################################################################################################################################
-    
+
 
     // checks if a point is within the bounds of the board
     private bool bounds(Point p)
     {
-        return p.row >= 0 && p.row<boardSize && p.col >= 0 && p.col<boardSize;
+        return p.row >= 0 && p.row < boardSize && p.col >= 0 && p.col < boardSize;
     }
     private bool bounds(Penguin p)
     {
@@ -138,17 +144,17 @@ public class QuixoClass : MonoBehaviour
     private Func<int, int, bool> PointTester(int r, int c) { return (row, col) => r == row && c == col; }
     private Func<Point, bool> PointTester(Point p) { return (Point np) => np.row == p.row && np.col == p.col; }
 
-    private int rebound(int i){
+    private int rebound(int i) {
         if (i == -1) return 0;
         else if (i == boardSize) return boardSize - 1;
         else return i;
     }
-    private Point rebound(Point p){
+    private Point rebound(Point p) {
         return new Point(rebound(p.row), rebound(p.col));
     }
     // Checks if a given point is on one of the board's corners
-    private bool isCorner(Point p) {    
-        return isCorner(rebound(p.row), rebound(p.col)); 
+    private bool isCorner(Point p) {
+        return isCorner(rebound(p.row), rebound(p.col));
     }
     private bool isCorner(int row, int col)
     {
@@ -191,13 +197,13 @@ public class QuixoClass : MonoBehaviour
                     }
                     else
                     {
-                        UnityEngine.Debug.Log($"({row},{col}) is owned by the other player, please select a different penguin.");
+                        //UnityEngine.Debug.Log($"({row},{col}) is owned by the other player, please select a different penguin.");
                         return false;
                     }
                 }
             }
         }
-        UnityEngine.Debug.Log($"({row},{col}) is not a valid move, please select a penguin on the edge of the board.");
+        //UnityEngine.Debug.Log($"({row},{col}) is not a valid move, please select a penguin on the edge of the board.");
         return false;
     }
 
@@ -459,7 +465,7 @@ public class QuixoClass : MonoBehaviour
         Vector3 targetDirection;
         if (from.row == to.row)
         {
-            targetDirection = to.col > from.col ? Vector3.back : Vector3.forward; 
+            targetDirection = to.col > from.col ? Vector3.back : Vector3.forward;
         }
         else
         {
@@ -519,8 +525,6 @@ public class QuixoClass : MonoBehaviour
         }
     }
 
-
-
     public IEnumerator RotatePenguin(Point lookAt)
     {
         Penguin penguin = Data(from);
@@ -537,16 +541,16 @@ public class QuixoClass : MonoBehaviour
 
     private IEnumerator PenguinWalkAround()
     {
-        
-        Point final; 
-        Point firstTo; 
-        List<Point> path = new List<Point>(); 
+
+        Point final;
+        Point firstTo;
+        List<Point> path = new List<Point>();
 
         bool AddCornerToPath()
         {
             Point last = path.Last();
 
-            if (!isCorner(last)){ // if last is on an edge
+            if (!isCorner(last)) { // if last is on an edge
                 Point corner1, corner2;
                 int index;
                 if (last.row == -1 || last.row == boardSize) // Last is on a top or bottom edge
@@ -575,8 +579,8 @@ public class QuixoClass : MonoBehaviour
                     path.Add(corner2);
                     return false;
                 }
-                else{
-                    if (index >= 1 && index <= boardCenter){
+                else {
+                    if (index >= 1 && index <= boardCenter) {
                         // corner1 is closer to last, or neither corner is closer to last
                         path.Add(corner1);
                         return true;
@@ -588,11 +592,11 @@ public class QuixoClass : MonoBehaviour
                     }
                 }
             }
-            else{ // if last is on a corner
-                if (from.row == to.row){
+            else { // if last is on a corner
+                if (from.row == to.row) {
                     path.Add(new Point(last.row, final.col));
                 }
-                else{
+                else {
                     path.Add(new Point(final.row, last.col));
                 }
                 return false;
@@ -603,47 +607,47 @@ public class QuixoClass : MonoBehaviour
         if (from.row == to.row) // move line is along a row
         {
             final = new Point(to.row, to.col == 0 ? -1 : boardSize);
-            if (!isCorner(from)) { 
+            if (!isCorner(from)) {
                 if (from.col == 0 || from.col == boardSize - 1)
-                    firstTo = new Point(from.row, from.col == 0 ? -1 : boardSize); 
+                    firstTo = new Point(from.row, from.col == 0 ? -1 : boardSize);
                 else
                     firstTo = new Point(from.row == 0 ? -1 : boardSize, from.col);
             }
-            else { 
+            else {
                 firstTo = new Point(from.row == 0 ? -1 : boardSize, from.col);
             }
         }
         else // move line is along a col 
         {
             final = new Point(to.row == 0 ? -1 : boardSize, to.col);
-            if (!isCorner(from)) { 
+            if (!isCorner(from)) {
                 if (from.col == 0 || from.col == boardSize - 1)
-                    firstTo = new Point(from.row, from.col == 0 ? -1 : boardSize); 
+                    firstTo = new Point(from.row, from.col == 0 ? -1 : boardSize);
                 else
                     firstTo = new Point(from.row == 0 ? -1 : boardSize, from.col);
             }
-            else { 
-                firstTo = new Point(from.row, from.col == 0 ? -1 : boardSize); 
+            else {
+                firstTo = new Point(from.row, from.col == 0 ? -1 : boardSize);
             }
         }
         path.Add(firstTo);
         while (AddCornerToPath()) { } // Keep adding corners until no more are needed
         path.Add(final);
-        
+
         Penguin penguin = Data(from);
         penguin.Play("Walk");
 
-        foreach (Point p in path) 
+        foreach (Point p in path)
         {
             yield return StartCoroutine(RotatePenguin(p));
-            
+
             while (Vector3.Distance(penguin.transform.position, getPos(p)) > acceptableOffset)
             {
                 penguin.step(spd, getPos(p));
                 yield return null; // Wait until next frame to continue
             }
         }
-        
+
         penguin.Play("Idle_A");
     }
 
@@ -676,7 +680,7 @@ public class QuixoClass : MonoBehaviour
         }
         while (!moveDone)
         {
-            moveDone = true; 
+            moveDone = true;
 
             foreach (Penguin penguin in toSlide)
             {
@@ -689,7 +693,7 @@ public class QuixoClass : MonoBehaviour
 
             }
 
-            yield return null; 
+            yield return null;
         }
 
 
@@ -704,7 +708,7 @@ public class QuixoClass : MonoBehaviour
         }
     }
 
-    
+
     // Ties up any loose ends so that everything is in place for the next move
     private void finalizeMove(List<Penguin> toSlide)
     {
@@ -724,19 +728,41 @@ public class QuixoClass : MonoBehaviour
         }
         gameBoard = tempBoard;
 
+        doWinCheck();
+        if (isXWin && isOWin)
+        {
+            tieDance();
+        }
+        else if (isXWin)
+        {
+            xDance();
+        }
+        else if (isOWin)
+        {
+            oDance();
+        }
+
+        if (isXWin || isOWin)
+        {
+            StartCoroutine(LoadWinScene());
+        }
 
         from = new Point(-1, -1);
         to = new Point(-1, -1); 
         moveInProgress = false; 
-        isXTurn = !isXTurn; 
+        isXTurn = !isXTurn;
+        isLocked = false;
+    }
+
+    IEnumerator LoadWinScene()
+    {
+        yield return new WaitForSeconds(3);
+        SceneManager.LoadScene("WinScene");
     }
 
     // checks various win / tie conditions to see if the game is over
-    private List<string> doWinCheck()
+    private void doWinCheck()
     {
-        List<string> EndConditions = new List<string>();
-        bool stalemate = true;
-
         // Check first diagonal
         bool diagonal1 = true;
         char test = gameBoard[0, 0].face;
@@ -748,6 +774,8 @@ public class QuixoClass : MonoBehaviour
                 break;
             }
         }
+
+        if (diagonal1 && test != '_') { gameOver = true; getWinner(gameBoard[0, 0].face); }
 
         // Check second diagonal
         bool diagonal2 = true;
@@ -761,27 +789,24 @@ public class QuixoClass : MonoBehaviour
             }
         }
 
-        if (diagonal1 && test != '_') { EndConditions.Add($"diagonal1{test}"); gameOver = true; }
-        if (diagonal2 && test != '_') { EndConditions.Add($"diagonal2{test}"); gameOver = true; }
+        if (diagonal2 && test != '_') { gameOver = true; getWinner(gameBoard[0, boardSize - 1].face); }
 
-
-
+        //check rows and columns
         for (int i = 0; i < boardSize; i++)
         {
-            if (checkRow(i)) { EndConditions.Add($"row{i}{gameBoard[i, 0].face}"); gameOver = true; }
-            if (checkCol(i)) { EndConditions.Add($"col{i}{gameBoard[0, i].face}"); gameOver = true; }
+            if (checkRow(i)) { gameOver = true; getWinner(gameBoard[i, 0].face); }
+            if (checkCol(i)) { gameOver = true; getWinner(gameBoard[0, i].face); }
         }
 
         // Check for stalemate
-        if (stalemate) { EndConditions.Add("stalemate"); gameOver = true; }
 
         // Functions to check rows and columns
         bool checkRow(int r)
         {
             char t = gameBoard[r, 0].face;
+            if (t == '_') return false;
             for (int i = 0; i < boardSize; i++)
             {
-                if (gameBoard[r, i].face == '_') { stalemate = false; return false; }// Adjust stalemate check
                 if (gameBoard[r, i].face != t) return false;
             }
             return true;
@@ -798,8 +823,17 @@ public class QuixoClass : MonoBehaviour
             return true;
         }
 
+        void getWinner(char face)
+        {
+            if(face == 'X')
+            {
+                isXWin = true;
+            }
+            else if (face == 'O') {
+                isOWin = true;
+            }
+        }
 
-        return EndConditions;
     }
 
     // uses the other primary move functions to carry out a move in its entirety
@@ -817,7 +851,7 @@ public class QuixoClass : MonoBehaviour
 
     public void passMove(bool autoMove = false)
     {
-        UnityEngine.Debug.Log($"Moving: ({from.row},{from.col}) >> ({to.row},{to.col}) inside passMove");
+        //UnityEngine.Debug.Log($"Moving: ({from.row},{from.col}) >> ({to.row},{to.col}) inside passMove");
         char blockVal = isXTurn ? 'X' : 'O';
 
         if (isOnline)
@@ -828,7 +862,7 @@ public class QuixoClass : MonoBehaviour
     }
     public void makeMove(bool autoMove = false)
     {
-        UnityEngine.Debug.Log($"Moving: ({from.row},{from.col}) >> ({to.row},{to.col}) inside makeMove");
+        //UnityEngine.Debug.Log($"Moving: ({from.row},{from.col}) >> ({to.row},{to.col}) inside makeMove");
         char blockVal = isXTurn ? 'X' : 'O';
 
         Penguin(from).SetActive(true);
@@ -854,13 +888,9 @@ public class QuixoClass : MonoBehaviour
         // Once that's complete, start the slide sequence
         yield return StartCoroutine(doSlide(penguins));
 
-
-        List<string> endCheck = doWinCheck();
-
-        UnityEngine.Debug.Log($"Move complete! ({from.row},{from.col}) >> ({to.row},{to.col})");
+        //UnityEngine.Debug.Log($"Move complete! ({from.row},{from.col}) >> ({to.row},{to.col})");
         
         finalizeMove(penguins);
-        //isXTurn = !isXTurn;
         string boardStr = translateBoard();
         blockVal = isXTurn ? 'X' : 'O';
         if (AIgame && !autoMove){
@@ -887,7 +917,7 @@ public class QuixoClass : MonoBehaviour
             }
         }
         board = board.Replace('_', ' ');
-        UnityEngine.Debug.Log("Translated Board: " + board);
+        //UnityEngine.Debug.Log("Translated Board: " + board);
         return board;
 
     }
@@ -915,6 +945,52 @@ public class QuixoClass : MonoBehaviour
         }
     }
 
+    //####################################################################################################################################
+    //# End Game Functions ###############################################################################################################
+    //####################################################################################################################################
 
+    private void xDance()
+    {
+        foreach (Penguin penguin in gameBoard)
+        {
+            if(penguin.face == 'X')
+            {
+                penguin.Play("Jump");
+            }
+            else
+            {
+                penguin.Play("Death");
+            }
+        }
+    }
 
+    private void oDance()
+    {
+        foreach (Penguin penguin in gameBoard)
+        {
+            if (penguin.face == 'O')
+            {
+                penguin.Play("Jump");
+            }
+            else
+            {
+                penguin.Play("Death");
+            }
+        }
+    }
+
+    private void tieDance()
+    {
+        foreach (Penguin penguin in gameBoard)
+        {
+            if (penguin.face != '_')
+            {
+                penguin.Play("Spin");
+            }
+            else
+            {
+                penguin.Play("Death");
+            }
+        }
+    }
 }

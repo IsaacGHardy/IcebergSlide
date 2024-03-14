@@ -20,7 +20,9 @@ public class CharacterCustomizationUI : MonoBehaviour
     public static bool IS_AI_GAME;
     public static int AI_DIFFICULTY;
     private bool vsAi = true;
+    private bool isP1 = true;
     private AIDifficulty difficulty = AIDifficulty.IceMaster;
+
     enum AIDifficulty
     {
         Eggling = 0,
@@ -58,6 +60,7 @@ public class CharacterCustomizationUI : MonoBehaviour
     public void switchSides()
     {
         characterCustomization.switchSides();
+        isP1 = !isP1;
     }
 
     public void playAgainst()
@@ -77,6 +80,7 @@ public class CharacterCustomizationUI : MonoBehaviour
         XHAT = characterCustomization.p1Hat;
         OHAT = characterCustomization.p2Hat;
         IS_AI_GAME = vsAi;
+        QuixoClass.isPlayer1 = isP1;
         AI_DIFFICULTY = (int)difficulty;
         Debug.Log(AI_DIFFICULTY);
         SceneManager.LoadScene("GameScene");
