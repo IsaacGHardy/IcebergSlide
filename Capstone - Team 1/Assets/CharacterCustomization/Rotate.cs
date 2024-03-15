@@ -20,6 +20,18 @@ public class Rotate : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             penguin.gameObject.transform.Rotate(0f, rotationSpeed * Time.deltaTime, 0f);
         }
     }
+
+    public void setPointerEnter()
+    {
+        pointerEnter = true;
+    }
+
+    public void setPointerExit()
+    {
+        pointerEnter = false;
+        penguin.gameObject.transform.rotation = resetRotation;
+    }
+
     public void OnPointerEnter(PointerEventData eventData)
     {
         pointerEnter = true;

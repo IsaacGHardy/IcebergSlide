@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -15,6 +16,17 @@ public class CharacterCustomizationUI : MonoBehaviour
     [SerializeField] private Button AIEasierButton;
     [SerializeField] private Button AIHarderButton;
     [SerializeField] private TextMeshProUGUI AIDifficultyText;
+    [SerializeField] private Button p1ForButton;
+    [SerializeField] private Button p1BackButton;
+    [SerializeField] private Button p2ForButton;
+    [SerializeField] private Button p2BackButton;
+    [SerializeField] private Button p1RandButton;
+    [SerializeField] private Button p2RandButton;
+    [SerializeField] private EventTrigger p1Rotate;
+    [SerializeField] private EventTrigger p2Rotate;
+    [SerializeField] private Button p1IsAI;
+    [SerializeField] private Button p2IsAI;
+
     public static Hat XHAT;
     public static Hat OHAT;
     public static bool IS_AI_GAME;
@@ -22,7 +34,81 @@ public class CharacterCustomizationUI : MonoBehaviour
     private bool vsAi = true;
     private bool isP1 = true;
     private AIDifficulty difficulty = AIDifficulty.IceMaster;
+    private Rotate P1RotateScript;
+    Rotate P2RotateScript;
 
+    private void Awake()
+    {
+        StartCoroutine(waitForInitialization());
+    }
+
+    IEnumerator waitForInitialization()
+    {
+        while(p2ForButton == null || p2BackButton == null || p2RandButton == null || p2Rotate == null) {
+            yield return null;
+        }
+
+        disableP2Buttons();
+        yield return new WaitForSeconds(1);
+        
+        StartCoroutine(aiCustomization());
+    }
+
+    IEnumerator aiCustomization()
+    {
+        P1RotateScript = p1Rotate.GetComponent<Rotate>();
+        P2RotateScript = p2Rotate.GetComponent<Rotate>();
+        while (vsAi)
+        {
+            if (isP1) { P2RotateScript.setPointerExit(); }
+            if (!isP1) { P1RotateScript.setPointerExit(); }
+            int random = Random.Range(1, 5);
+            switch(random)
+            {
+                case 1:
+                    if (isP1)
+                    {
+                        p2For();
+                    }
+                    else
+                    {
+                        p1For();
+                    }
+                    break;
+                case 2:
+                    if (isP1)
+                    {
+                        p2Back();
+                    }
+                    else
+                    {
+                        p1Back();
+                    }
+                    break;
+                case 3:
+                    if (isP1)
+                    {
+                        p2Rand();
+                    }
+                    else
+                    {
+                        p1Rand();
+                    }
+                    break;
+                case 4:
+                    if (isP1)
+                    {
+                        P2RotateScript.setPointerEnter();
+                    }
+                    else
+                    {
+                        P1RotateScript.setPointerEnter();
+                    }
+                    break;
+            }
+            yield return new WaitForSeconds(1);
+        }
+    }
     enum AIDifficulty
     {
         Eggling = 0,
@@ -61,6 +147,21 @@ public class CharacterCustomizationUI : MonoBehaviour
     {
         characterCustomization.switchSides();
         isP1 = !isP1;
+        if(vsAi)
+        {
+            if(isP1)
+            {
+                P1RotateScript.setPointerExit();
+                enableP1Buttons();
+                disableP2Buttons();
+            }
+            else
+            {
+                P2RotateScript.setPointerExit();
+                enableP2Buttons();
+                disableP1Buttons();
+            }
+        }
     }
 
     public void playAgainst()
@@ -71,8 +172,30 @@ public class CharacterCustomizationUI : MonoBehaviour
         AIDifficultyText.gameObject.SetActive(vsAi);
         AIEasierButton.gameObject.SetActive(vsAi);
         AIHarderButton.gameObject.SetActive(vsAi);
+        if (vsAi) { StartCoroutine(aiCustomization()); }
+        else {
+            P1RotateScript.setPointerExit();
+            P2RotateScript.setPointerExit();
+        }
 
-
+        if(!vsAi)
+        {
+            enableP1Buttons();
+            enableP2Buttons();
+        }
+        else
+        {
+            if(isP1)
+            {
+                enableP1Buttons();
+                disableP2Buttons();
+            }
+            else
+            {
+                enableP2Buttons();
+                disableP1Buttons();
+            }
+        } 
     }
 
     public void startGame()
@@ -147,6 +270,42 @@ public class CharacterCustomizationUI : MonoBehaviour
                 AIDifficultyText.text = "Emperor Of The Ice";
                 break;
         }
+    }
+
+    public void disableP1Buttons()
+    {
+        p1ForButton.interactable = false;
+        p1BackButton.interactable = false;
+        p1RandButton.interactable = false;
+        p1Rotate.enabled = false;
+        p1IsAI.gameObject.SetActive(true);
+    }
+
+    public void enableP1Buttons()
+    {
+        p1ForButton.interactable = true;
+        p1BackButton.interactable = true;
+        p1RandButton.interactable = true;
+        p1Rotate.enabled = true;
+        p1IsAI.gameObject.SetActive(false);
+
+    }
+    public void disableP2Buttons()
+    {
+        p2ForButton.interactable = false;
+        p2BackButton.interactable = false;
+        p2RandButton.interactable = false;
+        p2Rotate.enabled= false;
+        p2IsAI.gameObject.SetActive(true);
+    }
+
+    public void enableP2Buttons()
+    {
+        p2ForButton.interactable = true;
+        p2BackButton.interactable = true;
+        p2RandButton.interactable = true;
+        p2Rotate.enabled = true;
+        p2IsAI.gameObject.SetActive(false);
     }
 
 }
