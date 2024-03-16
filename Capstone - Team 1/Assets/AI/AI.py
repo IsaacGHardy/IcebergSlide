@@ -295,8 +295,16 @@ def get_all_moves(board, playing_as):
 
     return possible_moves
 
-def request_ai_move(board, playing_as):
+def shuffle_scores_for_difficulty(possible_moves, difficulty):
+    for move, score_reasoning in possible_moves.items():
+        score_ding_amount = random.randint(-5000, 5000)
+        score_reasoning[0] += score_ding_amount * difficulty
+    return possible_moves
+
+def request_ai_move(board, playing_as, difficulty):
     possible_moves = get_all_moves(board, playing_as)
+    shuffle_scores_for_difficulty(possible_moves, difficulty)
+
     best_moves = [move for move, score in possible_moves.items() if score == max(possible_moves.values())]
     random_best_move = random.choice(best_moves)
     spot_data = random_best_move.split(" ")
@@ -308,6 +316,6 @@ def request_ai_move(board, playing_as):
             print("\n" + "\u001b[31m" + playing_as + " Move Chosen" + "\u001b[0m")
         elif (playing_as == "O"):
             print("\n" + "\u001b[35m" + playing_as + " Move Chosen" + "\u001b[0m")
-    print(str(spot_data))
+        print(str(spot_data))
 
     return spot_data[0], spot_data[1]
