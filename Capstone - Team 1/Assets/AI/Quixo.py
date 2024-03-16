@@ -234,10 +234,10 @@ def start_match():
     while (player_turn != None and turn_counter < AI_GAME_MAX_MOVES):
         move_block_from, move_block_to = None, None
         if (player_turn != x_or_o):
-            move_block_from, move_block_to = request_ai_move(board, player_turn)
+            move_block_from, move_block_to = request_ai_move(board, player_turn, AI_SCORE_SKEW_AMOUNT)
         else:
             if (BUILD_AI_ONLY_PLAY):
-                move_block_from, move_block_to = request_ai_move(board, player_turn)
+                move_block_from, move_block_to = request_ai_move(board, player_turn, AI_SCORE_SKEW_AMOUNT)
             else:
                 move_block_from, move_block_to = get_player_move(board, player_turn)
 

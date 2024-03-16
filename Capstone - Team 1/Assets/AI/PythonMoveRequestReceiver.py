@@ -10,10 +10,12 @@ def chars_to_board(chars):
     return grid
 
 #CSharp_input will contain 26 chars, The 1st 25 will be board data, the final char is the team to generate a move for
-CSharp_input = input()
+#CSharp_input = input()
+CSharp_input = "X                        O0"
 
+difficulty = int(CSharp_input[26:27:1])
 team_playing_for = CSharp_input[25:26:1]
 board_data = CSharp_input[0:25:1]
 generated_board = chars_to_board(board_data)
 
-print(request_ai_move(generated_board, team_playing_for))
+print(request_ai_move(generated_board, team_playing_for, difficulty))
