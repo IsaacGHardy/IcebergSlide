@@ -9,14 +9,41 @@ using Photon.Realtime;
 using ExitGames.Client.Photon;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 
-
-public class CreateAndJoin : MonoBehaviourPunCallbacks
+public class PhotonLobby : MonoBehaviourPunCallbacks
 {
+    public static PhotonLobby lobby;
     public TMP_InputField input_Create;
     public TMP_InputField input_Join;
-    [SerializeField] private Canvas lobby;
+    [SerializeField] private Canvas connectinToServer;
+    [SerializeField] private Canvas lobbyCanvas;
     [SerializeField] private Canvas waiting;
     private float waitTime = .5f;
+
+    private void Awake()
+    {
+        lobby = this;
+    }
+    void Start()
+    {
+        PhotonNetwork.ConnectUsingSettings();
+    }
+
+    public override void OnConnectedToMaster()
+    {
+
+        PhotonNetwork.JoinLobby();
+
+    }
+
+    public override void OnJoinedLobby()
+    {
+        lobbyCanvas.gameObject.SetActive(true);
+        Debug.Log("You have joined the lobby.");
+        int playersInLobbby = PhotonNetwork.CountOfPlayersInRooms + PhotonNetwork.CountOfPlayersOnMaster;
+        Debug.Log($"Players in the lobby: {playersInLobbby}");
+
+
+    }
 
     public void CreateRoom()
     {
@@ -41,25 +68,12 @@ public class CreateAndJoin : MonoBehaviourPunCallbacks
     {
         Debug.Log($"You have joined the room '{PhotonNetwork.CurrentRoom.Name}'");
         Debug.Log($"Players in this room: {PhotonNetwork.CurrentRoom.PlayerCount}");
-        lobby.gameObject.SetActive( false );
-        waiting.gameObject.SetActive( true );
+        lobbyCanvas.gameObject.SetActive(false);
+        waiting.gameObject.SetActive(true);
 
         StartCoroutine(checkPlayerCount());
 
     }
-
-
-    //public override void OnPlayerEnteredRoom(Player newPlayer)
-    //    {
-    //        Debug.Log($"A new player has joined the room '{PhotonNetwork.CurrentRoom.Name}'!");
-    //        UpdatePlayerCount();
-    //    }
-
-    //    public override void OnPlayerLeftRoom(Player otherPlayer)
-    //    {
-    //        Debug.Log($"A player has left the room '{PhotonNetwork.CurrentRoom.Name}'!");
-    //        UpdatePlayerCount();
-    //    }
 
     void UpdatePlayerCount()
     {
@@ -72,7 +86,6 @@ public class CreateAndJoin : MonoBehaviourPunCallbacks
         print("Disconnected from server for reason " + cause.ToString());
     }
 
-
     bool isRoomFull()
     {
         return PhotonNetwork.CurrentRoom.PlayerCount == 2;
@@ -81,7 +94,7 @@ public class CreateAndJoin : MonoBehaviourPunCallbacks
     IEnumerator checkPlayerCount()
     {
 
-        while(!isRoomFull())
+        while (!isRoomFull())
         {
             yield return new WaitForSeconds(waitTime);
         }
@@ -92,6 +105,7 @@ public class CreateAndJoin : MonoBehaviourPunCallbacks
 
     void startGame()
     {
+        PhotonNetwork.AutomaticallySyncScene = true;
         PhotonNetwork.LoadLevel("OnlineTeamSelection");
 
     }
@@ -100,9 +114,7 @@ public class CreateAndJoin : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.Disconnect();
         SceneManager.LoadScene("Main Menu");
-
     }
-
 
 
 }
