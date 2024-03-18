@@ -757,7 +757,14 @@ public class QuixoClass : MonoBehaviour
     IEnumerator LoadWinScene()
     {
         yield return new WaitForSeconds(3);
-        SceneManager.LoadScene("WinScene");
+        if (isOnline)
+        {
+            SceneManager.LoadScene("OnlineWinScene");
+        }
+        else
+        {
+            SceneManager.LoadScene("WinScene");
+        }
     }
 
     // checks various win / tie conditions to see if the game is over

@@ -54,6 +54,12 @@ MonoBehaviour:
   - setPointerEnter
   - setPointerExit
   - onlineSetRandomHat
+  - playAgain
+  - newTeams
+  - toMenu
+  - setOtherSwap
+  - setOtherReady
+  - setOtherPlay
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

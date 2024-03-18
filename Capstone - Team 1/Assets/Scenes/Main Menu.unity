@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.43748862, g: 0.4853127, b: 0.56558615, a: 1}
+  m_IndirectSpecularColor: {r: 0.43748894, g: 0.48531288, b: 0.5655866, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -5043,7 +5043,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 210200826}
-  - component: {fileID: 210200825}
   - component: {fileID: 210200827}
   m_Layer: 5
   m_Name: MainMenu
@@ -5052,18 +5051,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &210200825
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 210200824}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f2070d3193ba5d409644d5bc8aa7153, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &210200826
 RectTransform:
   m_ObjectHideFlags: 0
@@ -19236,7 +19223,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1103263691}
-  - component: {fileID: 1103263692}
   m_Layer: 5
   m_Name: OptionMenu
   m_TagString: Untagged
@@ -19267,18 +19253,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1103263692
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1103263690}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f2070d3193ba5d409644d5bc8aa7153, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1105055952
 PrefabInstance:
   m_ObjectHideFlags: 0

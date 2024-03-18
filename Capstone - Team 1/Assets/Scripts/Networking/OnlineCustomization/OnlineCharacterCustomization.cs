@@ -32,8 +32,17 @@ public class OnlineCharacterCustomization : MonoBehaviour
     private void Awake()
     {
         //Assign different random hats to each penguin
-        p1.setHat(hatArray[0]);
-        p2.setHat(hatArray[1]);
+        if(OnlineCharacterCustomizationUI.XHAT != null && OnlineCharacterCustomizationUI.OHAT != null)
+        {
+            p1.setHat(OnlineCharacterCustomizationUI.XHAT);
+            p2.setHat(OnlineCharacterCustomizationUI.OHAT);
+        }
+        else
+        {
+            p1.setHat(hatArray[0]);
+            p2.setHat(hatArray[1]);
+        }
+
     }
 
     public void setRandomHat(bool isP1)

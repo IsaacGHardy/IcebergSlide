@@ -12,12 +12,11 @@ public class EndGame : MonoBehaviour
     private bool vsAi = CharacterCustomizationUI.IS_AI_GAME;
     private bool isP1 = QuixoClass.isPlayer1;
 
-
     private void Awake()
     {
         p1.setHat(CharacterCustomizationUI.XHAT);
         p2.setHat(CharacterCustomizationUI.OHAT);
-
+        
         if(QuixoClass.isXWin && QuixoClass.isOWin)
         {
             p1.Play("Spin");

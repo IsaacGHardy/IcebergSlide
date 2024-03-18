@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.43748862, g: 0.4853127, b: 0.56558615, a: 1}
+  m_IndirectSpecularColor: {r: 0.43748894, g: 0.48531288, b: 0.5655866, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -9215,6 +9215,7 @@ MonoBehaviour:
   gameOver: 0
   AIgame: 0
   isOnline: 1
+  isLocked: 0
 --- !u!65 &492747348
 BoxCollider:
   m_ObjectHideFlags: 0
