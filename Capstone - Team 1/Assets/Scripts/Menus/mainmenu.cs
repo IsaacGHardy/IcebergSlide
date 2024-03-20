@@ -28,7 +28,7 @@ public class mainmenu : MonoBehaviour
 
     public void ReturnToMenu()
     {
-        SceneManager.LoadScene("Main chatMenu");
+        SceneManager.LoadScene("Main Menu");
     }
 
     public void HelpMenu()
