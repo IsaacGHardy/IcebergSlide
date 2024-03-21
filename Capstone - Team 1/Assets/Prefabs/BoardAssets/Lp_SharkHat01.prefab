@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4218615784126516962}
   - component: {fileID: 6529934994684877919}
   - component: {fileID: 2641920456664819715}
+  - component: {fileID: -2472518596684974699}
   m_Layer: 0
   m_Name: Lp_SharkHat01
   m_TagString: Untagged
@@ -106,3 +107,19 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -7616481106823823951, guid: 1d056b4ff34ab854c9fcab6fe28c3ba9, type: 3}
+--- !u!114 &-2472518596684974699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2641920456664819712}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7832c92feffde6439665250a340289c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hat: {fileID: 2641920456664819712}
+  wearer: {fileID: 0}
+  pos: {x: 0, y: 0.0075, z: 0}
+  rot: {x: -15, y: 0, z: 0}

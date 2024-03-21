@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1828189919246527835
+--- !u!1 &1567265933630311904
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,24 +8,25 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1239187101071152784}
-  - component: {fileID: 5573321853318449753}
-  - component: {fileID: 1195172245560896750}
-  - component: {fileID: 5616753575933074784}
+  - component: {fileID: 8886579284329882761}
+  - component: {fileID: 7688095095743389895}
+  - component: {fileID: 3525044383400136999}
+  - component: {fileID: 1567265933630311911}
+  - component: {fileID: 8615559575071705457}
   m_Layer: 0
-  m_Name: Lp_Flowerpot01
+  m_Name: Lp_SmallHornedHelmet01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1239187101071152784
+--- !u!4 &8886579284329882761
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1828189919246527835}
+  m_GameObject: {fileID: 1567265933630311904}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: 0}
@@ -34,21 +35,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &5573321853318449753
+--- !u!33 &7688095095743389895
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1828189919246527835}
-  m_Mesh: {fileID: 2593415532976257350, guid: 1d056b4ff34ab854c9fcab6fe28c3ba9, type: 3}
---- !u!23 &1195172245560896750
+  m_GameObject: {fileID: 1567265933630311904}
+  m_Mesh: {fileID: -4470408457874692404, guid: 1d056b4ff34ab854c9fcab6fe28c3ba9, type: 3}
+--- !u!23 &3525044383400136999
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1828189919246527835}
+  m_GameObject: {fileID: 1567265933630311904}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -84,13 +85,13 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &5616753575933074784
+--- !u!64 &1567265933630311911
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1828189919246527835}
+  m_GameObject: {fileID: 1567265933630311904}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -105,4 +106,20 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: 2593415532976257350, guid: bcbbadea02c3698489ac1f4dd540e9a9, type: 3}
+  m_Mesh: {fileID: -4470408457874692404, guid: 1d056b4ff34ab854c9fcab6fe28c3ba9, type: 3}
+--- !u!114 &8615559575071705457
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1567265933630311904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7832c92feffde6439665250a340289c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hat: {fileID: 0}
+  wearer: {fileID: 0}
+  pos: {x: 0, y: 0, z: 0}
+  rot: {x: 0, y: 0, z: 0}

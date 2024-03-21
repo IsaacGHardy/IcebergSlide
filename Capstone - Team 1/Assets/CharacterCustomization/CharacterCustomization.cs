@@ -37,9 +37,7 @@ public class CharacterCustomization : MonoBehaviour
         {
             randP2Index = random.Next(0, hatArray.Length);
         } while (randP1Index == randP2Index);
-        //p1.setHat(hatArray[randP1Index]);
-        //TESTING
-        p1.setHat(hatArray[hatArray.Length - 1]);
+        p1.setHat(hatArray[randP1Index]);
         p2.setHat(hatArray[randP2Index]);
     }
 

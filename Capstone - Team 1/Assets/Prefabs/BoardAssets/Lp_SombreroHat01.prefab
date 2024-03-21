@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &4658131525375941683
+--- !u!1 &2085120349456763788
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,47 +8,48 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 3448201760364778124}
-  - component: {fileID: 6150054264281203672}
-  - component: {fileID: 6550104927599733693}
-  - component: {fileID: 4658131525375941680}
+  - component: {fileID: 6109099353633304138}
+  - component: {fileID: 8841811638897467103}
+  - component: {fileID: 134108930165622323}
+  - component: {fileID: 2085120349456763789}
+  - component: {fileID: -5197550678921150771}
   m_Layer: 0
-  m_Name: Lp_ShamanHat01
+  m_Name: Lp_SombreroHat01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &3448201760364778124
+--- !u!4 &6109099353633304138
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4658131525375941683}
+  m_GameObject: {fileID: 2085120349456763788}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.8, y: 1, z: 0.8}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &6150054264281203672
+--- !u!33 &8841811638897467103
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4658131525375941683}
-  m_Mesh: {fileID: 4426452718819014169, guid: 1d056b4ff34ab854c9fcab6fe28c3ba9, type: 3}
---- !u!23 &6550104927599733693
+  m_GameObject: {fileID: 2085120349456763788}
+  m_Mesh: {fileID: 112121354304131496, guid: 1d056b4ff34ab854c9fcab6fe28c3ba9, type: 3}
+--- !u!23 &134108930165622323
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4658131525375941683}
+  m_GameObject: {fileID: 2085120349456763788}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -84,13 +85,13 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &4658131525375941680
+--- !u!64 &2085120349456763789
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4658131525375941683}
+  m_GameObject: {fileID: 2085120349456763788}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -105,4 +106,20 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: 4426452718819014169, guid: bcbbadea02c3698489ac1f4dd540e9a9, type: 3}
+  m_Mesh: {fileID: 112121354304131496, guid: bcbbadea02c3698489ac1f4dd540e9a9, type: 3}
+--- !u!114 &-5197550678921150771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2085120349456763788}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7832c92feffde6439665250a340289c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hat: {fileID: 2085120349456763788}
+  wearer: {fileID: 0}
+  pos: {x: 0, y: 0.008, z: 0}
+  rot: {x: 0, y: 0, z: 0}

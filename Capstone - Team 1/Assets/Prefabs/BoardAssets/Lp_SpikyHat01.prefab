@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8009023945489583578}
   - component: {fileID: 8737474817306073309}
   - component: {fileID: 5860330333017752183}
+  - component: {fileID: -1370889693580892024}
   m_Layer: 0
   m_Name: Lp_SpikyHat01
   m_TagString: Untagged
@@ -29,7 +30,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.9, y: 0.9, z: 0.9}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -106,3 +107,19 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 2282362953172210407, guid: 1d056b4ff34ab854c9fcab6fe28c3ba9, type: 3}
+--- !u!114 &-1370889693580892024
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5860330333017752180}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7832c92feffde6439665250a340289c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hat: {fileID: 5860330333017752180}
+  wearer: {fileID: 0}
+  pos: {x: 0, y: 0.0065, z: 0}
+  rot: {x: -25, y: 0, z: 0}
