@@ -38,6 +38,7 @@ public class PhotonLobby : MonoBehaviourPunCallbacks
 
     public override void OnJoinedLobby()
     {
+        connectinToServer.gameObject.SetActive(false);
         lobbyCanvas.gameObject.SetActive(true);
         Debug.Log("You have joined the lobby.");
         int playersInLobbby = PhotonNetwork.CountOfPlayersInRooms + PhotonNetwork.CountOfPlayersOnMaster;

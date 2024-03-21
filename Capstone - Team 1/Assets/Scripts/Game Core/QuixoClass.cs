@@ -87,6 +87,10 @@ public class QuixoClass : MonoBehaviour
     {
         isXWin = false;
         isOWin = false;
+        if(!isPlayer1 && isOnline)
+        {
+            isLocked = true;
+        }
         //HANDLE FOR ONLINE GAME
         if (isOnline && OnlineCharacterCustomizationUI.XHAT != null && OnlineCharacterCustomizationUI.OHAT != null)
         {
@@ -751,7 +755,17 @@ public class QuixoClass : MonoBehaviour
         to = new Point(-1, -1); 
         moveInProgress = false; 
         isXTurn = !isXTurn;
-        isLocked = false;
+        if(isOnline)
+        {
+            if (isPlayer1 == isXTurn)
+            {
+                isLocked = false;
+            }
+            else
+            {
+                isLocked = true;
+            }
+        }
     }
 
     IEnumerator LoadWinScene()

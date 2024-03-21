@@ -16,8 +16,13 @@ public class OnlineCharacterCustomizationUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI playText;
     [SerializeField] private Button swapButton;
     [SerializeField] private Button playButton;
+    [SerializeField] private Button p1Button;
+    [SerializeField] private Button p2Button;
+    [SerializeField] private GameObject p1Buttons;
+    [SerializeField] private GameObject p2Buttons;
     public static Hat XHAT;
     public static Hat OHAT;
+    private bool isP1 = false;
     private bool otherPlay;
     private bool mePlay;
     private bool otherSwap;
@@ -158,6 +163,7 @@ public class OnlineCharacterCustomizationUI : MonoBehaviour
         {
             XHAT = characterCustomization.p1Hat;
             OHAT = characterCustomization.p2Hat;
+            QuixoClass.isPlayer1 = isP1;
             SceneManager.LoadScene("OnlineGame");
             otherPlay = false;
             mePlay = false;
@@ -179,6 +185,50 @@ public class OnlineCharacterCustomizationUI : MonoBehaviour
     public void p2Rand()
     {
         characterCustomization.setRandomHat(false);
+    }
+
+    public void onlineChooseP1()
+    {
+        meChooseP1();
+        photonView.RPC("otherChooseP1", RpcTarget.Others);
+    }
+
+    private void meChooseP1()
+    {
+        isP1 = true;
+        p1Buttons.SetActive(true);
+        p2Button.gameObject.SetActive(false);
+        p1Button.gameObject.SetActive(false);
+        characterCustomization.seeP1();
+    }
+
+    [PunRPC]
+    private void otherChooseP1()
+    {
+        characterCustomization.seeP1();
+        p1Button.gameObject.SetActive(false);
+    }
+
+    public void onlineChooseP2()
+    {
+        meChooseP2();
+        photonView.RPC("otherChooseP2", RpcTarget.Others);
+    }
+
+    private void meChooseP2()
+    {
+        isP1 = false;
+        p2Buttons.SetActive(true);
+        p1Button.gameObject.SetActive(false);
+        p2Button.gameObject.SetActive(false);
+        characterCustomization.seeP2();
+    }
+
+    [PunRPC]
+    private void otherChooseP2()
+    {
+        characterCustomization.seeP2();
+        p2Button.gameObject.SetActive(false);
     }
 
 }

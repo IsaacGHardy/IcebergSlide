@@ -60,6 +60,10 @@ MonoBehaviour:
   - setOtherSwap
   - setOtherReady
   - setOtherPlay
+  - onlineChooseP1
+  - onlineChooseP2
+  - otherChooseP1
+  - otherChooseP2
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

@@ -191,7 +191,8 @@ public class Penguin : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
             {
                 if (Game.moveInProgress)
                 {
-                    if (this.row == Penguin.clickedPenguin.row || this.col == Penguin.clickedPenguin.col)
+                    if ((this.row == clickedPenguin.row && (this.col == 0 || this.col == 4))
+                        || (this.col == clickedPenguin.col && (this.row == 0 || this.row == 4)))
                     {
                         Play("Bounce");
                     }

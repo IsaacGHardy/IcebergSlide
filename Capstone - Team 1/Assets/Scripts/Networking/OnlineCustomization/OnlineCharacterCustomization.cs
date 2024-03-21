@@ -1,4 +1,5 @@
 using Photon.Pun;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class OnlineCharacterCustomization : MonoBehaviour
@@ -25,6 +26,16 @@ public class OnlineCharacterCustomization : MonoBehaviour
             return hatArray[index];
         }
     }
+
+    public void seeP1()
+    {
+        p1.gameObject.SetActive(true);
+    }
+    public void seeP2()
+    {
+        p2.gameObject.SetActive(true);
+    }
+
 
     //To be used to compare cloned elements to the prefab
     private string CLONE = "(Clone)";
