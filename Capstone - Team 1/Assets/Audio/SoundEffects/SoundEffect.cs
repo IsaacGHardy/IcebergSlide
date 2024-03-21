@@ -9,7 +9,7 @@ public class SoundEffect : MonoBehaviour
     //1 is poke
     //2 is pitter
     //3 is bloop 2
-    
+     
     public void playBloop3()
     {
         audioSources[0].Play();

@@ -45,10 +45,9 @@ public class Penguin : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (!Game.isLocked)
+        if (!Game.isLocked && Game.canPickPiece(row, col))
         {
             soundEffect.playPoke();
-            soundEffect.playBloop2();
             run();
         }
     }
@@ -65,8 +64,6 @@ public class Penguin : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
                 face = face == '_' ? Game.isXTurn ? 'X' : 'O' : face;
                 setHat();
                 Play("Bounce");
-                /*soundEffect.stopAllsounds();
-                soundEffect.playPoke();*/
                 clickedPenguin = new Point(this.row, this.col);
             }
             else if (Game.from.eq(loc()))
@@ -75,8 +72,9 @@ public class Penguin : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
                 Game.moveInProgress = false;
                 face = oldFace;
                 setHat();
-                Play("Idle_A");
                 soundEffect.stopAllsounds();
+                soundEffect.playPoke();
+                Play("Idle_A");
                 clickedPenguin = new Point(-1, -1);
             }
             else
@@ -86,6 +84,7 @@ public class Penguin : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
                 if (Game.IsValidMove())
                 {
                     soundEffect.stopAllsounds();
+                    soundEffect.playPoke();
                     Game.isLocked = true;
                     Game.Data(Game.from).oldFace = Game.Data(Game.from).face;
                     Game.passMove(ai);
@@ -221,7 +220,6 @@ public class Penguin : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
             {
                 Play("Bounce");
                 soundEffect.stopBloop3();
-                soundEffect.playBloop2();
             }
             else
             {

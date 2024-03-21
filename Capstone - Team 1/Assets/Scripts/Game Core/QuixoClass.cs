@@ -48,6 +48,7 @@ public class QuixoClass : MonoBehaviour
     public GameObject ohat; // the hat worn by a penguin owned by the y player
     public AI ai;
     [SerializeField] PhotonView photonView;
+    [SerializeField] MenuSounds menuSounds;
 
 
     //####################################################################################################################################
@@ -751,6 +752,7 @@ public class QuixoClass : MonoBehaviour
 
         if (isXWin || isOWin)
         {
+            menuSounds.playWin();
             StartCoroutine(LoadWinScene());
         }
 
