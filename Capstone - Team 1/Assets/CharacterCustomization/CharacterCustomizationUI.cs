@@ -35,7 +35,7 @@ public class CharacterCustomizationUI : MonoBehaviour
     private bool isP1 = true;
     private AIDifficulty difficulty = AIDifficulty.IceMaster;
     private Rotate P1RotateScript;
-    Rotate P2RotateScript;
+    private Rotate P2RotateScript;
 
     private void Awake()
     {
@@ -48,16 +48,18 @@ public class CharacterCustomizationUI : MonoBehaviour
             yield return null;
         }
 
+
+        P1RotateScript = p1Rotate.GetComponent<Rotate>();
+        P2RotateScript = p2Rotate.GetComponent<Rotate>();
+
         disableP2Buttons();
         yield return new WaitForSeconds(1);
-        
+
         StartCoroutine(aiCustomization());
     }
 
     IEnumerator aiCustomization()
     {
-        P1RotateScript = p1Rotate.GetComponent<Rotate>();
-        P2RotateScript = p2Rotate.GetComponent<Rotate>();
         while (vsAi)
         {
             if (isP1) { P2RotateScript.setPointerExit(); }

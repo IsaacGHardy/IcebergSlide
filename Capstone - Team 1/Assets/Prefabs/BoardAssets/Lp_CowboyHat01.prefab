@@ -121,6 +121,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hat: {fileID: 6244871649593745648}
   wearer: {fileID: 0}
-  pos: {x: 0, y: 0, z: 0}
-  rot: {x: 0, y: 0, z: 0}
-  hideHair: 1
+  pos: {x: 0, y: 0.007, z: 0.0005}
+  rot: {x: -15, y: 0, z: 0}

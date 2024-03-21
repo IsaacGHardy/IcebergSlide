@@ -78,6 +78,9 @@ public class QuixoClass : MonoBehaviour
     public static bool isOWin = false;
     public bool isLocked = false;
     public static bool isPlayer1 = false;
+    private string[] movementAnimations = new string[] { "Walk", "Roll", "Walk", "Swim", "Walk", 
+                                                       "Spin", "Walk", "Hit", "Walk", "Fly", "Walk"};
+                                                        //adding more walks so it is randomly chosen more and others feel special
 
 
 
@@ -640,7 +643,7 @@ public class QuixoClass : MonoBehaviour
         path.Add(final);
 
         Penguin penguin = Data(from);
-        penguin.Play("Walk");
+        penguin.Play(movementAnimations[randomMovementAnimation()]);
         penguin.soundEffect.stopAllsounds();
         penguin.soundEffect.playPitter();
 
@@ -1015,12 +1018,21 @@ public class QuixoClass : MonoBehaviour
         {
             if (penguin.face != '_')
             {
-                penguin.Play("Spin");
+                penguin.Play("Fear");
             }
             else
             {
                 penguin.Play("Death");
             }
         }
+    }
+
+    private int randomMovementAnimation()
+    {
+        System.Random random = new System.Random();
+
+        int randomNumber = random.Next(0, movementAnimations.Length);
+        return randomNumber;
+
     }
 }

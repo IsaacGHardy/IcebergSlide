@@ -7,6 +7,7 @@ public class MenuSounds : MonoBehaviour
     [SerializeField] private AudioSource[] audioSources;
     //0 is win
     //1 is click
+    //2 is game start
 
     public void playWin()
     {
@@ -26,6 +27,16 @@ public class MenuSounds : MonoBehaviour
     public void stopClick()
     {
         audioSources[1].Stop();
+    }
+
+    public void playReady()
+    {
+        audioSources[2].Play();
+    }
+
+    public void stopReady()
+    {
+        audioSources[2].Stop();
     }
 
     public void stopAllsounds()

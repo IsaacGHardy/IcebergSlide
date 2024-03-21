@@ -18,6 +18,7 @@ public class PhotonLobby : MonoBehaviourPunCallbacks
     [SerializeField] private Canvas connectinToServer;
     [SerializeField] private Canvas lobbyCanvas;
     [SerializeField] private Canvas waiting;
+    [SerializeField] MenuSounds menuSounds;
     private float waitTime = .5f;
 
     private void Awake()
@@ -31,7 +32,7 @@ public class PhotonLobby : MonoBehaviourPunCallbacks
 
     public override void OnConnectedToMaster()
     {
-
+        menuSounds.playReady();
         PhotonNetwork.JoinLobby();
 
     }

@@ -19,8 +19,8 @@ public class EndGame : MonoBehaviour
         
         if(QuixoClass.isXWin && QuixoClass.isOWin)
         {
-            p1.Play("Spin");
-            p2.Play("Spin");
+            p1.Play("Fear");
+            p2.Play("Fear");
             WinnerText.text = "You Tied!";
         }
         else if(QuixoClass.isXWin)
