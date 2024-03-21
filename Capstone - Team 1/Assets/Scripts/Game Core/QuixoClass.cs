@@ -640,6 +640,8 @@ public class QuixoClass : MonoBehaviour
 
         Penguin penguin = Data(from);
         penguin.Play("Walk");
+        penguin.soundEffect.stopAllsounds();
+        penguin.soundEffect.playPitter();
 
         foreach (Point p in path)
         {
@@ -728,6 +730,7 @@ public class QuixoClass : MonoBehaviour
         foreach (Penguin penguin in toSlide)
         {
             penguin.snap();
+            penguin.soundEffect.stopAllsounds();
             tempBoard[penguin.row, penguin.col] = penguin;
         }
         gameBoard = tempBoard;
@@ -765,6 +768,10 @@ public class QuixoClass : MonoBehaviour
             {
                 isLocked = true;
             }
+        }
+        else
+        {
+            isLocked = false;
         }
     }
 

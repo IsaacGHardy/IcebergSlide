@@ -20,7 +20,8 @@ public class Penguin : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
     public char face;
     public char oldFace;
     private Point _toPoint;
-    public static Point clickedPenguin;
+    public static Point clickedPenguin = new Point(-1, -1);
+    [SerializeField] public SoundEffect soundEffect;
     public Point toPoint
     {
         get { return _toPoint; }
@@ -46,6 +47,8 @@ public class Penguin : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
     {
         if (!Game.isLocked)
         {
+            soundEffect.playPoke();
+            soundEffect.playBloop2();
             run();
         }
     }
@@ -62,6 +65,8 @@ public class Penguin : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
                 face = face == '_' ? Game.isXTurn ? 'X' : 'O' : face;
                 setHat();
                 Play("Bounce");
+                /*soundEffect.stopAllsounds();
+                soundEffect.playPoke();*/
                 clickedPenguin = new Point(this.row, this.col);
             }
             else if (Game.from.eq(loc()))
@@ -71,6 +76,7 @@ public class Penguin : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
                 face = oldFace;
                 setHat();
                 Play("Idle_A");
+                soundEffect.stopAllsounds();
                 clickedPenguin = new Point(-1, -1);
             }
             else
@@ -79,6 +85,7 @@ public class Penguin : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
                 clickedPenguin = new Point(-1, -1);
                 if (Game.IsValidMove())
                 {
+                    soundEffect.stopAllsounds();
                     Game.isLocked = true;
                     Game.Data(Game.from).oldFace = Game.Data(Game.from).face;
                     Game.passMove(ai);
@@ -179,7 +186,6 @@ public class Penguin : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
         Animator animator = penguin.GetComponent<Animator>();
         if(animator.HasState(0, Animator.StringToHash(animation))){
             animator.Play(animation);
-            
         }
     }
 
@@ -195,11 +201,13 @@ public class Penguin : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
                         || (this.col == clickedPenguin.col && (this.row == 0 || this.row == 4)))
                     {
                         Play("Bounce");
+                        soundEffect.playBloop3();
                     }
                 }
                 else
                 {
                     Play("Bounce");
+                    soundEffect.playBloop3();
                 }
             }
         }
@@ -212,10 +220,13 @@ public class Penguin : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
             if (this.row == Penguin.clickedPenguin.row && this.col == Penguin.clickedPenguin.col)
             {
                 Play("Bounce");
+                soundEffect.stopBloop3();
+                soundEffect.playBloop2();
             }
             else
             {
                 Play("Idle_A");
+                soundEffect.stopAllsounds();
             }
         }
     }

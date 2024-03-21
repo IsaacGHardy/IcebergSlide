@@ -2173,6 +2173,7 @@ MonoBehaviour:
   col: 0
   face: 95
   oldFace: 88
+  soundEffect: {fileID: 0}
   hat: {fileID: 0}
 --- !u!136 &401850836
 CapsuleCollider:
@@ -7541,7 +7542,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: c2a004054813ced46aafff29d6d04ec3, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.4
+  m_Volume: 0.2
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -8702,6 +8703,7 @@ MonoBehaviour:
   col: 0
   face: 95
   oldFace: 84
+  soundEffect: {fileID: 0}
   hat: {fileID: 0}
 --- !u!136 &1553774241
 CapsuleCollider:
