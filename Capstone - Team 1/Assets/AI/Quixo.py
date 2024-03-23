@@ -183,7 +183,6 @@ def next_move_or_match_end(board, player_turn):
         print_board(board)
         print(wins_list[0]+" has won. \n")
         if (BUILD_AI_ONLY_PLAY):
-            #time.sleep(10000)
             if (wins_list[0] == "X"):
                 global x_wins
                 x_wins += 1
@@ -245,13 +244,10 @@ def start_match():
         apply_move(board, move_block_from, move_block_to, player_turn)
         player_turn = next_move_or_match_end(board, player_turn)
         if (BUILD_AI_ONLY_PLAY):
-            #print_board(board)
             time.sleep(AI_WAIT_SPEED)
-    
+
     global ties
     ties += 1
-    #print("Tie Declared")
-    #print_board(board)
 
 if (BUILD_AI_ONLY_PLAY):
     print(time.asctime())
