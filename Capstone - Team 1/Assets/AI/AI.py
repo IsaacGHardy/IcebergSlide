@@ -243,7 +243,7 @@ def score_placement(board, playing_as, pickup_row, pickup_col, placement_row, pl
     your_max_streak_inc = your_current_streaks < your_future_streaks
     opps_max_streak_does_not_get_scary = opp_future_streaks < 4
     if (your_max_streak_inc and opps_max_streak_does_not_get_scary):
-        placement_score += 100
+        placement_score += 100 * your_future_streaks
         reasoning += " " + "Builds Streak and does not give opp 4 in a row" + ", "
 
     if (your_future_streaks == 5 and opp_future_streaks != 5):
@@ -286,8 +286,8 @@ def get_all_moves(board, playing_as):
                 placement_score, placement_reasoning = score_placement(board, playing_as, pickup_row, pickup_col, placement_row, placement_col, placement_reasoning)
 
                 combined_move = x + " " + spot
-                combined_move = combined_move.replace("(" , "<") #Integration with Unity
-                combined_move = combined_move.replace(")" , ">") #Integration with Unity
+                combined_move = combined_move.replace("(" , "｟") #Integration with Unity
+                combined_move = combined_move.replace(")" , "｠") #Integration with Unity
                 if len(placement_reasoning) >= 2:
                     placement_reasoning = placement_reasoning[:-2]
 
@@ -303,9 +303,10 @@ def shuffle_scores_for_difficulty(possible_moves, difficulty):
 
 def request_ai_move(board, playing_as, difficulty):
     possible_moves = get_all_moves(board, playing_as)
-    shuffle_scores_for_difficulty(possible_moves, difficulty)
+    shuffle_scores_for_difficulty(possible_moves, difficulty) 
 
-    best_moves = [move for move, score in possible_moves.items() if score == max(possible_moves.values())]
+    #best_moves are moves with a rating within 100 of the max score in the moves list
+    best_moves = [move for move, score in possible_moves.items() if int(score[0]) > (int(max(possible_moves.values())[0]) - 100)]
     random_best_move = random.choice(best_moves)
     spot_data = random_best_move.split(" ")
  
@@ -317,5 +318,5 @@ def request_ai_move(board, playing_as, difficulty):
         elif (playing_as == "O"):
             print("\n" + "\u001b[35m" + playing_as + " Move Chosen" + "\u001b[0m")
         print(str(spot_data))
-
+    
     return spot_data[0], spot_data[1]
