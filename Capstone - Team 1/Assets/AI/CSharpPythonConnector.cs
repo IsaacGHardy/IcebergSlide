@@ -9,8 +9,7 @@ public class AI : MonoBehaviour
     {
         //Editible Vars
         string pythonInterpreter = System.IO.Path.Combine(Application.dataPath, "AI/python.exe");
-
-        string charDataToSend = mov; //25 Chars, either "X" "O" " " and the last char (26th) is the team you are generating for, 27th Char is the difficulty 1-5
+        string charDataToSend = mov;
 
         //Proccesses and paths
         string filePath = Path.Combine(Application.dataPath, "AI", "PythonMoveRequestReceiver.py");

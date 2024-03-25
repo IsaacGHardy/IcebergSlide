@@ -286,8 +286,6 @@ def get_all_moves(board, playing_as):
                 placement_score, placement_reasoning = score_placement(board, playing_as, pickup_row, pickup_col, placement_row, placement_col, placement_reasoning)
 
                 combined_move = x + " " + spot
-                combined_move = combined_move.replace("(" , "｟") #Integration with Unity
-                combined_move = combined_move.replace(")" , "｠") #Integration with Unity
                 if len(placement_reasoning) >= 2:
                     placement_reasoning = placement_reasoning[:-2]
 

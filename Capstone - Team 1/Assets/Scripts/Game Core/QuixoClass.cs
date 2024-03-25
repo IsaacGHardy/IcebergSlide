@@ -927,7 +927,7 @@ public class QuixoClass : MonoBehaviour
         string boardStr = translateBoard();
         blockVal = isXTurn ? 'X' : 'O';
         if (AIgame && !autoMove){
-            string AImove = ai.makeMove(boardStr + 'O');
+            string AImove = ai.makeMove(boardStr + 'O' + '0');
             readAImove(AImove);
             Data(from).run(true);
             Data(to).run(true);
@@ -957,7 +957,7 @@ public class QuixoClass : MonoBehaviour
     private void readAImove(string move)
     {
         // Regular expression to match two instances of coordinates in the format (0,0)
-        var regex = new Regex(@"\<(\d+),(\d+)\>.*\<(\d+),(\d+)\>");
+        var regex = new Regex(@"\((\d +),(\d +)\).*\((\d +),(\d +)\)");
         var match = regex.Match(move);
 
         if (match.Success)
