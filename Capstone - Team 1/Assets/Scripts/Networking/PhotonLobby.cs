@@ -94,6 +94,8 @@ public class PhotonLobby : MonoBehaviourPunCallbacks
     public override void OnDisconnected(DisconnectCause cause)
     {
         print("Disconnected from server for reason " + cause.ToString());
+        SceneManager.LoadScene("Main Menu");
+
     }
 
     bool isRoomFull()

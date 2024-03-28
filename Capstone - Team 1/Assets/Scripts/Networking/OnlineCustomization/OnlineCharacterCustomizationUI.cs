@@ -1,11 +1,14 @@
 using ExitGames.Client.Photon;
 using JetBrains.Annotations;
 using Photon.Pun;
+using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.SocialPlatforms;
 using UnityEngine.UI;
 
 public class OnlineCharacterCustomizationUI : MonoBehaviour
@@ -14,19 +17,39 @@ public class OnlineCharacterCustomizationUI : MonoBehaviour
     [SerializeField] private PhotonView photonView;
     [SerializeField] private TextMeshProUGUI swapText;
     [SerializeField] private TextMeshProUGUI playText;
+    [SerializeField] private TextMeshProUGUI selectText;
+    [SerializeField] private TextMeshProUGUI otherSwapText;
     [SerializeField] private Button swapButton;
     [SerializeField] private Button playButton;
     [SerializeField] private Button p1Button;
     [SerializeField] private Button p2Button;
+    [SerializeField] private GameObject rotate1;
+    [SerializeField] private GameObject rotate2;
+    [SerializeField] private GameObject p1ReadyButton;
+    [SerializeField] private GameObject p2ReadyButton;
     [SerializeField] private GameObject p1Buttons;
     [SerializeField] private GameObject p2Buttons;
     public static Hat XHAT;
     public static Hat OHAT;
+    public static string P1Nickname = "Player 1";
+    public static string P2Nickname = "Player 2";
     private bool isP1 = false;
     private bool otherPlay;
     private bool mePlay;
     private bool otherSwap;
     private bool meSwap;
+    private Player[] playerList;
+
+    private void Awake()
+    {
+        playerList = PhotonNetwork.PlayerList;
+    }
+
+    public static void resetHats()
+    {
+        XHAT = null;
+        OHAT = null;
+    }
 
     public void onlineP1For()
     {
@@ -107,6 +130,15 @@ public class OnlineCharacterCustomizationUI : MonoBehaviour
     {
         //change to correct bool
         otherSwap = !otherSwap;
+        if(otherSwap)
+        {
+            otherSwapText.gameObject.SetActive(true);
+        }
+        else
+        {
+            otherSwapText.gameObject.SetActive(false);
+
+        }
     }
 
     [PunRPC]
@@ -117,9 +149,13 @@ public class OnlineCharacterCustomizationUI : MonoBehaviour
         {
             //change logic to accomplish necssary
             characterCustomization.switchSides();
+            swapNicknames();
+            isP1 = !isP1;
+            swapCustomButtons();
             //change these two bools and text
             otherSwap = false;
             meSwap = false;
+            otherSwapText.gameObject.SetActive(false);
             playButton.interactable = true;
             swapText.gameObject.SetActive(false);
         }
@@ -130,6 +166,13 @@ public class OnlineCharacterCustomizationUI : MonoBehaviour
             swapText.gameObject.SetActive(true);
         }
     }
+    
+    private void swapNicknames()
+    {
+        string temp = P1Nickname;
+        P1Nickname = P2Nickname;
+        P2Nickname = temp;
+    }
 
     public void onlineStart()
     {
@@ -138,10 +181,13 @@ public class OnlineCharacterCustomizationUI : MonoBehaviour
         if(mePlay)
         {
             swapButton.interactable = false;
+            setMyReadyButtons(mePlay);
+
         }
         else
         {
             swapButton.interactable = true;
+            setMyReadyButtons(mePlay);
         }
         if (!mePlay)
         {
@@ -154,6 +200,38 @@ public class OnlineCharacterCustomizationUI : MonoBehaviour
     private void setOtherPlay()
     {
         otherPlay = !otherPlay;
+        if(otherPlay)
+        {
+            setOtherReadyButtons(otherPlay);
+        }
+        else
+        {
+            setOtherReadyButtons(otherPlay);
+        }
+    }
+
+    private void setOtherReadyButtons(bool on)
+    {
+        if (isP1)
+        {
+            p2ReadyButton.gameObject.SetActive(on);
+        }
+        else
+        {
+            p1ReadyButton.gameObject.SetActive(on);
+        }
+    }
+
+    private void setMyReadyButtons(bool on)
+    {
+        if (isP1)
+        {
+            p1ReadyButton.gameObject.SetActive(on);
+        }
+        else
+        {
+            p2ReadyButton.gameObject.SetActive(on);
+        }
     }
 
     [PunRPC]
@@ -196,10 +274,27 @@ public class OnlineCharacterCustomizationUI : MonoBehaviour
     private void meChooseP1()
     {
         isP1 = true;
+        selectText.gameObject.SetActive(false);
+        setMiddleButtons();
         p1Buttons.SetActive(true);
+        activateRotateView();
         p2Button.gameObject.SetActive(false);
         p1Button.gameObject.SetActive(false);
         characterCustomization.seeP1();
+
+        foreach (Player player in playerList)
+        {
+            string nickname = player.NickName;
+            string localId = PhotonNetwork.LocalPlayer.UserId;
+            if (player.UserId ==  localId && nickname != "")
+            {
+                P1Nickname = nickname;
+            }
+            else if(player.UserId != localId && nickname != "")
+            {
+                P2Nickname = nickname;
+            }
+        }
     }
 
     [PunRPC]
@@ -207,6 +302,22 @@ public class OnlineCharacterCustomizationUI : MonoBehaviour
     {
         characterCustomization.seeP1();
         p1Button.gameObject.SetActive(false);
+        rotate1.gameObject.SetActive(true);
+        rotate1.GetComponent<Image>().enabled = false;
+
+        foreach (Player player in playerList)
+        {
+            string nickname = player.NickName;
+            string localId = PhotonNetwork.LocalPlayer.UserId;
+            if (player.UserId != localId && nickname != "")
+            {
+                P1Nickname = nickname;
+            }
+            else if (player.UserId == localId && nickname != "")
+            {
+                P2Nickname = nickname;
+            }
+        }
     }
 
     public void onlineChooseP2()
@@ -218,7 +329,10 @@ public class OnlineCharacterCustomizationUI : MonoBehaviour
     private void meChooseP2()
     {
         isP1 = false;
+        selectText.gameObject.SetActive(false);
+        setMiddleButtons();
         p2Buttons.SetActive(true);
+        activateRotateView();
         p1Button.gameObject.SetActive(false);
         p2Button.gameObject.SetActive(false);
         characterCustomization.seeP2();
@@ -229,6 +343,63 @@ public class OnlineCharacterCustomizationUI : MonoBehaviour
     {
         characterCustomization.seeP2();
         p2Button.gameObject.SetActive(false);
+        rotate2.gameObject.SetActive(true);
+        rotate2.GetComponent<Image>().enabled = false;
+    }
+
+    private void swapCustomButtons()
+    {
+        p1Buttons.SetActive(!p1Buttons.activeSelf);
+        rotate1.GetComponent<Image>().enabled = isP1;
+
+        p2Buttons.SetActive(!p2Buttons.activeSelf);
+        rotate2.GetComponent<Image>().enabled = !isP1 ;
+    }
+
+    private void activateRotateView()
+    {
+        if (isP1) {
+            rotate1.gameObject.SetActive(true);
+            rotate2.gameObject.SetActive(true);
+            rotate2.GetComponent<Image>().enabled = false;
+        }
+        else
+        {
+            rotate2.gameObject.SetActive(true);
+            rotate1.gameObject.SetActive(true);
+            rotate1.GetComponent<Image>().enabled = false;
+        }
+    }
+
+    private void setMiddleButtons()
+    {
+        playButton.gameObject.SetActive(true);
+        swapButton.gameObject.SetActive(true);
+    }
+
+    public void DisconnectAndWait()
+    {
+        PhotonNetwork.Disconnect();
+        StartCoroutine(WaitForDisconnect());
+
+    }
+
+    private IEnumerator WaitForDisconnect()
+    {
+        while (PhotonNetwork.IsConnected)
+        {
+            yield return null;
+        }
+
+
+        resetHats();
+        SceneManager.LoadScene("Lobby");
+    }
+
+    public void returnToLobby()
+    {
+
+        DisconnectAndWait();
     }
 
 }

@@ -29,16 +29,24 @@ public class CharacterCustomization : MonoBehaviour
 
     private void Awake()
     {
-        //Assign different random hats to each penguin
-        System.Random random = new System.Random();
-        int randP1Index = random.Next(0, hatArray.Length);
-        int randP2Index;
-        do
+        if (CharacterCustomizationUI.XHAT != null && CharacterCustomizationUI.OHAT != null)
         {
-            randP2Index = random.Next(0, hatArray.Length);
-        } while (randP1Index == randP2Index);
-        p1.setHat(hatArray[randP1Index]);
-        p2.setHat(hatArray[randP2Index]);
+            p1.setHat(CharacterCustomizationUI.XHAT);
+            p2.setHat(CharacterCustomizationUI.OHAT);
+        }
+        else
+        {
+            //Assign different random hats to each penguin
+            System.Random random = new System.Random();
+            int randP1Index = random.Next(0, hatArray.Length);
+            int randP2Index;
+            do
+            {
+                randP2Index = random.Next(0, hatArray.Length);
+            } while (randP1Index == randP2Index);
+            p1.setHat(hatArray[randP1Index]);
+            p2.setHat(hatArray[randP2Index]);
+        }
     }
 
     public void setRandomHat(bool isP1)

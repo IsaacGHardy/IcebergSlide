@@ -27,10 +27,27 @@ public class OnlineMgmt : MonoBehaviourPunCallbacks
         returnToLobby();
     }
 
-    public void returnToLobby()
+    public void DisconnectAndWait()
     {
         PhotonNetwork.Disconnect();
+        StartCoroutine(WaitForDisconnect());
+
+    }
+
+    private IEnumerator WaitForDisconnect()
+    {
+        while(PhotonNetwork.IsConnected)
+        {
+            yield return null;
+        }
+
+        OnlineCharacterCustomizationUI.resetHats();
         SceneManager.LoadScene("Lobby");
+    }
+
+    public void returnToLobby()
+    {
+        DisconnectAndWait();
     }
 
     private void OnDestroy()

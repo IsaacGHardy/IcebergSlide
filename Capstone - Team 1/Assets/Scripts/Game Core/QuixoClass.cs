@@ -80,7 +80,8 @@ public class QuixoClass : MonoBehaviour
     public static bool isPlayer1 = false;
     private string[] movementAnimations = new string[] { "Walk", "Roll", "Walk", "Swim", "Walk", 
                                                        "Spin", "Walk", "Hit", "Walk", "Fly", "Walk"};
-                                                        //adding more walks so it is randomly chosen more and others feel special
+    //adding more walks so it is randomly chosen more and others feel special
+    private int randMovementIndex = 0;
 
 
 
@@ -643,7 +644,7 @@ public class QuixoClass : MonoBehaviour
         path.Add(final);
 
         Penguin penguin = Data(from);
-        penguin.Play(movementAnimations[randomMovementAnimation()]);
+        penguin.Play(movementAnimations[randMovementIndex]);
         penguin.soundEffect.stopAllsounds();
         penguin.soundEffect.playPitter();
 
@@ -872,9 +873,10 @@ public class QuixoClass : MonoBehaviour
     // uses the other primary move functions to carry out a move in its entirety
 
     [PunRPC]
-    public void makeMove(int FromRow, int FromCol, int ToRow, int ToCol, bool AiMove = false)
+    public void makeMove(int FromRow, int FromCol, int ToRow, int ToCol, int tempRandMovementIndex,
+                        bool AiMove = false)
     {
-
+        randMovementIndex = tempRandMovementIndex;
         from = new Point(FromRow, FromCol);
         to = new Point(ToRow, ToCol);
         Penguin penguin = gameBoard[from.row, from.col];
@@ -886,10 +888,12 @@ public class QuixoClass : MonoBehaviour
     {
         //UnityEngine.Debug.Log($"Moving: ({from.row},{from.col}) >> ({to.row},{to.col}) inside passMove");
         char blockVal = isXTurn ? 'X' : 'O';
+        randMovementIndex = randomMovementAnimation();
 
         if (isOnline)
         {
-            photonView.RPC("makeMove", RpcTarget.Others, from.row, from.col, to.row, to.col, false);
+            photonView.RPC("makeMove", RpcTarget.Others, from.row, from.col, to.row, to.col, randMovementIndex,
+                                        false);
         }
         makeMove(autoMove);
     }

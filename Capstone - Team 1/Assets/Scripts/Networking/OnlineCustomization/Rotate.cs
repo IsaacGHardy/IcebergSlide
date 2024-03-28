@@ -5,14 +5,15 @@ using Photon.Pun;
 public class OnlineRotate : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public Penguin penguin;
-    private Quaternion resetRotation;
+    [SerializeField] private Vector3 resetRotationV;
     public float rotationSpeed;
     private bool pointerEnter = false;
     [SerializeField] private PhotonView photonView;
+    private Quaternion resetRotation;
 
     void Start()
     {
-        resetRotation = penguin.gameObject.transform.rotation;
+        resetRotation = Quaternion.Euler(resetRotationV);
     }
 
     void Update()
