@@ -223,6 +223,10 @@ public class OnlineCharacterCustomizationUI : MonoBehaviour
     {
         PhotonNetwork.NickName = (isP1 ? p1Name.text : p2Name.text);
         PlayerPrefs.SetString("Username", (isP1 ? p1Name.text : p2Name.text));
+
+        QuixoClass.p1Name = p1Name.text;
+        QuixoClass.p2Name = p2Name.text;
+
     }
 
     public void onInputFieldChanged(string text)

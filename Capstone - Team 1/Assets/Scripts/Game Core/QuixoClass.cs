@@ -14,6 +14,8 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Pun.Demo.PunBasics;
 using UnityEngine.SceneManagement;
+using TMPro;
+using Photon.Realtime;
 
 public struct Point
 {
@@ -49,6 +51,10 @@ public class QuixoClass : MonoBehaviour
     public AI ai;
     [SerializeField] PhotonView photonView;
     [SerializeField] MenuSounds menuSounds;
+    [SerializeField] TextMeshProUGUI playerTurn;
+    public static string p1Name = "Player 1";
+    public static string p2Name = "Player 2";
+    private Player[] playerList;
 
 
     //####################################################################################################################################
@@ -92,6 +98,8 @@ public class QuixoClass : MonoBehaviour
     {
         isXWin = false;
         isOWin = false;
+        if (isOnline) { playerTurn.text = $"{p1Name}'s turn"; }
+        else { playerTurn.text = $"{EndGame.p1Name}'s turn"; }
         if(!isPlayer1 && isOnline)
         {
             isLocked = true;
@@ -764,6 +772,7 @@ public class QuixoClass : MonoBehaviour
         to = new Point(-1, -1); 
         moveInProgress = false; 
         isXTurn = !isXTurn;
+        changePlayerTurn();
         if(isOnline)
         {
             if (isPlayer1 == isXTurn)
@@ -778,6 +787,20 @@ public class QuixoClass : MonoBehaviour
         else
         {
             isLocked = false;
+        }
+    }
+
+    private void changePlayerTurn()
+    {
+        if (isOnline)
+        {
+            if (!(isXWin || isOWin)) { playerTurn.text = $"{(isXTurn ? p1Name : p2Name)}'s turn"; }
+            else { playerTurn.text = ""; }
+        }
+        else
+        {
+            if (!(isXWin || isOWin)) { playerTurn.text = $"{(isXTurn ? EndGame.p1Name : EndGame.p2Name)}'s turn"; }
+            else { playerTurn.text = ""; }
         }
     }
 

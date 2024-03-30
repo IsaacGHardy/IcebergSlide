@@ -62,7 +62,7 @@ public class OnlineEndGame : MonoBehaviour
                 }
                 else
                 {
-                    p1Name = nickname;
+                    p2Name = nickname;
                 }
             }
         }
