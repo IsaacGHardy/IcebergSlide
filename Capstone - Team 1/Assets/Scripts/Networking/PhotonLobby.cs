@@ -41,9 +41,7 @@ public class PhotonLobby : MonoBehaviourPunCallbacks
     {
         connectinToServer.gameObject.SetActive(false);
         lobbyCanvas.gameObject.SetActive(true);
-        Debug.Log("You have joined the lobby.");
         int playersInLobbby = PhotonNetwork.CountOfPlayersInRooms + PhotonNetwork.CountOfPlayersOnMaster;
-        Debug.Log($"Players in the lobby: {playersInLobbby}");
 
 
     }
@@ -55,7 +53,6 @@ public class PhotonLobby : MonoBehaviourPunCallbacks
 
     public override void OnCreatedRoom()
     {
-        Debug.Log("You have created a new room!");
     }
 
     public void JoinRoom()
@@ -69,19 +66,15 @@ public class PhotonLobby : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        Debug.Log($"You have joined the room '{PhotonNetwork.CurrentRoom.Name}'");
-        Debug.Log($"Players in this room: {PhotonNetwork.CurrentRoom.PlayerCount}");
         lobbyCanvas.gameObject.SetActive(false);
         waiting.gameObject.SetActive(true);
 
         StartCoroutine(checkPlayerCount());
-
     }
 
     void UpdatePlayerCount()
     {
         int playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
-        Debug.Log($"Players in room '{PhotonNetwork.CurrentRoom.Name}': {playerCount}");
     }
 
     public override void OnDisconnected(DisconnectCause cause)

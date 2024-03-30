@@ -4,28 +4,27 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
+using System.Linq;
 
 public class RoomList : MonoBehaviourPunCallbacks
 {
     public GameObject RoomPrefab;
     public GameObject[] AllRooms;
+    private List<RoomInfo> RoomListings = new List<RoomInfo>();
 
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
-        for (int i = 0; i < AllRooms.Length; i++)
+        RoomListings.Clear();
+
+        RoomListings.AddRange(roomList);
+
+        AllRooms = new GameObject[RoomListings.Count];
+        for (int i = 0; i < RoomListings.Count; i++)
         {
-            if (AllRooms[i] != null)
-            {
-                Destroy(AllRooms[i]);
-            }
-        }
-        AllRooms = new GameObject[roomList.Count];
-        for (int i = 0; i < roomList.Count; i++)
-        {
-            if (roomList[i].IsOpen && roomList[i].IsVisible && roomList[i].PlayerCount == 1)
+            if (RoomListings[i].IsOpen && RoomListings[i].IsVisible && RoomListings[i].PlayerCount == 1)
             {
                 GameObject Room = Instantiate(RoomPrefab, new Vector3(155, -100 - (i * 60), 0), Quaternion.identity, GameObject.Find("Content").transform);
-                Room.GetComponent<Room>().Name.text = roomList[i].Name;
+                Room.GetComponent<Room>().Name.text = RoomListings[i].Name;
 
                 AllRooms[i] = Room;
             }

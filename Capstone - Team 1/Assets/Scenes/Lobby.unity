@@ -307,6 +307,7 @@ MonoBehaviour:
   lobbyCanvas: {fileID: 1556729509}
   waiting: {fileID: 873758537}
   menuSounds: {fileID: 83796610}
+  roomList: {fileID: 1537705568}
 --- !u!4 &83796607
 Transform:
   m_ObjectHideFlags: 0
