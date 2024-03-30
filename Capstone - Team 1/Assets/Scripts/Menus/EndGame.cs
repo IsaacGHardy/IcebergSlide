@@ -11,6 +11,8 @@ public class EndGame : MonoBehaviour
     [SerializeField] private TextMeshProUGUI WinnerText;
     private bool vsAi = CharacterCustomizationUI.IS_AI_GAME;
     private bool isP1 = QuixoClass.isPlayer1;
+    public static string p1Name = "Player 1";
+    public static string p2Name = "Player 2";
 
     private void Awake()
     {
@@ -39,7 +41,7 @@ public class EndGame : MonoBehaviour
             }
             else
             {
-                WinnerText.text = "Player 1 Wins!";
+                WinnerText.text = $"{p1Name} Wins!";
             }
         }
         else if (QuixoClass.isOWin)
@@ -59,7 +61,7 @@ public class EndGame : MonoBehaviour
             }
             else
             {
-                WinnerText.text = "Player 2 Wins!";
+                WinnerText.text = $"{p2Name} Wins!";
             }
         }
     }

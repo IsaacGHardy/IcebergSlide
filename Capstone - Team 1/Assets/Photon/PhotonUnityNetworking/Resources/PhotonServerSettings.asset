@@ -65,6 +65,7 @@ MonoBehaviour:
   - otherChooseP1
   - otherChooseP2
   - otherToLobby
+  - syncInput
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

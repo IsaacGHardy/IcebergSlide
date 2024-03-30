@@ -48,12 +48,6 @@ public class PhotonLobby : MonoBehaviourPunCallbacks
 
     }
 
-    public void SaveUsername()
-    {
-        PhotonNetwork.NickName = nickname.text;
-        PlayerPrefs.SetString("Username", nickname.text);
-    }
-
     public void CreateRoom()
     {
         PhotonNetwork.CreateRoom(input_Create.text, new RoomOptions() { MaxPlayers = 2, IsVisible = true, IsOpen = true }, TypedLobby.Default);
@@ -71,7 +65,6 @@ public class PhotonLobby : MonoBehaviourPunCallbacks
     public void JoinRoomInList(string RoomName)
     {
         PhotonNetwork.JoinRoom(RoomName);
-        SaveUsername();
     }
 
     public override void OnJoinedRoom()

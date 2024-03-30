@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.SocialPlatforms;
 using UnityEngine.UI;
 
 public class OnlineEndGame : MonoBehaviour
@@ -25,12 +26,46 @@ public class OnlineEndGame : MonoBehaviour
     private bool mePlay;
     private bool otherSwap;
     private bool meSwap;
+    private string p1Name = "Player 1";
+    private string p2Name = "Player 2";
+    private Player[] playerList;
 
     private void Awake()
     {
+        playerList = PhotonNetwork.PlayerList;
+
         p1.setHat(OnlineCharacterCustomizationUI.XHAT);
         p2.setHat(OnlineCharacterCustomizationUI.OHAT);
 
+        foreach (Player player in playerList)
+        {
+            string nickname = player.NickName;
+            string localId = PhotonNetwork.LocalPlayer.UserId;
+            if (player.UserId != localId && nickname != "")
+            {
+                //not my nickname, so if im p1 then give to p2
+                if (OnlineCharacterCustomizationUI.isP1)
+                {
+                    p2Name = nickname;
+                }
+                else
+                {
+                    p1Name = nickname;
+                }
+            }
+            else if (player.UserId == localId && nickname != "")
+            {
+                //my nickname, so give to p1 if im p1
+                if (OnlineCharacterCustomizationUI.isP1)
+                {
+                    p1Name = nickname;
+                }
+                else
+                {
+                    p1Name = nickname;
+                }
+            }
+        }
 
         if (QuixoClass.isXWin && QuixoClass.isOWin)
         {
@@ -42,13 +77,13 @@ public class OnlineEndGame : MonoBehaviour
         {
             p1.Play("Jump");
             p2.Play("Death");
-            WinnerText.text = $"{OnlineCharacterCustomizationUI.P1Nickname} Wins!";
+            WinnerText.text = $"{p1Name} Wins!";
         }
         else if (QuixoClass.isOWin)
         {
             p1.Play("Death");
             p2.Play("Jump");
-            WinnerText.text = $"{OnlineCharacterCustomizationUI.P2Nickname} Wins!";
+            WinnerText.text = $"{p2Name} Wins!";
         }
     }
 

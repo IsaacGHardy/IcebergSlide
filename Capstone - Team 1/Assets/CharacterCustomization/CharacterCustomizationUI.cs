@@ -16,6 +16,8 @@ public class CharacterCustomizationUI : MonoBehaviour
     [SerializeField] private Button AIEasierButton;
     [SerializeField] private Button AIHarderButton;
     [SerializeField] private TextMeshProUGUI AIDifficultyText;
+    [SerializeField] private TMP_InputField p1Name;
+    [SerializeField] private TMP_InputField p2Name;
     [SerializeField] private Button p1ForButton;
     [SerializeField] private Button p1BackButton;
     [SerializeField] private Button p2ForButton;
@@ -29,7 +31,7 @@ public class CharacterCustomizationUI : MonoBehaviour
 
     public static Hat XHAT;
     public static Hat OHAT;
-    public static bool IS_AI_GAME;
+    public static bool IS_AI_GAME = true;
     public static int AI_DIFFICULTY;
     private bool vsAi = true;
     private bool isP1 = true;
@@ -52,8 +54,28 @@ public class CharacterCustomizationUI : MonoBehaviour
         P1RotateScript = p1Rotate.GetComponent<Rotate>();
         P2RotateScript = p2Rotate.GetComponent<Rotate>();
 
-        disableP2Buttons();
+        vsAi = IS_AI_GAME;
+        p1Name.text = EndGame.p1Name;
+        p2Name.text = EndGame.p2Name;
+
+        p1Name.onEndEdit.AddListener(defaultName);
+        p2Name.onEndEdit.AddListener(defaultName);
+
+        if (vsAi) { 
+            disableP2Buttons();
+        }
+        else
+        {
+            enableP2Buttons();
+            vsAiButton.gameObject.SetActive(vsAi);
+            vsFriendButton.gameObject.SetActive(!vsAi);
+            AIDifficultyText.gameObject.SetActive(vsAi);
+            AIEasierButton.gameObject.SetActive(vsAi);
+            AIHarderButton.gameObject.SetActive(vsAi);
+        }
         yield return new WaitForSeconds(1);
+
+
 
         StartCoroutine(aiCustomization());
     }
@@ -204,6 +226,8 @@ public class CharacterCustomizationUI : MonoBehaviour
     {
         XHAT = characterCustomization.p1Hat;
         OHAT = characterCustomization.p2Hat;
+        EndGame.p1Name = p1Name.text;
+        EndGame.p2Name = p2Name.text;
         IS_AI_GAME = vsAi;
         QuixoClass.isPlayer1 = isP1;
         AI_DIFFICULTY = (int)difficulty;
@@ -308,6 +332,28 @@ public class CharacterCustomizationUI : MonoBehaviour
         p2RandButton.interactable = true;
         p2Rotate.enabled = true;
         p2IsAI.gameObject.SetActive(false);
+    }
+
+    private void defaultName(string text)
+    {
+        bool isP1Text = (EventSystem.current.currentSelectedGameObject.name == "P1Text");
+        if (text == "" || text == (isP1Text ? p2Name.text : p1Name.text))
+        {
+            if (isP1Text)
+            {
+                p1Name.text = "Player 1";
+            }
+            else
+            {
+                p2Name.text = "Player 2";
+            }
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (p1Name != null) { p1Name.onEndEdit.RemoveAllListeners(); }
+        if (p2Name != null) { p2Name.onEndEdit.RemoveAllListeners(); }
     }
 
 }

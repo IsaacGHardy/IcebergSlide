@@ -17447,7 +17447,7 @@ MonoBehaviour:
   ai: {fileID: 1941035188}
   photonView: {fileID: 0}
   menuSounds: {fileID: 834369303}
-  spd: 5
+  spd: 50
   trnspd: 25
   isXTurn: 1
   moveInProgress: 0
