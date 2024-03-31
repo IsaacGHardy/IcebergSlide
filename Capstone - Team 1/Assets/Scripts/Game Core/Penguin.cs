@@ -61,6 +61,7 @@ public class Penguin : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
                 Game.moveInProgress = true;
                 Game.from = loc();
                 Game.poss = Game.GetPossibleMoves();
+                Game.playPossibleMoves();
                 face = face == '_' ? Game.isXTurn ? 'X' : 'O' : face;
                 setHat();
                 Play("Bounce");
@@ -70,6 +71,7 @@ public class Penguin : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
             {
                 Game.from = new Point(0, 0);
                 Game.moveInProgress = false;
+                Game.stopPossibleMoves();
                 face = oldFace;
                 setHat();
                 soundEffect.stopAllsounds();
@@ -84,6 +86,7 @@ public class Penguin : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
                 if (Game.IsValidMove())
                 {
                     soundEffect.stopAllsounds();
+                    Game.stopPossibleMoves();
                     soundEffect.playPoke();
                     Game.isLocked = true;
                     Game.Data(Game.from).oldFace = Game.Data(Game.from).face;
@@ -216,7 +219,7 @@ public class Penguin : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
     {
         if (!Game.gameOver && !Game.isLocked)
         {
-            if (this.row == Penguin.clickedPenguin.row && this.col == Penguin.clickedPenguin.col)
+            if (this.row == Penguin.clickedPenguin.row && this.col == Penguin.clickedPenguin.col || isInPoss())
             {
                 Play("Bounce");
                 soundEffect.stopBloop3();
@@ -227,5 +230,20 @@ public class Penguin : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
                 soundEffect.stopAllsounds();
             }
         }
+    }
+    private bool isInPoss()
+    {
+        if(Game.poss == null)
+        {
+            return false;
+        }
+        foreach(Point p in Game.poss)
+        {
+            if(p.row == row && p.col == col)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

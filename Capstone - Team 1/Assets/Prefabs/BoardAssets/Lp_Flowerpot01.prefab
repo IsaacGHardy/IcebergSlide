@@ -121,5 +121,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hat: {fileID: 1828189919246527835}
   wearer: {fileID: 0}
-  pos: {x: 0, y: 0.007, z: 0}
+  pos: {x: 0, y: 0.008, z: 0}
   rot: {x: -15, y: 0, z: 0}

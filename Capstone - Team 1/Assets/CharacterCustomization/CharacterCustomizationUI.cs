@@ -38,6 +38,29 @@ public class CharacterCustomizationUI : MonoBehaviour
     private AIDifficulty difficulty = AIDifficulty.IceMaster;
     private Rotate P1RotateScript;
     private Rotate P2RotateScript;
+    private string[] aiNames = new string[]
+{
+    "Frosty",
+    "Blizzard",
+    "Pebbles",
+    "Chilly",
+    "Waddle",
+    "Squawk",
+    "Flurry",
+    "Iceberg",
+    "Squeak",
+    "Glide",
+    "Puff",
+    "Flipper",
+    "Snowy",
+    "Slide",
+    "Igloo",
+    "Tundra",
+    "Bubbles",
+    "Frost",
+    "Pingu",
+    "Glacier"
+};
 
     private void Awake()
     {
@@ -63,6 +86,7 @@ public class CharacterCustomizationUI : MonoBehaviour
 
         if (vsAi) { 
             disableP2Buttons();
+            p2Name.interactable = false;
         }
         else
         {
@@ -79,14 +103,13 @@ public class CharacterCustomizationUI : MonoBehaviour
 
         StartCoroutine(aiCustomization());
     }
-
     IEnumerator aiCustomization()
     {
         while (vsAi)
         {
             if (isP1) { P2RotateScript.setPointerExit(); }
             if (!isP1) { P1RotateScript.setPointerExit(); }
-            int random = Random.Range(1, 5);
+            int random = Random.Range(1, 6);
             switch(random)
             {
                 case 1:
@@ -129,10 +152,26 @@ public class CharacterCustomizationUI : MonoBehaviour
                         P1RotateScript.setPointerEnter();
                     }
                     break;
+                case 5:
+                    generateRandName();
+                    break;
             }
             yield return new WaitForSeconds(1);
         }
     }
+    private void generateRandName()
+    {
+        int random = Random.Range(0, 20);
+        if(isP1)
+        {
+            p2Name.text = aiNames[random];
+        }
+        else
+        {
+            p1Name.text = aiNames[random];
+        }
+    }
+
     enum AIDifficulty
     {
         Eggling = 0,
@@ -304,15 +343,16 @@ public class CharacterCustomizationUI : MonoBehaviour
         p1BackButton.interactable = false;
         p1RandButton.interactable = false;
         p1Rotate.enabled = false;
+        p1Name.interactable = false;
         p1IsAI.gameObject.SetActive(true);
     }
-
     public void enableP1Buttons()
     {
         p1ForButton.interactable = true;
         p1BackButton.interactable = true;
         p1RandButton.interactable = true;
         p1Rotate.enabled = true;
+        p1Name.interactable = true;
         p1IsAI.gameObject.SetActive(false);
 
     }
@@ -322,6 +362,7 @@ public class CharacterCustomizationUI : MonoBehaviour
         p2BackButton.interactable = false;
         p2RandButton.interactable = false;
         p2Rotate.enabled= false;
+        p2Name.interactable = false;
         p2IsAI.gameObject.SetActive(true);
     }
 
@@ -331,6 +372,7 @@ public class CharacterCustomizationUI : MonoBehaviour
         p2BackButton.interactable = true;
         p2RandButton.interactable = true;
         p2Rotate.enabled = true;
+        p1Name.interactable = true;
         p2IsAI.gameObject.SetActive(false);
     }
 

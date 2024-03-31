@@ -410,7 +410,27 @@ public class QuixoClass : MonoBehaviour
             if (i < possible.Count - 1) { log += ", "; } // Add a comma unless this is the last element
         }
         UnityEngine.Debug.Log(log);
+
         return possible;
+    }
+
+    public void playPossibleMoves()
+    {
+        foreach(Point p in poss)
+        {
+            Data(p).Play("Bounce");
+        }
+    }
+
+    public void stopPossibleMoves()
+    {
+        if (poss != null)
+        {
+            foreach (Point p in poss)
+            {
+                Data(p).Play("Idle_A");
+            }
+        }
     }
 
     // tests if the current to and from points constitute a valid move

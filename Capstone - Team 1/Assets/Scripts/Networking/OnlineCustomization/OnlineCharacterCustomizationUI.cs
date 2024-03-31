@@ -18,7 +18,7 @@ public class OnlineCharacterCustomizationUI : MonoBehaviour
     [SerializeField] private PhotonView photonView;
     [SerializeField] private TextMeshProUGUI swapText;
     [SerializeField] private TextMeshProUGUI playText;
-    [SerializeField] private TextMeshProUGUI selectText;
+    [SerializeField] private GameObject selectText;
     [SerializeField] private TextMeshProUGUI otherSwapText;
     [SerializeField] private TMP_InputField p1Name;
     [SerializeField] private TMP_InputField p2Name;
