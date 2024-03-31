@@ -86,7 +86,6 @@ public class CharacterCustomizationUI : MonoBehaviour
 
         if (vsAi) { 
             disableP2Buttons();
-            p2Name.interactable = false;
         }
         else
         {
@@ -209,6 +208,7 @@ public class CharacterCustomizationUI : MonoBehaviour
     public void switchSides()
     {
         characterCustomization.switchSides();
+        swapNicknames();
         isP1 = !isP1;
         if(vsAi)
         {
@@ -225,6 +225,13 @@ public class CharacterCustomizationUI : MonoBehaviour
                 disableP1Buttons();
             }
         }
+    }
+
+    private void swapNicknames()
+    {
+        string temp = p1Name.text;
+        p1Name.text = p2Name.text;
+        p2Name.text = temp;
     }
 
     public void playAgainst()
@@ -372,7 +379,7 @@ public class CharacterCustomizationUI : MonoBehaviour
         p2BackButton.interactable = true;
         p2RandButton.interactable = true;
         p2Rotate.enabled = true;
-        p1Name.interactable = true;
+        p2Name.interactable = true;
         p2IsAI.gameObject.SetActive(false);
     }
 
