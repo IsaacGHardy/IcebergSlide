@@ -8,11 +8,16 @@ public class AI : MonoBehaviour
     public string makeMove(string mov)
     {
         //Editible Vars
-        string pythonInterpreter = System.IO.Path.Combine(Application.dataPath, "AI/python.exe");
+        //string pythonInterpreter = System.IO.Path.Combine(Application.dataPath, "AI/python.exe");
+        //string pythonInterpreter = System.IO.Path.Combine(Application.dataPath, "Resources/UnityPython/python.exe");
+        string streamingPath = Application.streamingAssetsPath;
+        string pythonInterpreter = Path.Combine(streamingPath, "UnityPython/python.exe");
+        //string pythonInterpreter = System.IO.Path.Combine(Application.dataPath, "../Assets", "/AI/UnityPython/python.exe");
+
         string charDataToSend = mov;
 
         //Proccesses and paths
-        string filePath = Path.Combine(Application.dataPath, "AI", "PythonMoveRequestReceiver.py");
+        string filePath = Path.Combine(streamingPath, "AI", "PythonMoveRequestReceiver.py");
         ProcessStartInfo startInfo = new ProcessStartInfo
         {
             FileName = pythonInterpreter,

@@ -1004,10 +1004,22 @@ public class QuixoClass : MonoBehaviour
     private void readAImove(string move)
     {
         // Regular expression to match two instances of coordinates in the format (0,0)
-        var regex = new Regex(@"\((\d +),(\d +)\).*\((\d +),(\d +)\)");
-        var match = regex.Match(move);
+        //move = move.TrimEnd('\r', '\n');
+        //var regex = new Regex(@"\('(\d+,\d+)',\s*'(\d+,\d+)'\)");
+        //var match = regex.Match(move);
 
-        if (match.Success)
+        Regex regex = new Regex(@"\d+");
+
+        MatchCollection matches = regex.Matches(move);
+
+        int row1 = int.Parse(matches[0].Value);
+        int col1 = int.Parse(matches[1].Value);
+        int row2 = int.Parse(matches[2].Value);
+        int col2 = int.Parse(matches[3].Value);
+        from = new Point(row1, col1);
+        to = new Point(row2, col2);
+
+        /*if (match.Success)
         {
             // Extracting row and column values for the first point
             int row1 = int.Parse(match.Groups[1].Value);
@@ -1022,7 +1034,7 @@ public class QuixoClass : MonoBehaviour
         else
         {
             UnityEngine.Debug.LogError("The AI output string does not match the expected format.");
-        }
+        }*/
     }
 
     //####################################################################################################################################

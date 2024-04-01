@@ -35,4 +35,5 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/OnlineWinScene.unity
     guid: 93e68c0773504094abd99432591b3b32
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.addressableassets: {fileID: 11400000, guid: 0d15b8f11b5f5c5479361946509f7620, type: 2}
