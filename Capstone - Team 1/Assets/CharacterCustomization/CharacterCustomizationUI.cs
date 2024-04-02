@@ -24,6 +24,8 @@ public class CharacterCustomizationUI : MonoBehaviour
     [SerializeField] private Button p2BackButton;
     [SerializeField] private Button p1RandButton;
     [SerializeField] private Button p2RandButton;
+    [SerializeField] private Button p1RotateButton;
+    [SerializeField] private Button p2RotateButton;
     [SerializeField] private EventTrigger p1Rotate;
     [SerializeField] private EventTrigger p2Rotate;
     [SerializeField] private Button p1IsAI;
@@ -349,6 +351,7 @@ public class CharacterCustomizationUI : MonoBehaviour
         p1ForButton.interactable = false;
         p1BackButton.interactable = false;
         p1RandButton.interactable = false;
+        p1RotateButton.interactable = false;
         p1Rotate.enabled = false;
         p1Name.interactable = false;
         p1IsAI.gameObject.SetActive(true);
@@ -358,6 +361,7 @@ public class CharacterCustomizationUI : MonoBehaviour
         p1ForButton.interactable = true;
         p1BackButton.interactable = true;
         p1RandButton.interactable = true;
+        p1RotateButton.interactable = true;
         p1Rotate.enabled = true;
         p1Name.interactable = true;
         p1IsAI.gameObject.SetActive(false);
@@ -368,6 +372,8 @@ public class CharacterCustomizationUI : MonoBehaviour
         p2ForButton.interactable = false;
         p2BackButton.interactable = false;
         p2RandButton.interactable = false;
+        p2RotateButton.interactable = false;
+
         p2Rotate.enabled= false;
         p2Name.interactable = false;
         p2IsAI.gameObject.SetActive(true);
@@ -379,6 +385,8 @@ public class CharacterCustomizationUI : MonoBehaviour
         p2BackButton.interactable = true;
         p2RandButton.interactable = true;
         p2Rotate.enabled = true;
+        p2RotateButton.interactable = true;
+
         p2Name.interactable = true;
         p2IsAI.gameObject.SetActive(false);
     }

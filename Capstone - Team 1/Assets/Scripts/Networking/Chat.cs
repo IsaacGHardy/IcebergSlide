@@ -4,6 +4,8 @@ using UnityEngine;
 using Photon.Pun;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine;
+using Unity.VisualScripting;
 
 public class Chat : MonoBehaviour
 {
@@ -12,11 +14,30 @@ public class Chat : MonoBehaviour
     public GameObject Content;
     [SerializeField] private float minHeight = 30f;
 
+    private void Start()
+    {
+        inputField.onEndEdit.AddListener(delegate { checkEnterKey(inputField); });
+    }
+
     public void SendMessage()
     {
 
         GetComponent<PhotonView>().RPC("GetMessage", RpcTarget.All, (PhotonNetwork.NickName + " : " + inputField.text));
         inputField.text = "";
+    }
+    
+    private void checkEnterKey(TMP_InputField input)
+    {
+        if(Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+        {
+            SendMessage();
+        }
+    }
+
+    public void clickChatArea()
+    {
+        inputField.Select();
+        inputField.ActivateInputField();
     }
 
 

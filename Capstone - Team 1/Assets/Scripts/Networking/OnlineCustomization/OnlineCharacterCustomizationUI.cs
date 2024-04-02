@@ -37,6 +37,7 @@ public class OnlineCharacterCustomizationUI : MonoBehaviour
     public static Hat XHAT;
     public static Hat OHAT;
     public static bool isP1 = false;
+    private bool meSelect = false;
     private bool otherPlay;
     private bool mePlay;
     private bool otherSwap;
@@ -144,7 +145,7 @@ public class OnlineCharacterCustomizationUI : MonoBehaviour
     {
         //change to correct bool
         otherSwap = !otherSwap;
-        if(otherSwap)
+        if(otherSwap && meSelect)
         {
             otherSwapText.gameObject.SetActive(true);
         }
@@ -348,6 +349,11 @@ public class OnlineCharacterCustomizationUI : MonoBehaviour
     private void meChooseP1()
     {
         isP1 = true;
+        meSelect = true;
+        if (otherSwap)
+        {
+            otherSwapText.gameObject.SetActive(true);
+        }
         selectText.gameObject.SetActive(false);
         setMiddleButtons();
         p1Buttons.SetActive(true);
@@ -374,6 +380,10 @@ public class OnlineCharacterCustomizationUI : MonoBehaviour
 
         rotate1.gameObject.SetActive(true);
         rotate1.GetComponent<Image>().enabled = false;
+        foreach (Image image in rotate1.GetComponentsInChildren<Image>())
+        {
+            image.enabled = false;
+        }
     }
 
     public void onlineChooseP2()
@@ -385,6 +395,11 @@ public class OnlineCharacterCustomizationUI : MonoBehaviour
     private void meChooseP2()
     {
         isP1 = false;
+        meSelect = true;
+        if (otherSwap)
+        {
+            otherSwapText.gameObject.SetActive(true);
+        }
         selectText.gameObject.SetActive(false);
         setMiddleButtons();
         p2Buttons.SetActive(true);
@@ -402,6 +417,7 @@ public class OnlineCharacterCustomizationUI : MonoBehaviour
     [PunRPC]
     private void otherChooseP2(string name)
     {
+        isP1 = true;
         characterCustomization.seeP2();
         p2Button.gameObject.SetActive(false);
         p2Name.gameObject.SetActive(true);
@@ -411,17 +427,30 @@ public class OnlineCharacterCustomizationUI : MonoBehaviour
 
         rotate2.gameObject.SetActive(true);
         rotate2.GetComponent<Image>().enabled = false;
+        foreach (Image image in rotate2.GetComponentsInChildren<Image>())
+        {
+            image.enabled = false;
+        }
+
     }
 
     private void swapCustomButtons()
     {
         p1Buttons.SetActive(!p1Buttons.activeSelf);
         rotate1.GetComponent<Image>().enabled = isP1;
+        foreach (Image image in rotate1.GetComponentsInChildren<Image>())
+        {
+            image.enabled = isP1;
+        }
         p1NameEdit.GetComponent<Image>().enabled = isP1;
         p1Name.interactable = isP1;
 
         p2Buttons.SetActive(!p2Buttons.activeSelf);
-        rotate2.GetComponent<Image>().enabled = !isP1 ;
+        rotate2.GetComponent<Image>().enabled = !isP1;
+        foreach (Image image in rotate2.GetComponentsInChildren<Image>())
+        {
+            image.enabled = !isP1;
+        }
         p2NameEdit.GetComponent<Image>().enabled = !isP1;
         p2Name.interactable = !isP1;
 
@@ -489,12 +518,21 @@ public class OnlineCharacterCustomizationUI : MonoBehaviour
             rotate1.gameObject.SetActive(true);
             rotate2.gameObject.SetActive(true);
             rotate2.GetComponent<Image>().enabled = false;
+            foreach(Image image in rotate2.GetComponentsInChildren<Image>())
+            {
+                image.enabled = false;
+            }
         }
         else
         {
             rotate2.gameObject.SetActive(true);
             rotate1.gameObject.SetActive(true);
             rotate1.GetComponent<Image>().enabled = false;
+            foreach (Image image in rotate1.GetComponentsInChildren<Image>())
+            {
+                image.enabled = false;
+            }
+
         }
     }
 

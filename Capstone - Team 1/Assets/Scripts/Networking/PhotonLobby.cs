@@ -24,10 +24,28 @@ public class PhotonLobby : MonoBehaviourPunCallbacks
     private void Awake()
     {
         lobby = this;
+        input_Create.onEndEdit.AddListener(delegate { checkEnterKeyCreate(input_Create); });
+        input_Join.onEndEdit.AddListener(delegate { checkEnterKeyJoin(input_Join); });
     }
     void Start()
     {
         PhotonNetwork.ConnectUsingSettings();
+    }
+
+    private void checkEnterKeyCreate(TMP_InputField input)
+    {
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+        {
+            CreateRoom();
+        }
+    }
+
+    private void checkEnterKeyJoin(TMP_InputField input)
+    {
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+        {
+            JoinRoom();
+        }
     }
 
     public override void OnConnectedToMaster()

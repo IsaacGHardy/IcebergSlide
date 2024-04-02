@@ -15,11 +15,6 @@ public class mainmenu : MonoBehaviour
         SceneManager.LoadScene("Lobby"); 
     }
 
-    public void WalkThroughGame()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 4);
-    }
-
     public void QuitGame()
     {
         Debug.Log("Quit");
