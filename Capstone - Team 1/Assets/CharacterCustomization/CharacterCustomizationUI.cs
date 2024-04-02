@@ -173,11 +173,11 @@ public class CharacterCustomizationUI : MonoBehaviour
 
     enum AIDifficulty
     {
-        Eggling = 0,
-        WaddleWarrior = 1,
+        Eggling = 4,
+        WaddleWarrior = 3,
         IceMaster = 2,
-        ArcticLegend = 3,
-        EmperorOfTheIce = 4
+        ArcticLegend = 1,
+        EmperorOfTheIce = 0
     }
     public void p1For()
     {
@@ -304,7 +304,7 @@ public class CharacterCustomizationUI : MonoBehaviour
         }
         else
         {
-            ++difficulty;
+            --difficulty;
         }
         setAIText(difficulty);
     }
@@ -317,7 +317,7 @@ public class CharacterCustomizationUI : MonoBehaviour
         }
         else
         {
-            --difficulty;
+            ++difficulty;
         }
         setAIText(difficulty);
     }

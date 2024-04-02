@@ -16,6 +16,8 @@ using Photon.Pun.Demo.PunBasics;
 using UnityEngine.SceneManagement;
 using TMPro;
 using Photon.Realtime;
+using UnityEngine.EventSystems;
+using Random = System.Random;
 
 public struct Point
 {
@@ -100,7 +102,8 @@ public class QuixoClass : MonoBehaviour
         isOWin = false;
         if (isOnline) { playerTurn.text = $"{p1Name}'s turn"; }
         else { playerTurn.text = $"{EndGame.p1Name}'s turn"; }
-        if(!isPlayer1 && isOnline)
+
+        if(!isPlayer1)
         {
             isLocked = true;
         }
@@ -134,6 +137,11 @@ public class QuixoClass : MonoBehaviour
 
                 gameBoard[r, c] = nPenguinScript;
             }
+        }
+
+        if(AIgame && !isPlayer1)
+        {
+            StartCoroutine(aiMove());
         }
     }
 
@@ -790,7 +798,8 @@ public class QuixoClass : MonoBehaviour
 
         from = new Point(-1, -1);
         to = new Point(-1, -1); 
-        moveInProgress = false; 
+        moveInProgress = false;
+        poss = null;
         isXTurn = !isXTurn;
         changePlayerTurn();
         if(isOnline)
@@ -971,16 +980,70 @@ public class QuixoClass : MonoBehaviour
         //UnityEngine.Debug.Log($"Move complete! ({from.row},{from.col}) >> ({to.row},{to.col})");
         
         finalizeMove(penguins);
-        string boardStr = translateBoard();
         blockVal = isXTurn ? 'X' : 'O';
         if (AIgame && !autoMove){
-            string AImove = ai.makeMove(boardStr + 'O' + '0');
-            readAImove(AImove);
-            Data(from).run(true);
-            Data(to).run(true);
-            moveInProgress = false;
+            StartCoroutine(aiMove());
         }
     }
+
+    private IEnumerator aiMove()
+    {
+        yield return new WaitForSeconds(.5f);
+
+        bool hovered = true;
+        randomAiHover(ref hovered);
+
+        if (hovered)
+        {
+            yield return new WaitForSeconds(1f);
+
+            stopAiHover();
+
+            yield return new WaitForSeconds(.2f);
+        }
+
+        string boardStr = translateBoard();
+        int difficulty = CharacterCustomizationUI.AI_DIFFICULTY;
+        string AImove = ai.makeMove(boardStr + (isPlayer1 ? "O" : "X") + difficulty.ToString());
+        readAImove(AImove);
+
+        //simulate hovering
+        Data(from).Play("Bounce");
+
+        yield return new WaitForSeconds(1f);
+
+        Data(from).run(true);
+
+        yield return new WaitForSeconds(1f);
+
+        Data(to).run(true);
+        moveInProgress = false;
+    }
+
+    private void randomAiHover(ref bool hovered)
+    {
+        //randomly hover a penguin
+        Random rand = new System.Random();
+        int randRow, randCol;
+        randRow = rand.Next(0, 5);
+        randCol = (rand.Next(0, 2) == 0 ? 0 : 4);
+        if (canPickPiece(randRow, randCol)) {
+            from = new Point(randRow, randCol);
+            hovered = true;
+            Data(from).Play("Bounce"); 
+        }
+        else
+        {
+            hovered = false;
+        }
+    }
+
+    private void stopAiHover()
+    {
+        Data(from).Play("Idle_A");
+    }
+
+
 
 
     //####################################################################################################################################
