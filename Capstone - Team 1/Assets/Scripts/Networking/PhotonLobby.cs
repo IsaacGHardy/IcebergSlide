@@ -66,7 +66,10 @@ public class PhotonLobby : MonoBehaviourPunCallbacks
 
     public void CreateRoom()
     {
-        PhotonNetwork.CreateRoom(input_Create.text, new RoomOptions() { MaxPlayers = 2, IsVisible = true, IsOpen = true }, TypedLobby.Default);
+        if (input_Create.text != "")
+        {
+            PhotonNetwork.CreateRoom(input_Create.text, new RoomOptions() { MaxPlayers = 2, IsVisible = true, IsOpen = true }, TypedLobby.Default);
+        }
     }
 
     public override void OnCreatedRoom()
@@ -114,7 +117,7 @@ public class PhotonLobby : MonoBehaviourPunCallbacks
         {
             yield return new WaitForSeconds(waitTime);
         }
-
+        PhotonNetwork.CurrentRoom.IsVisible = false;
         startGame();
 
     }

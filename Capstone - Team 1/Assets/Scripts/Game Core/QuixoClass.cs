@@ -802,7 +802,7 @@ public class QuixoClass : MonoBehaviour
         poss = null;
         isXTurn = !isXTurn;
         changePlayerTurn();
-        if(isOnline)
+        if(isOnline || AIgame)
         {
             if (isPlayer1 == isXTurn)
             {
