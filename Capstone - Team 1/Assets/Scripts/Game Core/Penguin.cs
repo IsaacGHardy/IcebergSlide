@@ -12,6 +12,8 @@ using UnityEngine.EventSystems;
 public class Penguin : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
     public GameObject penguin;
+    public GameObject Mesh;
+    private Material hatMat;
     public GameObject head;
     public GameObject hair;
     public QuixoClass Game;
@@ -37,7 +39,13 @@ public class Penguin : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
         get { return _toPos; } 
     }
 
-    public Hat hat;
+    public Hat hat; 
+    public void setMat(Material mat)
+    {
+        SkinnedMeshRenderer renderer = Mesh.GetComponent<SkinnedMeshRenderer>();
+        renderer.material = mat;
+
+    }
     public void resetTarget()
     {
         toPoint = new Point(0, 0); 

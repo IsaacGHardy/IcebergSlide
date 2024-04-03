@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.43748862, g: 0.4853127, b: 0.56558615, a: 1}
+  m_IndirectSpecularColor: {r: 0.43748912, g: 0.48531318, b: 0.5655871, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -17600,12 +17600,16 @@ MonoBehaviour:
   boardObject: {fileID: 834369295}
   xhat: {fileID: 1040014940314809808, guid: 2d323132e7d137f49b3ce12cb73cca04, type: 3}
   ohat: {fileID: 5218222298377500684, guid: db1a7cd4aa32a4e4fac5d7a8de68a2ca, type: 3}
+  highlightMat: {fileID: 2100000, guid: 6c78cd5148af8b845a73ff6fd42009cb, type: 2}
+  selectedMat: {fileID: 2100000, guid: 40d2cb6f8c261c34087f809003158205, type: 2}
+  defaultMat: {fileID: 2100000, guid: 76198734b86c6f84092e520e9fff3cbb, type: 2}
   ai: {fileID: 1941035188}
   photonView: {fileID: 0}
   menuSounds: {fileID: 834369303}
   playerTurn: {fileID: 1638482189}
   spd: 5
   trnspd: 25
+  isTutorial: 1
   isXTurn: 1
   moveInProgress: 0
   gameOver: 0
