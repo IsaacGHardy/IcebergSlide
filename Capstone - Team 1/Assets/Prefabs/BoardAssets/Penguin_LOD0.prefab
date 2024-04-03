@@ -101,6 +101,7 @@ MonoBehaviour:
   head: {fileID: 1644941905979550459}
   hair: {fileID: 8978688515977958422}
   Game: {fileID: 0}
+  Mesh: {fileID: 5764805315443165031}
   row: 0
   col: 0
   face: 95

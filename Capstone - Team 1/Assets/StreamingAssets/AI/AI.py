@@ -50,6 +50,15 @@ def apply_move(board, move_block_from, move_block_to, player_turn):
 
     board[int(move_block_to[1])][int(move_block_to[3])] = player_turn
 
+def chars_to_board(chars):
+    grid = [['' for _ in range(5)] for _ in range(5)]
+
+    for i in range(5):
+        for j in range(5):
+            grid[i][j] = chars[i * 5 + j]
+
+    return grid
+
 def get_opponent(playing_as):
     if (playing_as == "X"):
         return "O"
