@@ -15,8 +15,6 @@ public class Penguin : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
     public GameObject head;
     public GameObject hair;
     public QuixoClass Game;
-    public GameObject Mesh;
-    private Material hatMat;
     public int row = 0;
     public int col = 0;
     public char face;
@@ -45,12 +43,6 @@ public class Penguin : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
         toPoint = new Point(0, 0); 
     }
 
-    public void setMat(Material mat)
-    {
-        SkinnedMeshRenderer renderer = Mesh.GetComponent<SkinnedMeshRenderer>();
-        renderer.material = mat;
-
-    }
     public void OnPointerClick(PointerEventData eventData)
     {
         if (!Game.isLocked && Game.canPickPiece(row, col))
@@ -71,7 +63,6 @@ public class Penguin : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
                 Game.poss = Game.GetPossibleMoves();
                 Game.playPossibleMoves();
                 face = face == '_' ? Game.isXTurn ? 'X' : 'O' : face;
-                setMat(Game.selectedMat);
                 setHat();
                 Play("Bounce");
                 clickedPenguin = new Point(this.row, this.col);
@@ -83,7 +74,6 @@ public class Penguin : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
                 Game.stopPossibleMoves();
                 face = oldFace;
                 setHat();
-                setMat(Game.defaultMat);
                 soundEffect.stopAllsounds();
                 soundEffect.playPoke();
                 Play("Idle_A");
@@ -256,5 +246,4 @@ public class Penguin : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
         }
         return false;
     }
-    
 }

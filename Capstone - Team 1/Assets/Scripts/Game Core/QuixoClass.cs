@@ -16,6 +16,8 @@ using Photon.Pun.Demo.PunBasics;
 using UnityEngine.SceneManagement;
 using TMPro;
 using Photon.Realtime;
+using UnityEngine.EventSystems;
+using Random = System.Random;
 
 public struct Point
 {
@@ -48,9 +50,6 @@ public class QuixoClass : MonoBehaviour
     public GameObject boardObject;
     public GameObject xhat; // the hat worn by a penguin owned by the x player
     public GameObject ohat; // the hat worn by a penguin owned by the y player
-    public Material highlightMat;
-    public Material selectedMat;
-    public Material defaultMat;
     public AI ai;
     [SerializeField] PhotonView photonView;
     [SerializeField] MenuSounds menuSounds;
@@ -77,7 +76,6 @@ public class QuixoClass : MonoBehaviour
     //####################################################################################################################################
     public Penguin[,] gameBoard;
     public Point from, to;
-    public bool isTutorial = true;
     public List<Point> poss;
     public bool isXTurn = true;
     public bool moveInProgress = false;
@@ -90,8 +88,6 @@ public class QuixoClass : MonoBehaviour
     public static bool isPlayer1 = false;
     private string[] movementAnimations = new string[] { "Walk", "Roll", "Walk", "Swim", "Walk", 
                                                        "Spin", "Walk", "Hit", "Walk", "Fly", "Walk"};
-    public Point suggestedTo = new Point();
-    public Point suggestedFrom = new Point();
     //adding more walks so it is randomly chosen more and others feel special
     private int randMovementIndex = 0;
 
@@ -106,7 +102,8 @@ public class QuixoClass : MonoBehaviour
         isOWin = false;
         if (isOnline) { playerTurn.text = $"{p1Name}'s turn"; }
         else { playerTurn.text = $"{EndGame.p1Name}'s turn"; }
-        if(!isPlayer1 && isOnline)
+
+        if(!isPlayer1)
         {
             isLocked = true;
         }
@@ -141,9 +138,10 @@ public class QuixoClass : MonoBehaviour
                 gameBoard[r, c] = nPenguinScript;
             }
         }
-        if (isTutorial)
+
+        if(AIgame && !isPlayer1)
         {
-            HighlightSuggestedMove();
+            StartCoroutine(aiMove());
         }
     }
 
@@ -800,10 +798,11 @@ public class QuixoClass : MonoBehaviour
 
         from = new Point(-1, -1);
         to = new Point(-1, -1); 
-        moveInProgress = false; 
+        moveInProgress = false;
+        poss = null;
         isXTurn = !isXTurn;
         changePlayerTurn();
-        if(isOnline)
+        if(isOnline || AIgame)
         {
             if (isPlayer1 == isXTurn)
             {
@@ -957,28 +956,21 @@ public class QuixoClass : MonoBehaviour
 
         Penguin(from).SetActive(true);
 
-        Penguin peng = Data(from);
-        peng.Face(blockVal);
+        Data(from).Face(blockVal);
 
         List<Penguin> penguins = getPenguinsToSlide();
         //UnityEngine.Debug.Log($"Penguins to slide: {penguins.Count}");
 
 
-        StartCoroutine(ExecuteMoveSequence(penguins, blockVal, autoMove, peng));
-
-        
+        StartCoroutine(ExecuteMoveSequence(penguins, blockVal, autoMove));
     }
 
-    private IEnumerator ExecuteMoveSequence(List<Penguin> penguins, char blockVal, bool autoMove, Penguin peng)
+    private IEnumerator ExecuteMoveSequence(List<Penguin> penguins, char blockVal, bool autoMove)
     {
         // First, execute the penguin walk around sequence
         yield return StartCoroutine(PenguinWalkAround());
 
-        if (isTutorial)
-        {
-            Data(suggestedTo).setMat(defaultMat);
-            Data(suggestedFrom).setMat(defaultMat);
-        }
+
         prepSlide();
 
 
@@ -988,25 +980,70 @@ public class QuixoClass : MonoBehaviour
         //UnityEngine.Debug.Log($"Move complete! ({from.row},{from.col}) >> ({to.row},{to.col})");
         
         finalizeMove(penguins);
-        string boardStr = translateBoard();
         blockVal = isXTurn ? 'X' : 'O';
         if (AIgame && !autoMove){
-            string AImove = ai.makeMove(boardStr + blockVal + '0');
-            readAImove(AImove);
-            Data(from).run(true);
-            Data(to).run(true);
-            moveInProgress = false;
+            StartCoroutine(aiMove());
         }
-        else if (isTutorial && !autoMove)
-        {
-            string AImove = ai.makeMove(boardStr + blockVal + '2');
-            readAImove(AImove);
-            Data(from).run(true);
-            Data(to).run(true);
-            moveInProgress = false;
-        }
-        peng.setMat(defaultMat);
     }
+
+    private IEnumerator aiMove()
+    {
+        yield return new WaitForSeconds(.5f);
+
+        bool hovered = true;
+        randomAiHover(ref hovered);
+
+        if (hovered)
+        {
+            yield return new WaitForSeconds(1f);
+
+            stopAiHover();
+
+            yield return new WaitForSeconds(.2f);
+        }
+
+        string boardStr = translateBoard();
+        int difficulty = CharacterCustomizationUI.AI_DIFFICULTY;
+        string AImove = ai.makeMove(boardStr + (isPlayer1 ? "O" : "X") + difficulty.ToString());
+        readAImove(AImove);
+
+        //simulate hovering
+        Data(from).Play("Bounce");
+
+        yield return new WaitForSeconds(1f);
+
+        Data(from).run(true);
+
+        yield return new WaitForSeconds(1f);
+
+        Data(to).run(true);
+        moveInProgress = false;
+    }
+
+    private void randomAiHover(ref bool hovered)
+    {
+        //randomly hover a penguin
+        Random rand = new System.Random();
+        int randRow, randCol;
+        randRow = rand.Next(0, 5);
+        randCol = (rand.Next(0, 2) == 0 ? 0 : 4);
+        if (canPickPiece(randRow, randCol)) {
+            from = new Point(randRow, randCol);
+            hovered = true;
+            Data(from).Play("Bounce"); 
+        }
+        else
+        {
+            hovered = false;
+        }
+    }
+
+    private void stopAiHover()
+    {
+        Data(from).Play("Idle_A");
+    }
+
+
 
 
     //####################################################################################################################################
@@ -1030,9 +1067,22 @@ public class QuixoClass : MonoBehaviour
     private void readAImove(string move)
     {
         // Regular expression to match two instances of coordinates in the format (0,0)
-        var regex = new Regex(@"\((\d +),(\d +)\).*\((\d +),(\d +)\)");
-        var match = regex.Match(move);
-        if (match.Success)
+        //move = move.TrimEnd('\r', '\n');
+        //var regex = new Regex(@"\('(\d+,\d+)',\s*'(\d+,\d+)'\)");
+        //var match = regex.Match(move);
+
+        Regex regex = new Regex(@"\d+");
+
+        MatchCollection matches = regex.Matches(move);
+
+        int row1 = int.Parse(matches[0].Value);
+        int col1 = int.Parse(matches[1].Value);
+        int row2 = int.Parse(matches[2].Value);
+        int col2 = int.Parse(matches[3].Value);
+        from = new Point(row1, col1);
+        to = new Point(row2, col2);
+
+        /*if (match.Success)
         {
             // Extracting row and column values for the first point
             int row1 = int.Parse(match.Groups[1].Value);
@@ -1047,32 +1097,7 @@ public class QuixoClass : MonoBehaviour
         else
         {
             UnityEngine.Debug.LogError("The AI output string does not match the expected format.");
-        }
-    }
-    private void readAImove(ref Point outTo, ref Point outFrom, char dificulty)
-    {
-        string boardStr = translateBoard();
-        string move = ai.makeMove(boardStr + 'O' + dificulty);
-        // Regular expression to match two instances of coordinates in the format (0,0)
-        var regex = new Regex(@"\((\d +),(\d +)\).*\((\d +),(\d +)\)");
-        var match = regex.Match(move);
-
-        if (match.Success)
-        {
-            // Extracting row and column values for the first point
-            int row1 = int.Parse(match.Groups[1].Value);
-            int col1 = int.Parse(match.Groups[2].Value);
-            outFrom = new Point(row1, col1);
-
-            // Extracting row and column values for the second point
-            int row2 = int.Parse(match.Groups[3].Value);
-            int col2 = int.Parse(match.Groups[4].Value);
-            outTo = new Point(row2, col2);
-        }
-        else
-        {
-            UnityEngine.Debug.LogError("The AI output string does not match the expected format.");
-        }
+        }*/
     }
 
     //####################################################################################################################################
@@ -1131,16 +1156,5 @@ public class QuixoClass : MonoBehaviour
         int randomNumber = random.Next(0, movementAnimations.Length);
         return randomNumber;
 
-    }
-
-    //####################################################################################################################################
-    //# Tutorial Functions ###############################################################################################################
-    //####################################################################################################################################
-
-    void HighlightSuggestedMove()
-    {
-        readAImove(ref suggestedTo, ref suggestedFrom, '1');
-        Data(suggestedTo).setMat(selectedMat);
-        Data(suggestedFrom).setMat(highlightMat);
     }
 }
