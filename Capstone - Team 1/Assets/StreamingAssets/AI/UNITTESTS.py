@@ -12,7 +12,7 @@ request_ai_move(start_board, "O", 0)
 
 
 #Check ahead for winnies
-    '''if (get_pieces_on_board(board) > 6):
+'''if (get_pieces_on_board(board) > 6):
         for key, data in possible_moves.items():
             if (data[0] > 0):
                 moves_data = key.split(" ")
