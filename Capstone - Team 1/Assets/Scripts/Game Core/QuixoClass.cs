@@ -77,6 +77,7 @@ public class QuixoClass : MonoBehaviour
     //####################################################################################################################################
     public Penguin[,] gameBoard;
     public Point from, to;
+    public bool isTutorial = true;
     public List<Point> poss;
     public bool isXTurn = true;
     public bool moveInProgress = false;
@@ -89,6 +90,8 @@ public class QuixoClass : MonoBehaviour
     public static bool isPlayer1 = false;
     private string[] movementAnimations = new string[] { "Walk", "Roll", "Walk", "Swim", "Walk", 
                                                        "Spin", "Walk", "Hit", "Walk", "Fly", "Walk"};
+    public Point suggestedTo = new Point();
+    public Point suggestedFrom = new Point();
     //adding more walks so it is randomly chosen more and others feel special
     private int randMovementIndex = 0;
 
@@ -137,6 +140,10 @@ public class QuixoClass : MonoBehaviour
 
                 gameBoard[r, c] = nPenguinScript;
             }
+        }
+        if (isTutorial)
+        {
+            HighlightSuggestedMove();
         }
     }
 
@@ -967,7 +974,11 @@ public class QuixoClass : MonoBehaviour
         // First, execute the penguin walk around sequence
         yield return StartCoroutine(PenguinWalkAround());
 
-
+        if (isTutorial)
+        {
+            Data(suggestedTo).setMat(defaultMat);
+            Data(suggestedFrom).setMat(defaultMat);
+        }
         prepSlide();
 
 
@@ -980,7 +991,15 @@ public class QuixoClass : MonoBehaviour
         string boardStr = translateBoard();
         blockVal = isXTurn ? 'X' : 'O';
         if (AIgame && !autoMove){
-            string AImove = ai.makeMove(boardStr + 'O' + '0');
+            string AImove = ai.makeMove(boardStr + blockVal + '0');
+            readAImove(AImove);
+            Data(from).run(true);
+            Data(to).run(true);
+            moveInProgress = false;
+        }
+        else if (isTutorial && !autoMove)
+        {
+            string AImove = ai.makeMove(boardStr + blockVal + '2');
             readAImove(AImove);
             Data(from).run(true);
             Data(to).run(true);
@@ -1013,7 +1032,6 @@ public class QuixoClass : MonoBehaviour
         // Regular expression to match two instances of coordinates in the format (0,0)
         var regex = new Regex(@"\((\d +),(\d +)\).*\((\d +),(\d +)\)");
         var match = regex.Match(move);
-
         if (match.Success)
         {
             // Extracting row and column values for the first point
@@ -1025,6 +1043,31 @@ public class QuixoClass : MonoBehaviour
             int row2 = int.Parse(match.Groups[3].Value);
             int col2 = int.Parse(match.Groups[4].Value);
             to = new Point(row2, col2);
+        }
+        else
+        {
+            UnityEngine.Debug.LogError("The AI output string does not match the expected format.");
+        }
+    }
+    private void readAImove(ref Point outTo, ref Point outFrom, char dificulty)
+    {
+        string boardStr = translateBoard();
+        string move = ai.makeMove(boardStr + 'O' + dificulty);
+        // Regular expression to match two instances of coordinates in the format (0,0)
+        var regex = new Regex(@"\((\d +),(\d +)\).*\((\d +),(\d +)\)");
+        var match = regex.Match(move);
+
+        if (match.Success)
+        {
+            // Extracting row and column values for the first point
+            int row1 = int.Parse(match.Groups[1].Value);
+            int col1 = int.Parse(match.Groups[2].Value);
+            outFrom = new Point(row1, col1);
+
+            // Extracting row and column values for the second point
+            int row2 = int.Parse(match.Groups[3].Value);
+            int col2 = int.Parse(match.Groups[4].Value);
+            outTo = new Point(row2, col2);
         }
         else
         {
@@ -1094,8 +1137,10 @@ public class QuixoClass : MonoBehaviour
     //# Tutorial Functions ###############################################################################################################
     //####################################################################################################################################
 
-    void Tutorial()
+    void HighlightSuggestedMove()
     {
-
+        readAImove(ref suggestedTo, ref suggestedFrom, '1');
+        Data(suggestedTo).setMat(selectedMat);
+        Data(suggestedFrom).setMat(highlightMat);
     }
 }
