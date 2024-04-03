@@ -972,13 +972,15 @@ public class QuixoClass : MonoBehaviour
     private IEnumerator ExecuteMoveSequence(List<Penguin> penguins, char blockVal, bool autoMove, Penguin peng)
     {
         // First, execute the penguin walk around sequence
-        yield return StartCoroutine(PenguinWalkAround());
-
         if (isTutorial)
         {
             Data(suggestedTo).setMat(defaultMat);
             Data(suggestedFrom).setMat(defaultMat);
         }
+
+        yield return StartCoroutine(PenguinWalkAround());
+
+        
         prepSlide();
 
 
@@ -1004,6 +1006,10 @@ public class QuixoClass : MonoBehaviour
             Data(from).run(true);
             Data(to).run(true);
             moveInProgress = false;
+        }
+        else if (isTutorial && autoMove)
+        {
+            HighlightSuggestedMove();
         }
         peng.setMat(defaultMat);
     }
@@ -1039,26 +1045,8 @@ public class QuixoClass : MonoBehaviour
         int row2 = int.Parse(matches[2].Value);
         int col2 = int.Parse(matches[3].Value);
         from = new Point(row1, col1);
-        to = new Point(row1, col1);
-        // Regular expression to match two instances of coordinates in the format (0,0)
-        //var regex = new Regex(@"\((\d +),(\d +)\).*\((\d +),(\d +)\)");
-        //var match = regex.Match(move);
-        //if (match.Success)
-        //{
-        //    // Extracting row and column values for the first point
-        //    int row1 = int.Parse(match.Groups[1].Value);
-        //    int col1 = int.Parse(match.Groups[2].Value);
-        //    from = new Point(row1, col1);
-
-        //    // Extracting row and column values for the second point
-        //    int row2 = int.Parse(match.Groups[3].Value);
-        //    int col2 = int.Parse(match.Groups[4].Value);
-        //    to = new Point(row2, col2);
-        //}
-        //else
-        //{
-        //    UnityEngine.Debug.LogError("The AI output string does not match the expected format.");
-        //}
+        to = new Point(row2, col2);
+        
     }
     private void readAImove(ref Point outTo, ref Point outFrom, char dificulty)
     {
@@ -1145,7 +1133,7 @@ public class QuixoClass : MonoBehaviour
 
     void HighlightSuggestedMove()
     {
-        readAImove(ref suggestedTo, ref suggestedFrom, '7');
+        readAImove(ref suggestedTo, ref suggestedFrom, '0');
         Data(suggestedTo).setMat(selectedMat);
         Data(suggestedFrom).setMat(highlightMat);
     }

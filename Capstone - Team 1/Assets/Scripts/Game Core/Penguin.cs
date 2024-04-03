@@ -39,13 +39,23 @@ public class Penguin : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
         get { return _toPos; } 
     }
 
-    public Hat hat; 
+    public Hat hat;
     public void setMat(Material mat)
     {
-        SkinnedMeshRenderer renderer = Mesh.GetComponent<SkinnedMeshRenderer>();
-        renderer.material = mat;
-
+        SkinnedMeshRenderer skinnedMeshRenderer = Mesh.GetComponent<SkinnedMeshRenderer>();
+        skinnedMeshRenderer.material = mat;
+        if (hat == null) return;
+        MeshRenderer hatRenderer = hat.gameObject.GetComponent<MeshRenderer>();
+        if (mat == Game.defaultMat)
+        {
+            hatRenderer.material = hatMat; // Assuming hatMat is a Material variable you've defined elsewhere
+        }
+        else
+        {
+            hatRenderer.material = mat;
+        }
     }
+
     public void resetTarget()
     {
         toPoint = new Point(0, 0); 
@@ -86,6 +96,10 @@ public class Penguin : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
                 soundEffect.playPoke();
                 Play("Idle_A");
                 clickedPenguin = new Point(-1, -1);
+                if (ai)
+                {
+                    Game.makeMove(ai);
+                }
             }
             else
             {
@@ -120,14 +134,29 @@ public class Penguin : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
         // matches the curent player's turn
         if (Game.isXTurn && hat == null && Game.xhat != null){
             newHat = Instantiate(Game.xhat, Game.getPos(loc()), Quaternion.identity);
+            MeshRenderer renderer = newHat.GetComponent<MeshRenderer>();
+            hatMat = renderer.material;
             hat = newHat.GetComponent<Hat>();
             hat.Setup(this, head);
         }
         else if (!Game.isXTurn && hat == null && Game.ohat != null){
             newHat = Instantiate(Game.ohat, Game.getPos(loc()), Quaternion.identity);
+            MeshRenderer renderer = newHat.GetComponent<MeshRenderer>();
+            hatMat = renderer.material;
             hat = newHat.GetComponent<Hat>();
             hat.Setup(this, head);
         }
+
+        if (Game.isTutorial && Game.isXTurn)
+        {
+            SkinnedMeshRenderer skinnedMeshRenderer = Mesh.GetComponent<SkinnedMeshRenderer>();
+            MeshRenderer renderer = hat.gameObject.GetComponent<MeshRenderer>();
+            if (skinnedMeshRenderer.GetComponent<Material>() != Game.defaultMat)
+            {
+                renderer.material = skinnedMeshRenderer.material;
+            }
+        }
+        
     }
 
     public void onlineSetHat()
@@ -138,14 +167,28 @@ public class Penguin : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
         if (Game.isXTurn && hat == null && Game.xhat != null)
         {
             newHat = Instantiate(Game.xhat, Game.getPos(loc()), Quaternion.identity);
+            MeshRenderer renderer = newHat.GetComponent<MeshRenderer>();
+            hatMat = renderer.material;
             hat = newHat.GetComponent<Hat>();
             hat.Setup(this, head);
         }
         else if (!Game.isXTurn && hat == null && Game.ohat != null)
         {
             newHat = Instantiate(Game.ohat, Game.getPos(loc()), Quaternion.identity);
+            MeshRenderer renderer = newHat.GetComponent<MeshRenderer>();
+            hatMat = renderer.material;
             hat = newHat.GetComponent<Hat>();
             hat.Setup(this, head);
+        }
+        if (Game.isTutorial)
+        {
+            SkinnedMeshRenderer skinnedMeshRenderer = Mesh.GetComponent<SkinnedMeshRenderer>();
+            MeshRenderer renderer = hat.gameObject.GetComponent<MeshRenderer>();
+            if (skinnedMeshRenderer.GetComponent<Material>() != Game.defaultMat)
+            {
+                Material mat = renderer.GetComponent<Material>();
+                mat = skinnedMeshRenderer.GetComponent<Material>();
+            }
         }
     }
 
