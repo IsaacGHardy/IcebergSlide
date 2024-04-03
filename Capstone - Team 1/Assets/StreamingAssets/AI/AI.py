@@ -50,6 +50,15 @@ def apply_move(board, move_block_from, move_block_to, player_turn):
 
     board[int(move_block_to[1])][int(move_block_to[3])] = player_turn
 
+def chars_to_board(chars):
+    grid = [['' for _ in range(5)] for _ in range(5)]
+
+    for i in range(5):
+        for j in range(5):
+            grid[i][j] = chars[i * 5 + j]
+
+    return grid
+
 def get_opponent(playing_as):
     if (playing_as == "X"):
         return "O"
@@ -298,6 +307,66 @@ def shuffle_scores_for_difficulty(possible_moves, difficulty):
         score_ding_amount = random.randint(-5000, 5000)
         score_reasoning[0] += score_ding_amount * difficulty
     return possible_moves
+
+
+#1 Layer
+#Get all possible moves with their scores
+    #Generate all possible boards that could happen from opponent move
+        #2 Layer
+        #If there is a pin and not immediate loss select it
+        #Add to the base score the #Of Winaable paths * 200
+        #Get all possible moves with their scores
+            #Generate all possible boards that could happen from opponent move
+                #3 Layer
+                #If there is a pin and not immediate loss select it
+                #Add to the base score the #Of Winaable paths * 50
+
+#How do I weight the current scores
+#Do I add points to the current moves dictionary score
+#Do I make it mega move scores
+
+#I am keeping track of # of methods to win? Yes.
+#Dont generate all possible moves, Check if opponent has no survivable moves (Searching for pin)
+
+#You're not searching for the 3 move win, You're searching for the 3 move opponnet has lost
+#THIS IS RIGHT
+
+#All the right moves in all the right places, so yeah we're going down
+
+#I think I should just check if it leads to certain death, if not then follow the fork/pin
+
+def get_a_random_best_move(possible_moves):
+    best_moves = [move for move, score in possible_moves.items() if int(score[0]) > (int(max(possible_moves.values())[0]) - 100)]
+    random_best_move = random.choice(best_moves)
+    return random_best_move.split(" ")
+
+def get_best_moves(how_many_moves_to_get, possible_moves):
+    sorted_moves = sorted(possible_moves.items(), key=lambda x: int(x[1][0]), reverse=True)
+    return sorted_moves[:how_many_moves_to_get]
+
+def new_request_ai_move(board, playing_as, difficulty):
+    depth = 1
+
+    possible_moves = None
+    for i in range(depth):
+        possible_moves = get_all_moves(board, playing_as)
+        shuffle_scores_for_difficulty(possible_moves, difficulty)
+
+        get_best_moves(10, possible_moves)
+    spot_data = get_a_random_best_move(possible_moves)
+
+    if (BUILD_OUTPUT_DATA_ON):
+        for key, value in sorted(possible_moves.items(), key=lambda item: item[1]):
+            print(f'{key}: {value}')
+        if (playing_as == "X"):
+            print("\n" + "\u001b[31m" + playing_as + " Move Chosen" + "\u001b[0m")
+        elif (playing_as == "O"):
+            print("\n" + "\u001b[35m" + playing_as + " Move Chosen" + "\u001b[0m")
+        print(str(spot_data))
+    
+    return spot_data[0], spot_data[1]
+
+new_request_ai_move(chars_to_board("                         "), "X", 0)
 
 def request_ai_move(board, playing_as, difficulty):
     possible_moves = get_all_moves(board, playing_as)
