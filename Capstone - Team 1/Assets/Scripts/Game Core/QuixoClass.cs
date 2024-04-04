@@ -106,7 +106,7 @@ public class QuixoClass : MonoBehaviour
         isOWin = false;
         if (isOnline) { playerTurn.text = $"{p1Name}'s turn"; }
         else { playerTurn.text = $"{EndGame.p1Name}'s turn"; }
-        if(!isPlayer1 && isOnline)
+        if(!isPlayer1)
         {
             isLocked = true;
         }
@@ -121,6 +121,11 @@ public class QuixoClass : MonoBehaviour
             xhat = CharacterCustomizationUI.XHAT.gameObject;
             ohat = CharacterCustomizationUI.OHAT.gameObject;
             AIgame = CharacterCustomizationUI.IS_AI_GAME;
+        }
+
+        if (AIgame && !isPlayer1)
+        {
+            StartCoroutine(aiMove());
         }
 
         gameBoard = new Penguin[boardSize, boardSize];
@@ -799,11 +804,12 @@ public class QuixoClass : MonoBehaviour
         }
 
         from = new Point(-1, -1);
-        to = new Point(-1, -1); 
+        to = new Point(-1, -1);
+        poss = null;
         moveInProgress = false; 
         isXTurn = !isXTurn;
         changePlayerTurn();
-        if(isOnline)
+        if(isOnline || AIgame)
         {
             if (isPlayer1 == isXTurn)
             {
@@ -993,25 +999,46 @@ public class QuixoClass : MonoBehaviour
         string boardStr = translateBoard();
         blockVal = isXTurn ? 'X' : 'O';
         if (AIgame && !autoMove){
-            string AImove = ai.makeMove(boardStr + blockVal + '0');
-            readAImove(AImove);
-            Data(from).run(true);
-            Data(to).run(true);
-            moveInProgress = false;
+            StartCoroutine(aiMove());
         }
         else if (isTutorial && !autoMove)
         {
-            string AImove = ai.makeMove(boardStr + blockVal + '2');
-            readAImove(AImove);
-            Data(from).run(true);
-            Data(to).run(true);
-            moveInProgress = false;
+            StartCoroutine(aiMove());
         }
         else if (isTutorial && autoMove)
         {
             HighlightSuggestedMove();
         }
         peng.setMat(defaultMat);
+    }
+
+    private IEnumerator aiMove()
+    {
+        yield return new WaitForSeconds(.5f);
+
+        string boardStr = translateBoard();
+
+        int difficulty = CharacterCustomizationUI.AI_DIFFICULTY;
+        string AImove = ai.makeMove(boardStr + (isPlayer1 ? "O" : "X") + (!isTutorial ? difficulty.ToString() : '2'));
+        readAImove(AImove);
+
+        //simulate hover
+        Data(from).aiHover();
+
+        yield return new WaitForSeconds(1f);
+
+        //simulate click
+        Data(from).aiClick();
+        Data(from).run(true);
+
+        yield return new WaitForSeconds(1f);
+
+        Data(to).aiClick();
+        Data(to).run(true);
+        moveInProgress = false;
+
+
+
     }
 
 

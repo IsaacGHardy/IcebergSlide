@@ -66,6 +66,10 @@ MonoBehaviour:
   - otherChooseP2
   - otherToLobby
   - syncInput
+  - pauseGame
+  - resumeGame
+  - otherPauseGame
+  - otherResumeGame
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

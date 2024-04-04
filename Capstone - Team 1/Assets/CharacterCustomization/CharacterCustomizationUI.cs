@@ -2,11 +2,15 @@ using ExitGames.Client.Photon;
 using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
+using Button = UnityEngine.UI.Button;
+using Image = UnityEngine.UI.Image;
 
 public class CharacterCustomizationUI : MonoBehaviour
 {
@@ -28,8 +32,8 @@ public class CharacterCustomizationUI : MonoBehaviour
     [SerializeField] private Button p2RotateButton;
     [SerializeField] private EventTrigger p1Rotate;
     [SerializeField] private EventTrigger p2Rotate;
-    [SerializeField] private Button p1IsAI;
-    [SerializeField] private Button p2IsAI;
+    [SerializeField] private GameObject p1IsAI;
+    [SerializeField] private GameObject p2IsAI;
 
     public static Hat XHAT;
     public static Hat OHAT;
@@ -175,9 +179,9 @@ public class CharacterCustomizationUI : MonoBehaviour
 
     enum AIDifficulty
     {
-        Eggling = 4,
-        WaddleWarrior = 3,
-        IceMaster = 2,
+        Eggling = 9,
+        WaddleWarrior = 6,
+        IceMaster = 3,
         ArcticLegend = 1,
         EmperorOfTheIce = 0
     }
@@ -300,28 +304,59 @@ public class CharacterCustomizationUI : MonoBehaviour
 
     public void AiHarder()
     {
-        if(difficulty == AIDifficulty.EmperorOfTheIce)
+        switch(difficulty)
         {
-            difficulty = AIDifficulty.Eggling;
+            case AIDifficulty.Eggling:
+                difficulty = AIDifficulty.WaddleWarrior;
+                showButton(AIEasierButton);  break;
+            case AIDifficulty.WaddleWarrior:
+                difficulty = AIDifficulty.IceMaster; break;
+            case AIDifficulty.IceMaster:
+                difficulty = AIDifficulty.ArcticLegend; break;
+            case AIDifficulty.ArcticLegend:
+                hideButton(AIHarderButton);
+                difficulty = AIDifficulty.EmperorOfTheIce; break;
         }
-        else
-        {
-            --difficulty;
-        }
+
         setAIText(difficulty);
     }
 
     public void AiEasier()
     {
-        if (difficulty == AIDifficulty.Eggling)
+        switch (difficulty)
         {
-            difficulty = AIDifficulty.EmperorOfTheIce;
+            case AIDifficulty.WaddleWarrior:
+                difficulty = AIDifficulty.Eggling;
+                hideButton(AIEasierButton); break;
+            case AIDifficulty.IceMaster:
+                difficulty = AIDifficulty.WaddleWarrior; break;
+            case AIDifficulty.ArcticLegend:
+                difficulty = AIDifficulty.IceMaster; break;
+            case AIDifficulty.EmperorOfTheIce:
+                showButton(AIHarderButton);
+                difficulty = AIDifficulty.ArcticLegend; break;
         }
-        else
-        {
-            ++difficulty;
-        }
+
         setAIText(difficulty);
+
+    }
+
+    private void hideButton(Button button)
+    {
+        button.GetComponent<Image>().enabled = false;
+        foreach (Image image in button.GetComponentsInChildren<Image>())
+        {
+            image.enabled = false;
+        }
+    }
+
+    private void showButton(Button button)
+    {
+            button.GetComponent<Image>().enabled = true;
+            foreach (Image image in button.GetComponentsInChildren<Image>())
+            {
+                image.enabled = true;
+            }
     }
 
     private void setAIText(AIDifficulty diff)

@@ -70,6 +70,17 @@ public class Penguin : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
         }
     }
 
+    public void aiHover()
+    {
+        soundEffect.playBloop3();
+        Play("Bounce");
+    }
+
+    public void aiClick()
+    {
+
+    }
+
     public void run(bool ai = false)
     {
         if (Game.canPickPiece(row, col))
@@ -82,7 +93,7 @@ public class Penguin : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
                 Game.playPossibleMoves();
                 face = face == '_' ? Game.isXTurn ? 'X' : 'O' : face;
                 setHat();
-                Play("Bounce");
+                Play("Jump");
                 clickedPenguin = new Point(this.row, this.col);
             }
             else if (Game.from.eq(loc()))
@@ -180,16 +191,6 @@ public class Penguin : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
             hat = newHat.GetComponent<Hat>();
             hat.Setup(this, head);
         }
-        if (Game.isTutorial)
-        {
-            SkinnedMeshRenderer skinnedMeshRenderer = Mesh.GetComponent<SkinnedMeshRenderer>();
-            MeshRenderer renderer = hat.gameObject.GetComponent<MeshRenderer>();
-            if (skinnedMeshRenderer.GetComponent<Material>() != Game.defaultMat)
-            {
-                Material mat = renderer.GetComponent<Material>();
-                mat = skinnedMeshRenderer.GetComponent<Material>();
-            }
-        }
     }
 
     public void setHat(Hat hat)
@@ -250,15 +251,17 @@ public class Penguin : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
             {
                 if (Game.moveInProgress)
                 {
-                    if ((this.row == clickedPenguin.row && (this.col == 0 || this.col == 4))
-                        || (this.col == clickedPenguin.col && (this.row == 0 || this.row == 4)))
+                    if (isInPoss())
                     {
                         Play("Bounce");
                         soundEffect.playBloop3();
                     }
                 }
-                else
+                else if(this.row == Penguin.clickedPenguin.row && this.col == Penguin.clickedPenguin.col)
                 {
+                        //do nothin since this is the clicked penguin
+                }
+                else {
                     Play("Bounce");
                     soundEffect.playBloop3();
                 }
@@ -270,8 +273,11 @@ public class Penguin : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
     {
         if (!Game.gameOver && !Game.isLocked)
         {
-            if (this.row == Penguin.clickedPenguin.row && this.col == Penguin.clickedPenguin.col || isInPoss())
+            if (this.row == Penguin.clickedPenguin.row && this.col == Penguin.clickedPenguin.col)
             {
+               //do nothin since this is the clicked penguin
+            }
+            else if(isInPoss()){
                 Play("Bounce");
                 soundEffect.stopBloop3();
             }

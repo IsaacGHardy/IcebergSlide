@@ -29,6 +29,7 @@ public class OnlineMgmt : MonoBehaviourPunCallbacks
 
     public void DisconnectAndWait()
     {
+        Time.timeScale = 1.0f;
         PhotonNetwork.Disconnect();
         StartCoroutine(WaitForDisconnect());
 
