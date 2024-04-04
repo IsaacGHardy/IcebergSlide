@@ -1011,6 +1011,7 @@ public class QuixoClass : MonoBehaviour
         {
             HighlightSuggestedMove();
         }
+        peng.setMat(defaultMat);
     }
 
 
