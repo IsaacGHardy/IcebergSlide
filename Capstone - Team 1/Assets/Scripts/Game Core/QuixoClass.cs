@@ -1011,7 +1011,6 @@ public class QuixoClass : MonoBehaviour
         {
             HighlightSuggestedMove();
         }
-        peng.setMat(defaultMat);
     }
 
 
@@ -1051,7 +1050,7 @@ public class QuixoClass : MonoBehaviour
     private void readAImove(ref Point outTo, ref Point outFrom, char dificulty)
     {
         string boardStr = translateBoard();
-        boardStr += ("O" + dificulty);
+        boardStr += ("X" + dificulty);
         string move = ai.makeMove(boardStr);
         Regex regex = new Regex(@"\d+");
 
