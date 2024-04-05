@@ -12,6 +12,10 @@ public class Chat : MonoBehaviour
     public GameObject Message;
     public GameObject Content;
     [SerializeField] private float minHeight = 30f;
+    [SerializeField] GameObject chat;
+    [SerializeField] GameObject notification;
+    [SerializeField] ScrollRect scrollArea;
+
 
     private void Start()
     {
@@ -25,6 +29,8 @@ public class Chat : MonoBehaviour
             GetComponent<PhotonView>().RPC("GetMessage", RpcTarget.All, (PhotonNetwork.NickName + ": " + inputField.text));
         }
         inputField.text = "";
+        clickChatArea();
+        scrollTobottom();
     }
     
     private void checkEnterKey(TMP_InputField input)
@@ -45,9 +51,27 @@ public class Chat : MonoBehaviour
     [PunRPC]
     public void GetMessage(string ReceiveMessage)
     {
-
-        GameObject M = Instantiate(Message, GameObject.Find("Content").transform.position, Quaternion.identity, Content.transform);
+        if(!chat.activeSelf)
+        {
+            notification.SetActive(true);
+        }
+        GameObject M = Instantiate(Message, Content.transform.position, Quaternion.identity, Content.transform);
         M.GetComponent<Message>().MyMessage.text = ReceiveMessage;
+        scrollTobottom();
+    }
+
+    public void toggleChat()
+    {
+        chat.SetActive(!chat.activeSelf);
+        if (chat.activeSelf) { clickChatArea(); }
+        notification.SetActive(false);
+        scrollTobottom();
+    }
+
+    private void scrollTobottom()
+    {
+        Canvas.ForceUpdateCanvases();
+        scrollArea.verticalNormalizedPosition = 0f;
     }
 
 

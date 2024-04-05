@@ -9,6 +9,10 @@ public class OnlineMgmt : MonoBehaviourPunCallbacks
 {
     [SerializeField] private GameObject playerLeftGame;
     [SerializeField] private GameObject drawRequest;
+    [SerializeField] private GameObject pauseMenu;
+    [SerializeField] private GameObject otherPauseMenu;
+
+
     private void Start()
     {
         PhotonNetwork.AddCallbackTarget(this);
@@ -18,6 +22,8 @@ public class OnlineMgmt : MonoBehaviourPunCallbacks
     {
         base.OnPlayerLeftRoom(otherPlayer);
         drawRequest.SetActive(false);
+        pauseMenu.SetActive(false);
+        otherPauseMenu.SetActive(false);
         playerLeftGame.gameObject.SetActive(true);
         StartCoroutine(waitReturnToLobby());
     }
