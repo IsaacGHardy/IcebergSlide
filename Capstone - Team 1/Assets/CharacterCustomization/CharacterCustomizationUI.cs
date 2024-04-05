@@ -282,6 +282,7 @@ public class CharacterCustomizationUI : MonoBehaviour
         EndGame.p2Name = p2Name.text;
         IS_AI_GAME = vsAi;
         QuixoClass.isPlayer1 = isP1;
+        if(!IS_AI_GAME) { QuixoClass.isPlayer1 = true; }
         AI_DIFFICULTY = (int)difficulty;
         Debug.Log(AI_DIFFICULTY);
         SceneManager.LoadScene("GameScene");

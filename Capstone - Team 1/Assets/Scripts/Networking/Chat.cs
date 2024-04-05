@@ -4,7 +4,6 @@ using UnityEngine;
 using Photon.Pun;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine;
 using Unity.VisualScripting;
 
 public class Chat : MonoBehaviour

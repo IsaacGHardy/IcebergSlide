@@ -16,6 +16,7 @@ using Photon.Pun.Demo.PunBasics;
 using UnityEngine.SceneManagement;
 using TMPro;
 using Photon.Realtime;
+using UnityEngine.UI;
 
 public struct Point
 {
@@ -55,6 +56,8 @@ public class QuixoClass : MonoBehaviour
     [SerializeField] PhotonView photonView;
     [SerializeField] MenuSounds menuSounds;
     [SerializeField] TextMeshProUGUI playerTurn;
+    [SerializeField] Button offerDrawButton;
+    [SerializeField] GameObject rejectionMessage;
     public static string p1Name = "Player 1";
     public static string p2Name = "Player 2";
     private Player[] playerList;
@@ -94,6 +97,7 @@ public class QuixoClass : MonoBehaviour
     public Point suggestedFrom = new Point();
     //adding more walks so it is randomly chosen more and others feel special
     private int randMovementIndex = 0;
+    private int turncount = 0;
 
 
 
@@ -808,6 +812,7 @@ public class QuixoClass : MonoBehaviour
         poss = null;
         moveInProgress = false; 
         isXTurn = !isXTurn;
+        ++turncount;
         changePlayerTurn();
         if(isOnline || AIgame)
         {
@@ -828,6 +833,9 @@ public class QuixoClass : MonoBehaviour
 
     private void changePlayerTurn()
     {
+        offerDrawButton.gameObject.SetActive(turncount > 10);
+        if (offerDrawButton.gameObject != null) { offerDrawButton.interactable = ((!AIgame && !isOnline) || (isPlayer1 ? isXTurn : !isXTurn)); }
+
         if (isOnline)
         {
             if (!(isXWin || isOWin)) { playerTurn.text = $"{(isXTurn ? p1Name : p2Name)}'s turn"; }
@@ -945,6 +953,7 @@ public class QuixoClass : MonoBehaviour
 
     public void passMove(bool autoMove = false)
     {
+        if (offerDrawButton.gameObject != null) { offerDrawButton.interactable = false; }
         //UnityEngine.Debug.Log($"Moving: ({from.row},{from.col}) >> ({to.row},{to.col}) inside passMove");
         char blockVal = isXTurn ? 'X' : 'O';
         randMovementIndex = randomMovementAnimation();
@@ -1037,9 +1046,101 @@ public class QuixoClass : MonoBehaviour
         Data(to).run(true);
         moveInProgress = false;
 
-
-
     }
+
+    public void offerDraw()
+    {
+        if(!AIgame && !isOnline)
+        {
+            isXWin = true;
+            isOWin = true;
+            tieDance();
+            StartCoroutine(LoadWinScene());
+        }
+        else if(AIgame)
+        {
+            if((int)CharacterCustomizationUI.AI_DIFFICULTY < 3)
+            {
+                goodAiDraw();
+            }
+            else
+            {
+                draw();
+            }
+        }
+    }
+
+    private void goodAiDraw()
+    {
+        if(turncount >= 20 && !isActiveStreak())
+        {
+            draw();
+        } 
+        else if(turncount >= 30)
+        {
+            draw();
+        }
+        else
+        {
+            StartCoroutine(tellRejected());
+        }
+    }
+
+    private bool isActiveStreak()
+    {
+        char aiFace = (isPlayer1 ? 'O' : 'X');
+        int maxStreak = 0;
+
+        //check rows and cols for active streak
+        for(int i = 0; i < boardSize; ++i)
+        {
+            int active = 0;
+            for(int j = 0; j < boardSize; ++j)
+            {
+                if (gameBoard[i,j].face == aiFace)
+                {
+                    ++active;
+                }
+            }
+            maxStreak = (active > maxStreak ?  active : maxStreak);
+        }
+
+        for(int i = 0; i < boardSize; ++i)
+        {
+            int activeRight = 0;
+            int activeLeft = 0;
+            if (gameBoard[i, i].face == aiFace)
+            {
+                ++activeRight;
+            }
+            else if (gameBoard[i, boardSize - 1 - i].face == aiFace)
+            {
+                ++activeLeft;
+            }
+            maxStreak = (activeRight > maxStreak ? activeRight : maxStreak);
+            maxStreak = (activeLeft > maxStreak ? activeLeft : maxStreak);
+        }
+
+        return maxStreak >= 4;
+    }
+
+    public void draw()
+    {
+        isXWin = true;
+        isOWin = true;
+        tieDance();
+        StartCoroutine(LoadWinScene());
+    }
+
+    private IEnumerator tellRejected()
+    {
+        rejectionMessage.SetActive(true);
+
+        yield return new WaitForSeconds(5f);
+
+        rejectionMessage.SetActive(false);
+    }
+
 
 
     //####################################################################################################################################
@@ -1102,6 +1203,7 @@ public class QuixoClass : MonoBehaviour
 
     private void xDance()
     {
+        isLocked = true;
         foreach (Penguin penguin in gameBoard)
         {
             if(penguin.face == 'X')
@@ -1117,6 +1219,8 @@ public class QuixoClass : MonoBehaviour
 
     private void oDance()
     {
+        isLocked = true;
+
         foreach (Penguin penguin in gameBoard)
         {
             if (penguin.face == 'O')
@@ -1132,6 +1236,8 @@ public class QuixoClass : MonoBehaviour
 
     private void tieDance()
     {
+        isLocked = true;
+
         foreach (Penguin penguin in gameBoard)
         {
             if (penguin.face != '_')

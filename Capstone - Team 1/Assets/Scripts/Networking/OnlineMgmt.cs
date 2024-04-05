@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 public class OnlineMgmt : MonoBehaviourPunCallbacks
 {
     [SerializeField] private GameObject playerLeftGame;
+    [SerializeField] private GameObject drawRequest;
     private void Start()
     {
         PhotonNetwork.AddCallbackTarget(this);
@@ -16,6 +17,7 @@ public class OnlineMgmt : MonoBehaviourPunCallbacks
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         base.OnPlayerLeftRoom(otherPlayer);
+        drawRequest.SetActive(false);
         playerLeftGame.gameObject.SetActive(true);
         StartCoroutine(waitReturnToLobby());
     }
