@@ -1,7 +1,7 @@
 #Hi, I'm OX, the AI for Quixo
 
 from Settings import *
-import copy, random
+import copy, random, re, time
 
 #Reused Function, will break out into a module later
 def init_safe_pickup_spots():
@@ -276,7 +276,7 @@ def get_placements(row, col):
 
     return spots
 
-def get_all_moves(board, playing_as):
+def get_all_moves(board, playing_as, should_score):
     possible_moves = {}
 
     for x in EDGES_OF_THE_BOARD:
@@ -284,21 +284,27 @@ def get_all_moves(board, playing_as):
         spot_contents = board[pickup_row][pickup_col]
 
         if (spot_contents == " " or spot_contents == playing_as):
-            pickup_score = 0
-            pickup_reasoning = ""
-            pickup_score, pickup_reasoning = score_pickup(spot_contents, playing_as, pickup_row, pickup_col, pickup_reasoning)
+            if (should_score):
+                pickup_score = 0
+                pickup_reasoning = ""
+                pickup_score, pickup_reasoning = score_pickup(spot_contents, playing_as, pickup_row, pickup_col, pickup_reasoning)
 
             for spot in get_placements(pickup_row, pickup_col):
                 placement_row, placement_col = str_to_int_spot_data(spot)
-                placement_score = 0
-                placement_reasoning = ""
-                placement_score, placement_reasoning = score_placement(board, playing_as, pickup_row, pickup_col, placement_row, placement_col, placement_reasoning)
+
+                if (should_score):
+                    placement_score = 0
+                    placement_reasoning = ""
+                    placement_score, placement_reasoning = score_placement(board, playing_as, pickup_row, pickup_col, placement_row, placement_col, placement_reasoning)
+                    if len(placement_reasoning) >= 2:
+                        placement_reasoning = placement_reasoning[:-2]
 
                 combined_move = x + " " + spot
-                if len(placement_reasoning) >= 2:
-                    placement_reasoning = placement_reasoning[:-2]
 
-                possible_moves[combined_move] = [(pickup_score + placement_score), (pickup_reasoning + placement_reasoning)]
+                if (should_score):
+                    possible_moves[combined_move] = [(pickup_score + placement_score), (pickup_reasoning + placement_reasoning)]
+                else:
+                    possible_moves[combined_move] = [0, 0]
 
     return possible_moves
 
@@ -308,33 +314,6 @@ def shuffle_scores_for_difficulty(possible_moves, difficulty):
         score_reasoning[0] += score_ding_amount * difficulty
     return possible_moves
 
-
-#1 Layer
-#Get all possible moves with their scores
-    #Generate all possible boards that could happen from opponent move
-        #2 Layer
-        #If there is a pin and not immediate loss select it
-        #Add to the base score the #Of Winaable paths * 200
-        #Get all possible moves with their scores
-            #Generate all possible boards that could happen from opponent move
-                #3 Layer
-                #If there is a pin and not immediate loss select it
-                #Add to the base score the #Of Winaable paths * 50
-
-#How do I weight the current scores
-#Do I add points to the current moves dictionary score
-#Do I make it mega move scores
-
-#I am keeping track of # of methods to win? Yes.
-#Dont generate all possible moves, Check if opponent has no survivable moves (Searching for pin)
-
-#You're not searching for the 3 move win, You're searching for the 3 move opponnet has lost
-#THIS IS RIGHT
-
-#All the right moves in all the right places, so yeah we're going down
-
-#I think I should just check if it leads to certain death, if not then follow the fork/pin
-
 def get_a_random_best_move(possible_moves):
     best_moves = [move for move, score in possible_moves.items() if int(score[0]) > (int(max(possible_moves.values())[0]) - 100)]
     random_best_move = random.choice(best_moves)
@@ -342,17 +321,110 @@ def get_a_random_best_move(possible_moves):
 
 def get_best_moves(how_many_moves_to_get, possible_moves):
     sorted_moves = sorted(possible_moves.items(), key=lambda x: int(x[1][0]), reverse=True)
-    return sorted_moves[:how_many_moves_to_get]
+    max_score = int(sorted_moves[0][1][0])
+    filtered_moves = [(move, score) for move, score in sorted_moves if int(score[0]) >= max_score - 100]
+    return filtered_moves
 
-def new_request_ai_move(board, playing_as, difficulty):
-    depth = 1
+def breakdown_move_set(moveset_string):
+    numbers = re.findall(r'\d+', moveset_string)
+    numbers = [int(num) for num in numbers]
+    return numbers
 
-    possible_moves = None
-    for i in range(depth):
-        possible_moves = get_all_moves(board, playing_as)
-        shuffle_scores_for_difficulty(possible_moves, difficulty)
+def gen_board_with_move(board, sim_for, potential_move):
+    pickup_row, pickup_col, placement_row, placement_col = breakdown_move_set(potential_move[0])
+    return generate_future_board(board, sim_for, pickup_row, pickup_col, placement_row, placement_col)
 
-        get_best_moves(10, possible_moves)
+def get_opp_boards_after_your_moves(board, player):
+    all_generated_boards = []
+    possible_moves = get_all_moves(board, player, True)
+    best_moves = get_best_moves(AI_NUM_OF_BEST_MOVES_CONSIDERED, possible_moves)
+
+    for move in best_moves:
+        pickup_row, pickup_col, placement_row, placement_col = breakdown_move_set(move[0])
+        future_board = generate_future_board(board, player, pickup_row, pickup_col, placement_row, placement_col)
+        all_generated_boards.append(future_board)
+
+    return all_generated_boards
+
+def only_loses_generated(moves):
+    for move in moves:
+        if move[1][0] > 0:
+            return False
+    return True
+
+def count_wins(moves):
+    win_count = 0
+    for move in moves:
+        if move[1][0] > 290000:
+            win_count += 1
+    return win_count
+
+#Can Dos
+#Check the tie considitions (5 mins)
+#Packing the board better?
+#Play game to verify good
+#Run proof sims
+
+def request_ai_move(board_10, playing_as, difficulty):
+    #3.5 Seconds
+    start_time = time.time()
+
+    opponent = get_opponent(playing_as)
+    possible_moves = {}
+
+    def explore_scores(layers_deep, board_10, best_move_10, seen_messages = set()):
+        passed_max_depth = (layers_deep > AI_MAX_DEPTH)
+        on_first_layer = (layers_deep == 1)
+
+        #Timeout Messaging
+        message = "Exploration timed out"
+        seen_msg = (message not in seen_messages)
+        time_passed_limit = (time.time() - start_time) > 3.5
+        if (seen_msg and time_passed_limit):
+            seen_messages.add(message)
+            if (BUILD_OUTPUT_DATA_ON):
+                print("\033[38;5;208m\nExploration timed out!\n\n", end= "\u001b[0m")
+
+        if (not passed_max_depth and not time_passed_limit):
+            possible_moves_10 = get_all_moves(board_10, playing_as, True)
+            shuffle_scores_for_difficulty(possible_moves_10, difficulty)
+            best_moves = get_best_moves(AI_NUM_OF_BEST_MOVES_CONSIDERED, possible_moves_10)
+
+            #Score Adjusters
+            how_many_wins_in_this_depth = count_wins(best_moves)
+            depth_score_impact_adjustment = (5 ** layers_deep)
+
+            if (on_first_layer):
+                for best_move_10 in best_moves:
+                    possible_moves[best_move_10[0]] = best_move_10[1]
+
+            if (only_loses_generated(best_moves)):
+                best_move_10[1][0] -= (5000 / depth_score_impact_adjustment)
+                best_move_10[1][1] += ", " + ("Certain Loss in "+str(layers_deep)) + " moves"
+            
+            if (how_many_wins_in_this_depth > 0):
+                best_move_10[1][0] += ((5000 * how_many_wins_in_this_depth) / depth_score_impact_adjustment)
+                best_move_10[1][1] += ", " + (str(how_many_wins_in_this_depth) + " Wins in "+str(layers_deep))+" moves"
+
+            for potential_move in best_moves:
+                if (on_first_layer):
+                    best_move_10 = potential_move
+
+                move_score = potential_move[1][0]
+                if (move_score < 500000):
+                    board_15 = gen_board_with_move(board_10, playing_as, potential_move)
+                    set_of_boards_20 = get_opp_boards_after_your_moves(board_15, opponent)
+
+                    for board_20 in set_of_boards_20:
+                        explore_scores(layers_deep + 1, board_20, best_move_10)
+    
+    #Depth Adjuster
+    if (get_pieces_on_board(board_10) < 10):
+        AI_MAX_DEPTH = 1
+    else:
+        AI_MAX_DEPTH = 2
+
+    explore_scores(1, board_10, None)
     spot_data = get_a_random_best_move(possible_moves)
 
     if (BUILD_OUTPUT_DATA_ON):
@@ -363,27 +435,21 @@ def new_request_ai_move(board, playing_as, difficulty):
         elif (playing_as == "O"):
             print("\n" + "\u001b[35m" + playing_as + " Move Chosen" + "\u001b[0m")
         print(str(spot_data))
-    
+
+    #Output data stuff
+    end_time = time.time()
+    how_long_move_took = (end_time - start_time)
+    if (how_long_move_took > 3.5):
+        print("\033[38;5;34m\nMove took too long! Time Taken: " + str(how_long_move_took) + "\n\u001b[0m")
+
     return spot_data[0], spot_data[1]
 
-new_request_ai_move(chars_to_board("                         "), "X", 0)
+#Test Case (Blank board prediction)
+row1 = [" ", " ", " ", " ", " "]
+row2 = [" ", " ", " ", " ", " "]
+row3 = [" ", " ", " ", " ", " "]
+row4 = [" ", " ", " ", " ", " "]
+row5 = [" ", " ", " ", " ", " "]
+blank_board = [row1, row2, row3, row4, row5]
 
-def request_ai_move(board, playing_as, difficulty):
-    possible_moves = get_all_moves(board, playing_as)
-    shuffle_scores_for_difficulty(possible_moves, difficulty) 
-
-    #best_moves are moves with a rating within 100 of the max score in the moves list
-    best_moves = [move for move, score in possible_moves.items() if int(score[0]) > (int(max(possible_moves.values())[0]) - 100)]
-    random_best_move = random.choice(best_moves)
-    spot_data = random_best_move.split(" ")
- 
-    if (BUILD_OUTPUT_DATA_ON):
-        for key, value in sorted(possible_moves.items(), key=lambda item: item[1]):
-            print(f'{key}: {value}')
-        if (playing_as == "X"):
-            print("\n" + "\u001b[31m" + playing_as + " Move Chosen" + "\u001b[0m")
-        elif (playing_as == "O"):
-            print("\n" + "\u001b[35m" + playing_as + " Move Chosen" + "\u001b[0m")
-        print(str(spot_data))
-    
-    return spot_data[0], spot_data[1]
+#print(request_ai_move(blank_board, "X", 0))

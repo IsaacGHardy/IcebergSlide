@@ -1,6 +1,5 @@
 from Settings import *
 from AI import request_ai_move
-import numpy
 import time
 import copy
 
@@ -253,7 +252,7 @@ if (BUILD_AI_ONLY_PLAY):
     print(time.asctime())
 
     start = time.time()
-    for i in range(250):
+    for i in range(5):
         start_match()
     end = time.time()
 
