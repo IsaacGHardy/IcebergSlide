@@ -164,6 +164,18 @@ def get_pieces_on_board(board):
                 total_pieces += 1
     return total_pieces
 
+def get_pieces_on_edge_of_board(board):
+    total_pieces = 0
+    rowVal = 0
+    for row in board:
+        rowVal += 1
+        colVal = 0
+        for item in row:
+            colVal += 1
+            if (item != " " and (rowVal == 1 or rowVal == 5 or colVal == 5 or colVal == 1)):
+                total_pieces += 1
+    return total_pieces
+
 def maybe_create_fork(future_board, opponent_as):
     top_streak = check_for_streaks(future_board, opponent_as)[0]
     second_from_top_streak = check_for_streaks(future_board, opponent_as)[1]
@@ -230,7 +242,7 @@ def score_placement(board, playing_as, pickup_row, pickup_col, placement_row, pl
         reasoning += " " + "Takes Middle Piece" + ", "
 
     if (is_a_corner(placement_row, placement_col) and board[placement_row][placement_col] != playing_as):
-        if (get_pieces_on_board(board) < 10):
+        if (get_pieces_on_board(board) < 8):
             placement_score -= 5
             reasoning += " " + "Takes Corner too early" + ", "
         else:
@@ -245,7 +257,7 @@ def score_placement(board, playing_as, pickup_row, pickup_col, placement_row, pl
         placement_score -= 50
         reasoning += " " + "Gives Opponent Middle" + ", "
 
-    if (opp_current_streaks < 4 and is_the_magic_bar(placement_row, placement_col) and board[2][2] != playing_as):
+    if (opp_current_streaks < 4 and is_the_magic_bar(placement_row, placement_col)):
         placement_score += 95
         reasoning += " " + "Push Middle" + ", "
 
@@ -360,7 +372,7 @@ def count_wins(moves):
     return win_count
 
 #Can Dos
-#Check the tie considitions (5 mins)
+#Check the tie considitions (5 mins), Check how long it takes with the AI thinking thing
 #Packing the board better?
 #Play game to verify good
 #Run proof sims
@@ -372,14 +384,14 @@ def request_ai_move(board_10, playing_as, difficulty):
     opponent = get_opponent(playing_as)
     possible_moves = {}
 
-    def explore_scores(layers_deep, board_10, best_move_10, seen_messages = set()):
-        passed_max_depth = (layers_deep > AI_MAX_DEPTH)
+    def explore_scores(layers_deep, board_10, best_move_10, depth_to_go, seen_messages=set()):
+        passed_max_depth = (layers_deep > depth_to_go)
         on_first_layer = (layers_deep == 1)
 
         #Timeout Messaging
         message = "Exploration timed out"
         seen_msg = (message not in seen_messages)
-        time_passed_limit = (time.time() - start_time) > 3.5
+        time_passed_limit = (time.time() - start_time) > 3
         if (seen_msg and time_passed_limit):
             seen_messages.add(message)
             if (BUILD_OUTPUT_DATA_ON):
@@ -416,15 +428,15 @@ def request_ai_move(board_10, playing_as, difficulty):
                     set_of_boards_20 = get_opp_boards_after_your_moves(board_15, opponent)
 
                     for board_20 in set_of_boards_20:
-                        explore_scores(layers_deep + 1, board_20, best_move_10)
+                        explore_scores(layers_deep + 1, board_20, best_move_10, depth_to_go)
     
     #Depth Adjuster
-    if (get_pieces_on_board(board_10) < 10):
-        AI_MAX_DEPTH = 1
+    if (get_pieces_on_edge_of_board(board_10) < 6):
+        depth_to_go = 1
     else:
-        AI_MAX_DEPTH = 2
+        depth_to_go = 2
 
-    explore_scores(1, board_10, None)
+    explore_scores(1, board_10, depth_to_go, depth_to_go)
     spot_data = get_a_random_best_move(possible_moves)
 
     if (BUILD_OUTPUT_DATA_ON):
