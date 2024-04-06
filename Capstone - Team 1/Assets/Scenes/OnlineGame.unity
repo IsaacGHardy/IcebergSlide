@@ -2056,7 +2056,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 204, y: -263}
+  m_AnchoredPosition: {x: 215, y: -275}
   m_SizeDelta: {x: 80, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &125078901
@@ -10999,6 +10999,7 @@ MonoBehaviour:
   playerTurn: {fileID: 1334658242}
   offerDrawButton: {fileID: 1108612686}
   rejectionMessage: {fileID: 449720781}
+  tutorial: {fileID: 0}
   spd: 5
   trnspd: 25
   isTutorial: 0
@@ -13367,8 +13368,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 968.48, y: 602.8687}
-  m_SizeDelta: {x: 2796.5, y: 1740.7911}
+  m_AnchoredPosition: {x: 1017.06824, y: 579.44116}
+  m_SizeDelta: {x: 2936.7988, y: 1673.1442}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &612545626
 MonoBehaviour:
@@ -14568,8 +14569,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 35.024994, y: 50}
-  m_SizeDelta: {x: 407.95, y: 554.59393}
+  m_AnchoredPosition: {x: -8.0265, y: 45.046}
+  m_SizeDelta: {x: 494.05, y: 544.69}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &641566475
 GameObject:
@@ -20024,18 +20025,6 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 786780954}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 1108612683}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 6
@@ -39269,18 +39258,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 995326173}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
       - m_Target: {fileID: 1455895641}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
@@ -48811,7 +48788,7 @@ MonoBehaviour:
   m_CharacterValidation: 0
   m_RegexValue: 
   m_GlobalPointSize: 14
-  m_CharacterLimit: 20
+  m_CharacterLimit: 25
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls: []
@@ -48868,8 +48845,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.000034332275, y: -227.29694}
-  m_SizeDelta: {x: 407.95, y: 100}
+  m_AnchoredPosition: {x: 15.53, y: -227.29694}
+  m_SizeDelta: {x: 462.99, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &2960426050412141038
 RectTransform:
@@ -48888,8 +48865,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -4.0251617, y: 49.098915}
-  m_SizeDelta: {x: 399.9, y: 456.3961}
+  m_AnchoredPosition: {x: 15.530297, y: 49.098915}
+  m_SizeDelta: {x: 462.9896, y: 456.3961}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &3267739495464604414
 MonoBehaviour:
@@ -49445,6 +49422,8 @@ MonoBehaviour:
   chat: {fileID: 639169850}
   notification: {fileID: 1175554551}
   scrollArea: {fileID: 1537003078001253891}
+  gamePosition: {x: -2.5, y: 4.5, z: 1.5}
+  chatPosition: {x: -3.5, y: 4.5, z: 1.5}
 --- !u!1 &6957258010397380590
 GameObject:
   m_ObjectHideFlags: 0

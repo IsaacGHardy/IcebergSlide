@@ -581,6 +581,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerLeftGame: {fileID: 0}
+  drawRequest: {fileID: 0}
+  pauseMenu: {fileID: 0}
+  otherPauseMenu: {fileID: 0}
 --- !u!1 &128334365
 GameObject:
   m_ObjectHideFlags: 0
@@ -678,7 +681,7 @@ MonoBehaviour:
   m_CharacterValidation: 0
   m_RegexValue: 
   m_GlobalPointSize: 14
-  m_CharacterLimit: 0
+  m_CharacterLimit: 10
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls: []
@@ -853,7 +856,7 @@ MonoBehaviour:
   m_CharacterValidation: 0
   m_RegexValue: 
   m_GlobalPointSize: 14
-  m_CharacterLimit: 0
+  m_CharacterLimit: 10
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls: []

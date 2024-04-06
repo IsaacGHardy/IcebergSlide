@@ -58,6 +58,7 @@ public class QuixoClass : MonoBehaviour
     [SerializeField] TextMeshProUGUI playerTurn;
     [SerializeField] Button offerDrawButton;
     [SerializeField] GameObject rejectionMessage;
+    [SerializeField] Tutorial tutorial;
     public static string p1Name = "Player 1";
     public static string p2Name = "Player 2";
     private Player[] playerList;
@@ -81,6 +82,7 @@ public class QuixoClass : MonoBehaviour
     public Penguin[,] gameBoard;
     public Point from, to;
     public bool isTutorial = true;
+    public Point pieceToClick = new Point( -1, -1 );
     public List<Point> poss;
     public bool isXTurn = true;
     public bool moveInProgress = false;
@@ -97,7 +99,7 @@ public class QuixoClass : MonoBehaviour
     public Point suggestedFrom = new Point();
     //adding more walks so it is randomly chosen more and others feel special
     private int randMovementIndex = 0;
-    private int turncount = 0;
+    private int turncount = 1;
 
 
 
@@ -154,6 +156,12 @@ public class QuixoClass : MonoBehaviour
         {
             HighlightSuggestedMove();
         }
+    }
+
+    public void startTutorial()
+    {
+        isPlayer1 = true;
+        isLocked = false;
     }
 
 
@@ -803,6 +811,7 @@ public class QuixoClass : MonoBehaviour
 
         if (isXWin || isOWin)
         {
+            gameOver = true;
             menuSounds.playWin();
             StartCoroutine(LoadWinScene());
         }
@@ -813,8 +822,9 @@ public class QuixoClass : MonoBehaviour
         moveInProgress = false; 
         isXTurn = !isXTurn;
         ++turncount;
+        if(isTutorial && tutorial.isGoing()) { tutorial.advanceTurn(); }
         changePlayerTurn();
-        if(isOnline || AIgame)
+        if(isOnline || AIgame || isTutorial)
         {
             if (isPlayer1 == isXTurn)
             {
@@ -834,7 +844,7 @@ public class QuixoClass : MonoBehaviour
     private void changePlayerTurn()
     {
         offerDrawButton.gameObject.SetActive(turncount > 10);
-        if (offerDrawButton.gameObject != null) { offerDrawButton.interactable = ((!AIgame && !isOnline) || (isPlayer1 ? isXTurn : !isXTurn)); }
+        if (offerDrawButton.gameObject != null) { offerDrawButton.interactable = ((!AIgame && !isOnline && !isTutorial) || (isPlayer1 ? isXTurn : !isXTurn)); }
 
         if (isOnline)
         {
@@ -1007,7 +1017,7 @@ public class QuixoClass : MonoBehaviour
         finalizeMove(penguins);
         string boardStr = translateBoard();
         blockVal = isXTurn ? 'X' : 'O';
-        if (AIgame && !autoMove){
+        if (AIgame && !autoMove && !gameOver){
             StartCoroutine(aiMove());
         }
         else if (isTutorial && !autoMove)
@@ -1028,7 +1038,7 @@ public class QuixoClass : MonoBehaviour
         string boardStr = translateBoard();
 
         int difficulty = CharacterCustomizationUI.AI_DIFFICULTY;
-        string AImove = ai.makeMove(boardStr + (isPlayer1 ? "O" : "X") + (!isTutorial ? difficulty.ToString() : '2'));
+        string AImove = ai.makeMove(boardStr + (isPlayer1 ? "O" : "X") + (!isTutorial ? difficulty.ToString() : '6'));
         readAImove(AImove);
 
         //simulate hover
@@ -1050,7 +1060,7 @@ public class QuixoClass : MonoBehaviour
 
     public void offerDraw()
     {
-        if(!AIgame && !isOnline)
+        if(!AIgame && !isOnline && !isTutorial)
         {
             isXWin = true;
             isOWin = true;
@@ -1067,6 +1077,10 @@ public class QuixoClass : MonoBehaviour
             {
                 draw();
             }
+        }
+        else if(isTutorial)
+        {
+            goodAiDraw();
         }
     }
 
@@ -1264,10 +1278,33 @@ public class QuixoClass : MonoBehaviour
     //# Tutorial Functions ###############################################################################################################
     //####################################################################################################################################
 
+    public void tutorialPieceClick()
+    {
+        tutorial.wasClicked();
+    }
+
+    public void resetMat(Point p)
+    {
+        Data(p).setMat(defaultMat);
+    }
+
     void HighlightSuggestedMove()
     {
         readAImove(ref suggestedTo, ref suggestedFrom, '0');
-        Data(suggestedTo).setMat(selectedMat);
         Data(suggestedFrom).setMat(highlightMat);
+        pieceToClick = Data(suggestedFrom).loc() ;
+        StartCoroutine(readyForTo());
+    }
+
+    private IEnumerator readyForTo()
+    {
+        while (!tutorial.readyForTo())
+        {
+            yield return new WaitForSeconds(.3f);
+        }
+
+        Data(suggestedTo).setMat(selectedMat);
+        pieceToClick = Data(suggestedTo).loc();
+
     }
 }

@@ -63,7 +63,16 @@ public class Penguin : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (!Game.isLocked && Game.canPickPiece(row, col))
+        if(Game.isTutorial)
+        {
+            if (Game.pieceToClick.eq(loc()))
+            {
+                soundEffect.playPoke();
+                run();
+                Game.tutorialPieceClick();
+            }
+        }
+        else if (!Game.isLocked && Game.canPickPiece(row, col))
         {
             soundEffect.playPoke();
             run();

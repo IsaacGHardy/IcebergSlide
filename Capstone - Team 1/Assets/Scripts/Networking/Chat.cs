@@ -15,11 +15,18 @@ public class Chat : MonoBehaviour
     [SerializeField] GameObject chat;
     [SerializeField] GameObject notification;
     [SerializeField] ScrollRect scrollArea;
+    new Camera camera;
+    [SerializeField] private Vector3 gamePosition;
+    [SerializeField] private Vector3 chatPosition;
+    private float moveSpeed = 5.0f;
+
 
 
     private void Start()
     {
         inputField.onEndEdit.AddListener(delegate { checkEnterKey(inputField); });
+        new Camera();
+        camera = Camera.main;
     }
 
     public void SendMessage()
@@ -32,7 +39,26 @@ public class Chat : MonoBehaviour
         clickChatArea();
         scrollTobottom();
     }
-    
+
+    private IEnumerator moveCameraForChat(Vector3 position)
+    {
+        Vector3 curr = camera.transform.position;
+        float distance = Vector3.Distance(curr, position);
+        float duration = distance / moveSpeed;
+        float elapsedTime = 0f;
+
+        while (elapsedTime < duration)
+        {
+            camera.transform.position = Vector3.Lerp(curr, position, elapsedTime / duration);
+            elapsedTime += Time.deltaTime;
+
+            yield return null;
+        }
+
+        camera.transform.position = position;
+    }
+
+
     private void checkEnterKey(TMP_InputField input)
     {
         if(Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
@@ -63,7 +89,14 @@ public class Chat : MonoBehaviour
     public void toggleChat()
     {
         chat.SetActive(!chat.activeSelf);
-        if (chat.activeSelf) { clickChatArea(); }
+        if (chat.activeSelf) { 
+            clickChatArea();
+            StartCoroutine(moveCameraForChat(chatPosition));
+        }
+        else
+        {
+            StartCoroutine(moveCameraForChat(gamePosition));
+        }
         notification.SetActive(false);
         scrollTobottom();
     }

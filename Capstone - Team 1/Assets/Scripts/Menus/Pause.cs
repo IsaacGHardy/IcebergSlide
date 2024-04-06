@@ -40,7 +40,7 @@ public class Pause : MonoBehaviour
     {
         resumeGame();
         pauseButton.SetActive(true);
-        chat.SetActive(false);
+        chat.SetActive(true);
         otherPauseMenu.SetActive(false);
     }
 
