@@ -1047,11 +1047,11 @@ public class QuixoClass : MonoBehaviour
         if (AIgame && !autoMove && !gameOver){
             StartCoroutine(aiMove());
         }
-        else if (isTutorial && !autoMove)
+        else if (isTutorial && !autoMove && !gameOver)
         {
             StartCoroutine(aiMove());
         }
-        else if (isTutorial && autoMove && !gameOver)
+        else if (isTutorial && autoMove)
         {
             HighlightSuggestedMove();
         }
