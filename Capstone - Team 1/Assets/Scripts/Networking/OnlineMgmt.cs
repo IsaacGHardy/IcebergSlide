@@ -21,9 +21,9 @@ public class OnlineMgmt : MonoBehaviourPunCallbacks
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         base.OnPlayerLeftRoom(otherPlayer);
-        drawRequest.SetActive(false);
-        pauseMenu.SetActive(false);
-        otherPauseMenu.SetActive(false);
+        if (drawRequest != null) { drawRequest.SetActive(false); }
+        if (pauseMenu != null) { pauseMenu.SetActive(false); }
+        if (otherPauseMenu != null) { otherPauseMenu.SetActive(false); }
         playerLeftGame.gameObject.SetActive(true);
         StartCoroutine(waitReturnToLobby());
     }

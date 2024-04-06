@@ -100,6 +100,7 @@ public class QuixoClass : MonoBehaviour
     //adding more walks so it is randomly chosen more and others feel special
     private int randMovementIndex = 0;
     private int turncount = 1;
+    private bool isQuick = false;
 
 
 
@@ -115,6 +116,15 @@ public class QuixoClass : MonoBehaviour
         if(!isPlayer1)
         {
             isLocked = true;
+        }
+
+        if(!isOnline && !isTutorial)
+        {
+            if (PlayerPrefs.GetInt("quick") == 1)
+            {
+                spd = 50f;
+                isQuick = true;
+            }
         }
         //HANDLE FOR ONLINE GAME
         if (isOnline && OnlineCharacterCustomizationUI.XHAT != null && OnlineCharacterCustomizationUI.OHAT != null)
@@ -162,6 +172,23 @@ public class QuixoClass : MonoBehaviour
     {
         isPlayer1 = true;
         isLocked = false;
+    }
+
+    public void toggleQuick()
+    {
+        if (!isOnline && !isTutorial)
+        {
+            if (PlayerPrefs.GetInt("quick") == 1)
+            {
+                spd = 50f;
+                isQuick = true;
+            }
+            else
+            {
+                spd = 5f;
+                isQuick = false;
+            }
+        }
     }
 
 
@@ -1024,7 +1051,7 @@ public class QuixoClass : MonoBehaviour
         {
             StartCoroutine(aiMove());
         }
-        else if (isTutorial && autoMove)
+        else if (isTutorial && autoMove && !gameOver)
         {
             HighlightSuggestedMove();
         }
@@ -1033,7 +1060,8 @@ public class QuixoClass : MonoBehaviour
 
     private IEnumerator aiMove()
     {
-        yield return new WaitForSeconds(.5f);
+        if (!isQuick) { yield return new WaitForSeconds(.5f); }
+        
 
         string boardStr = translateBoard();
 
@@ -1044,13 +1072,13 @@ public class QuixoClass : MonoBehaviour
         //simulate hover
         Data(from).aiHover();
 
-        yield return new WaitForSeconds(1f);
+        if (!isQuick) { yield return new WaitForSeconds(1f); }
 
         //simulate click
         Data(from).aiClick();
         Data(from).run(true);
 
-        yield return new WaitForSeconds(1f);
+        if (!isQuick) { yield return new WaitForSeconds(1f); }
 
         Data(to).aiClick();
         Data(to).run(true);

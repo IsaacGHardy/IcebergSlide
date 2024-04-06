@@ -42,7 +42,7 @@ public class Tutorial : MonoBehaviour
         "It's time for the rival penguins to make their move!",
         //3
         "Once again, choose the green penguin to begin your turn\n\n" +
-        "You can't slide penguins from the opposing team!" +
+        "You can't slide penguins from the opposing team!",
         //4
         "Select the blue penguin to complete your turn\n\n" +
         "You must always slide your penguin to the end of the same row or column\n\n" +
