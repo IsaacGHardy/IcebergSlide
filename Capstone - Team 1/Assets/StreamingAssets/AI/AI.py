@@ -390,10 +390,6 @@ def count_wins(moves):
             win_count += 1
     return win_count
 
-#To-Do
-#Verify Tie Validation
-#Play the game
-
 def request_ai_move(board_10, playing_as, difficulty):
     start_time = time.time()
 
