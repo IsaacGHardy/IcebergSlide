@@ -1118,7 +1118,7 @@ public class QuixoClass : MonoBehaviour
         {
             draw();
         } 
-        else if(turncount >= 30)
+        else if(turncount >= 35)
         {
             draw();
         }
@@ -1163,7 +1163,7 @@ public class QuixoClass : MonoBehaviour
             maxStreak = (activeLeft > maxStreak ? activeLeft : maxStreak);
         }
 
-        return maxStreak >= 4;
+        return maxStreak >= 3;
     }
 
     public void draw()
