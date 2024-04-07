@@ -128,6 +128,20 @@ def generate_future_board(board, player_turn, pickup_row, pickup_col, placement_
 
     return future_board
 
+def pieces_in_middle(board):
+    total_spots_in_middle = 0
+
+    row_on = 0
+    for row in board:
+        row_on += 1
+        col_on = 0
+        for item in row:
+            col_on += 1
+            if ((row_on != 5 and row_on != 1) and (col_on != 5 and col_on != 1)  and (item == "X" or item == "O")):
+                total_spots_in_middle += 1
+
+    return total_spots_in_middle
+
 def get_open_spots(board):
     total_open_spots = 0
 
@@ -241,6 +255,10 @@ def score_placement(board, playing_as, pickup_row, pickup_col, placement_row, pl
         placement_score += 50
         reasoning += " " + "Takes Middle Piece" + ", "
 
+    if (pieces_in_middle(future_board) > pieces_in_middle(board)):
+        placement_score += 110
+        reasoning += " " + "Adds Middle Piece" + ", "
+
     if (is_a_corner(placement_row, placement_col) and board[placement_row][placement_col] != playing_as):
         if (get_pieces_on_board(board) < 8):
             placement_score -= 5
@@ -257,9 +275,9 @@ def score_placement(board, playing_as, pickup_row, pickup_col, placement_row, pl
         placement_score -= 50
         reasoning += " " + "Gives Opponent Middle" + ", "
 
-    if (opp_current_streaks < 4 and is_the_magic_bar(placement_row, placement_col)):
-        placement_score += 95
-        reasoning += " " + "Push Middle" + ", "
+    #if (opp_current_streaks < 4 and is_the_magic_bar(placement_row, placement_col)):
+    #    placement_score += 95
+    #    reasoning += " " + "Push Middle" + ", "
 
     your_max_streak_inc = your_current_streaks < your_future_streaks
     opps_max_streak_does_not_get_scary = opp_future_streaks < 4
@@ -333,8 +351,9 @@ def get_a_random_best_move(possible_moves):
 
 def get_best_moves(how_many_moves_to_get, possible_moves):
     sorted_moves = sorted(possible_moves.items(), key=lambda x: int(x[1][0]), reverse=True)
-    max_score = int(sorted_moves[0][1][0])
-    filtered_moves = [(move, score) for move, score in sorted_moves if int(score[0]) >= max_score - 100]
+    filtered_moves = sorted_moves[:how_many_moves_to_get]
+    #max_score = int(sorted_moves[0][1][0])
+    #filtered_moves = [(move, score) for move, score in sorted_moves if int(score[0]) >= max_score - 100]
     return filtered_moves
 
 def breakdown_move_set(moveset_string):
@@ -371,21 +390,23 @@ def count_wins(moves):
             win_count += 1
     return win_count
 
-#Can Dos
-#Check the tie considitions (5 mins), Check how long it takes with the AI thinking thing
-#Packing the board better?
-#Play game to verify good
-#Run proof sims
+#To-Do
+#Verify Tie Validation
+#Play the game
+#Sim overnight
 
 def request_ai_move(board_10, playing_as, difficulty):
-    #3.5 Seconds
     start_time = time.time()
 
     opponent = get_opponent(playing_as)
     possible_moves = {}
 
-    def explore_scores(layers_deep, board_10, best_move_10, depth_to_go, seen_messages=set()):
-        passed_max_depth = (layers_deep > depth_to_go)
+    def explore_scores(layers_deep, board_10, best_move_10, seen_messages=set()):
+        passed_max_depth = (layers_deep > AI_MAX_DEPTH)
+        if (difficulty > 0):
+            #Easier Modes
+            passed_max_depth = (layers_deep > 1)
+
         on_first_layer = (layers_deep == 1)
 
         #Timeout Messaging
@@ -436,15 +457,9 @@ def request_ai_move(board_10, playing_as, difficulty):
                     set_of_boards_20 = get_opp_boards_after_your_moves(board_15, opponent)
 
                     for board_20 in set_of_boards_20:
-                        explore_scores(layers_deep + 1, board_20, best_move_10, depth_to_go)
-    
-    #Depth Adjuster
-    if (get_pieces_on_edge_of_board(board_10) < 6):
-        depth_to_go = 4
-    else:
-        depth_to_go = 4
+                        explore_scores(layers_deep + 1, board_20, best_move_10, seen_messages)
 
-    explore_scores(1, board_10, depth_to_go, depth_to_go)
+    explore_scores(1, board_10, None)
     spot_data = get_a_random_best_move(possible_moves)
 
     if (BUILD_OUTPUT_DATA_ON):
@@ -459,17 +474,7 @@ def request_ai_move(board_10, playing_as, difficulty):
     #Output data stuff
     end_time = time.time()
     how_long_move_took = (end_time - start_time)
-    #if (how_long_move_took > 3.5):
-    print("\033[38;5;208m\nMove took too long! Time Taken: " + str(how_long_move_took) + "\n\u001b[0m")
+    if (how_long_move_took > 3.3):
+        print("\033[38;5;208m\nMove took too long! Time Taken: " + str(how_long_move_took) + "\u001b[0m")
 
     return spot_data[0], spot_data[1]
-
-#Test Case (Blank board prediction)
-row1 = [" ", " ", " ", " ", " "]
-row2 = [" ", " ", " ", " ", " "]
-row3 = [" ", " ", " ", " ", " "]
-row4 = [" ", " ", " ", " ", " "]
-row5 = [" ", " ", " ", " ", " "]
-blank_board = [row1, row2, row3, row4, row5]
-
-#print(request_ai_move(blank_board, "X", 0))
