@@ -393,7 +393,6 @@ def count_wins(moves):
 #To-Do
 #Verify Tie Validation
 #Play the game
-#Sim overnight
 
 def request_ai_move(board_10, playing_as, difficulty):
     start_time = time.time()
