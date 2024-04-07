@@ -402,6 +402,10 @@ def request_ai_move(board_10, playing_as, difficulty):
             shuffle_scores_for_difficulty(possible_moves_10, difficulty)
             best_moves = get_best_moves(AI_NUM_OF_BEST_MOVES_CONSIDERED, possible_moves_10)
 
+            time_passed_limit = (time.time() - start_time) > 3
+            if (time_passed_limit):
+                return
+
             #Score Adjusters
             how_many_wins_in_this_depth = count_wins(best_moves)
             depth_score_impact_adjustment = (5 ** layers_deep)
@@ -422,6 +426,10 @@ def request_ai_move(board_10, playing_as, difficulty):
                 if (on_first_layer):
                     best_move_10 = potential_move
 
+                time_passed_limit = (time.time() - start_time) > 3
+                if (time_passed_limit):
+                    return
+               
                 move_score = potential_move[1][0]
                 if (move_score < 500000):
                     board_15 = gen_board_with_move(board_10, playing_as, potential_move)
@@ -432,9 +440,9 @@ def request_ai_move(board_10, playing_as, difficulty):
     
     #Depth Adjuster
     if (get_pieces_on_edge_of_board(board_10) < 6):
-        depth_to_go = 1
+        depth_to_go = 4
     else:
-        depth_to_go = 2
+        depth_to_go = 4
 
     explore_scores(1, board_10, depth_to_go, depth_to_go)
     spot_data = get_a_random_best_move(possible_moves)
@@ -451,8 +459,8 @@ def request_ai_move(board_10, playing_as, difficulty):
     #Output data stuff
     end_time = time.time()
     how_long_move_took = (end_time - start_time)
-    if (how_long_move_took > 3.5):
-        print("\033[38;5;34m\nMove took too long! Time Taken: " + str(how_long_move_took) + "\n\u001b[0m")
+    #if (how_long_move_took > 3.5):
+    print("\033[38;5;208m\nMove took too long! Time Taken: " + str(how_long_move_took) + "\n\u001b[0m")
 
     return spot_data[0], spot_data[1]
 
