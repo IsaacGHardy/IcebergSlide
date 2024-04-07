@@ -1,6 +1,5 @@
 from Settings import *
 from AI import request_ai_move
-import numpy
 import time
 import copy
 
@@ -214,7 +213,7 @@ def get_player_move(board, player_turn):
         print_board(cloned_original_board)
 
         confirmed_move = check_for_undo(last_board_state, cloned_original_board)
-        cloned_original_board = last_board_state
+        cloned_original_board = last_board_state 
 
     return move_block_from, move_block_to
 
@@ -253,7 +252,7 @@ if (BUILD_AI_ONLY_PLAY):
     print(time.asctime())
 
     start = time.time()
-    for i in range(250):
+    for i in range(10):
         start_match()
     end = time.time()
 
