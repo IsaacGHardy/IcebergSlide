@@ -264,10 +264,10 @@ public class OnlineCharacterCustomizationUI : MonoBehaviour
             swapButton.interactable = true;
             setMyReadyButtons(mePlay);
         }
-        if (!mePlay)
+/*        if (!mePlay)
         {
             playText.gameObject.SetActive(false);
-        }
+        }*/
         photonView.RPC("startGame", RpcTarget.All);
     }
 
@@ -322,12 +322,12 @@ public class OnlineCharacterCustomizationUI : MonoBehaviour
             otherPlay = false;
             mePlay = false;
             swapButton.interactable = true;
-            playText.gameObject.SetActive(false);
+            //playText.gameObject.SetActive(false);
         }
-        else if (mePlay && !otherPlay)
+/*        else if (mePlay && !otherPlay)
         {
             playText.gameObject.SetActive(true);
-        }
+        }*/
     }
 
     public void p1Rand()

@@ -42,7 +42,6 @@ public class SoundEffect : MonoBehaviour
 
     public void playPitter()
     {
-        audioSources[2].volume = 3.0f;
         audioSources[2].Play();
     }
 

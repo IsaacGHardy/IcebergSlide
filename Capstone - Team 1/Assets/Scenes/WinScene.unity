@@ -4424,6 +4424,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   penguin: {fileID: 941818986}
+  Mesh: {fileID: 0}
   head: {fileID: 824583033}
   hair: {fileID: 802218516}
   Game: {fileID: 0}
@@ -5739,6 +5740,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   penguin: {fileID: 1401389440}
+  Mesh: {fileID: 0}
   head: {fileID: 404164008}
   hair: {fileID: 44303699}
   Game: {fileID: 0}
@@ -7536,6 +7538,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   p1: {fileID: 1401389441}
   p2: {fileID: 941818987}
+  p1Hat: {fileID: 6274777768011801096, guid: 2d323132e7d137f49b3ce12cb73cca04, type: 3}
+  p2Hat: {fileID: 6417708159670384053, guid: db1a7cd4aa32a4e4fac5d7a8de68a2ca, type: 3}
+  playButton: {fileID: 268819835}
+  newTeamsButton: {fileID: 391491965}
   WinnerText: {fileID: 941612369}
 --- !u!4 &1763947988
 Transform:

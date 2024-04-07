@@ -16,6 +16,7 @@ using Photon.Pun.Demo.PunBasics;
 using UnityEngine.SceneManagement;
 using TMPro;
 using Photon.Realtime;
+using UnityEngine.UI;
 
 public struct Point
 {
@@ -55,6 +56,9 @@ public class QuixoClass : MonoBehaviour
     [SerializeField] PhotonView photonView;
     [SerializeField] MenuSounds menuSounds;
     [SerializeField] TextMeshProUGUI playerTurn;
+    [SerializeField] Button offerDrawButton;
+    [SerializeField] GameObject rejectionMessage;
+    [SerializeField] Tutorial tutorial;
     public static string p1Name = "Player 1";
     public static string p2Name = "Player 2";
     private Player[] playerList;
@@ -78,6 +82,7 @@ public class QuixoClass : MonoBehaviour
     public Penguin[,] gameBoard;
     public Point from, to;
     public bool isTutorial = true;
+    public Point pieceToClick = new Point( -1, -1 );
     public List<Point> poss;
     public bool isXTurn = true;
     public bool moveInProgress = false;
@@ -94,6 +99,8 @@ public class QuixoClass : MonoBehaviour
     public Point suggestedFrom = new Point();
     //adding more walks so it is randomly chosen more and others feel special
     private int randMovementIndex = 0;
+    private int turncount = 1;
+    private bool isQuick = false;
 
 
 
@@ -106,9 +113,18 @@ public class QuixoClass : MonoBehaviour
         isOWin = false;
         if (isOnline) { playerTurn.text = $"{p1Name}'s turn"; }
         else { playerTurn.text = $"{EndGame.p1Name}'s turn"; }
-        if(!isPlayer1 && isOnline)
+        if(!isPlayer1)
         {
             isLocked = true;
+        }
+
+        if(!isOnline && !isTutorial)
+        {
+            if (PlayerPrefs.GetInt("quick") == 1)
+            {
+                spd = 50f;
+                isQuick = true;
+            }
         }
         //HANDLE FOR ONLINE GAME
         if (isOnline && OnlineCharacterCustomizationUI.XHAT != null && OnlineCharacterCustomizationUI.OHAT != null)
@@ -121,6 +137,11 @@ public class QuixoClass : MonoBehaviour
             xhat = CharacterCustomizationUI.XHAT.gameObject;
             ohat = CharacterCustomizationUI.OHAT.gameObject;
             AIgame = CharacterCustomizationUI.IS_AI_GAME;
+        }
+
+        if (AIgame && !isPlayer1)
+        {
+            StartCoroutine(aiMove());
         }
 
         gameBoard = new Penguin[boardSize, boardSize];
@@ -144,6 +165,29 @@ public class QuixoClass : MonoBehaviour
         if (isTutorial)
         {
             HighlightSuggestedMove();
+        }
+    }
+
+    public void startTutorial()
+    {
+        isPlayer1 = true;
+        isLocked = false;
+    }
+
+    public void toggleQuick()
+    {
+        if (!isOnline && !isTutorial)
+        {
+            if (PlayerPrefs.GetInt("quick") == 1)
+            {
+                spd = 50f;
+                isQuick = true;
+            }
+            else
+            {
+                spd = 5f;
+                isQuick = false;
+            }
         }
     }
 
@@ -794,16 +838,20 @@ public class QuixoClass : MonoBehaviour
 
         if (isXWin || isOWin)
         {
+            gameOver = true;
             menuSounds.playWin();
             StartCoroutine(LoadWinScene());
         }
 
         from = new Point(-1, -1);
-        to = new Point(-1, -1); 
+        to = new Point(-1, -1);
+        poss = null;
         moveInProgress = false; 
         isXTurn = !isXTurn;
+        ++turncount;
+        if(isTutorial && tutorial.isGoing()) { tutorial.advanceTurn(); }
         changePlayerTurn();
-        if(isOnline)
+        if(isOnline || AIgame || isTutorial)
         {
             if (isPlayer1 == isXTurn)
             {
@@ -822,6 +870,9 @@ public class QuixoClass : MonoBehaviour
 
     private void changePlayerTurn()
     {
+        offerDrawButton.gameObject.SetActive(turncount > 10);
+        if (offerDrawButton.gameObject != null) { offerDrawButton.interactable = ((!AIgame && !isOnline && !isTutorial) || (isPlayer1 ? isXTurn : !isXTurn)); }
+
         if (isOnline)
         {
             if (!(isXWin || isOWin)) { playerTurn.text = $"{(isXTurn ? p1Name : p2Name)}'s turn"; }
@@ -939,6 +990,7 @@ public class QuixoClass : MonoBehaviour
 
     public void passMove(bool autoMove = false)
     {
+        if (offerDrawButton.gameObject != null) { offerDrawButton.interactable = false; }
         //UnityEngine.Debug.Log($"Moving: ({from.row},{from.col}) >> ({to.row},{to.col}) inside passMove");
         char blockVal = isXTurn ? 'X' : 'O';
         randMovementIndex = randomMovementAnimation();
@@ -992,20 +1044,12 @@ public class QuixoClass : MonoBehaviour
         finalizeMove(penguins);
         string boardStr = translateBoard();
         blockVal = isXTurn ? 'X' : 'O';
-        if (AIgame && !autoMove){
-            string AImove = ai.makeMove(boardStr + blockVal + '0');
-            readAImove(AImove);
-            Data(from).run(true);
-            Data(to).run(true);
-            moveInProgress = false;
+        if (AIgame && !autoMove && !gameOver){
+            StartCoroutine(aiMove());
         }
-        else if (isTutorial && !autoMove)
+        else if (isTutorial && !autoMove && !gameOver)
         {
-            string AImove = ai.makeMove(boardStr + blockVal + '2');
-            readAImove(AImove);
-            Data(from).run(true);
-            Data(to).run(true);
-            moveInProgress = false;
+            StartCoroutine(aiMove());
         }
         else if (isTutorial && autoMove)
         {
@@ -1013,6 +1057,132 @@ public class QuixoClass : MonoBehaviour
         }
         peng.setMat(defaultMat);
     }
+
+    private IEnumerator aiMove()
+    {
+        if (!isQuick) { yield return new WaitForSeconds(.5f); }
+        
+
+        string boardStr = translateBoard();
+
+        int difficulty = CharacterCustomizationUI.AI_DIFFICULTY;
+        string AImove = ai.makeMove(boardStr + (isPlayer1 ? "O" : "X") + (!isTutorial ? difficulty.ToString() : '6'));
+        readAImove(AImove);
+
+        //simulate hover
+        Data(from).aiHover();
+
+        if (!isQuick) { yield return new WaitForSeconds(1f); }
+
+        //simulate click
+        Data(from).aiClick();
+        Data(from).run(true);
+
+        if (!isQuick) { yield return new WaitForSeconds(1f); }
+
+        Data(to).aiClick();
+        Data(to).run(true);
+        moveInProgress = false;
+
+    }
+
+    public void offerDraw()
+    {
+        if(!AIgame && !isOnline && !isTutorial)
+        {
+            isXWin = true;
+            isOWin = true;
+            tieDance();
+            StartCoroutine(LoadWinScene());
+        }
+        else if(AIgame)
+        {
+            if((int)CharacterCustomizationUI.AI_DIFFICULTY < 3)
+            {
+                goodAiDraw();
+            }
+            else
+            {
+                draw();
+            }
+        }
+        else if(isTutorial)
+        {
+            goodAiDraw();
+        }
+    }
+
+    private void goodAiDraw()
+    {
+        if(turncount >= 20 && !isActiveStreak())
+        {
+            draw();
+        } 
+        else if(turncount >= 30)
+        {
+            draw();
+        }
+        else
+        {
+            StartCoroutine(tellRejected());
+        }
+    }
+
+    private bool isActiveStreak()
+    {
+        char aiFace = (isPlayer1 ? 'O' : 'X');
+        int maxStreak = 0;
+
+        //check rows and cols for active streak
+        for(int i = 0; i < boardSize; ++i)
+        {
+            int active = 0;
+            for(int j = 0; j < boardSize; ++j)
+            {
+                if (gameBoard[i,j].face == aiFace)
+                {
+                    ++active;
+                }
+            }
+            maxStreak = (active > maxStreak ?  active : maxStreak);
+        }
+
+        for(int i = 0; i < boardSize; ++i)
+        {
+            int activeRight = 0;
+            int activeLeft = 0;
+            if (gameBoard[i, i].face == aiFace)
+            {
+                ++activeRight;
+            }
+            else if (gameBoard[i, boardSize - 1 - i].face == aiFace)
+            {
+                ++activeLeft;
+            }
+            maxStreak = (activeRight > maxStreak ? activeRight : maxStreak);
+            maxStreak = (activeLeft > maxStreak ? activeLeft : maxStreak);
+        }
+
+        return maxStreak >= 4;
+    }
+
+    public void draw()
+    {
+        isXWin = true;
+        isOWin = true;
+        tieDance();
+        StartCoroutine(LoadWinScene());
+    }
+
+    private IEnumerator tellRejected()
+    {
+        rejectionMessage.SetActive(true);
+
+        yield return new WaitForSeconds(5f);
+
+        rejectionMessage.SetActive(false);
+    }
+
 
 
     //####################################################################################################################################
@@ -1051,7 +1221,7 @@ public class QuixoClass : MonoBehaviour
     private void readAImove(ref Point outTo, ref Point outFrom, char dificulty)
     {
         string boardStr = translateBoard();
-        boardStr += ("O" + dificulty);
+        boardStr += ("X" + dificulty);
         string move = ai.makeMove(boardStr);
         Regex regex = new Regex(@"\d+");
 
@@ -1075,6 +1245,7 @@ public class QuixoClass : MonoBehaviour
 
     private void xDance()
     {
+        isLocked = true;
         foreach (Penguin penguin in gameBoard)
         {
             if(penguin.face == 'X')
@@ -1090,6 +1261,8 @@ public class QuixoClass : MonoBehaviour
 
     private void oDance()
     {
+        isLocked = true;
+
         foreach (Penguin penguin in gameBoard)
         {
             if (penguin.face == 'O')
@@ -1105,6 +1278,8 @@ public class QuixoClass : MonoBehaviour
 
     private void tieDance()
     {
+        isLocked = true;
+
         foreach (Penguin penguin in gameBoard)
         {
             if (penguin.face != '_')
@@ -1131,10 +1306,33 @@ public class QuixoClass : MonoBehaviour
     //# Tutorial Functions ###############################################################################################################
     //####################################################################################################################################
 
+    public void tutorialPieceClick()
+    {
+        tutorial.wasClicked();
+    }
+
+    public void resetMat(Point p)
+    {
+        Data(p).setMat(defaultMat);
+    }
+
     void HighlightSuggestedMove()
     {
         readAImove(ref suggestedTo, ref suggestedFrom, '0');
-        Data(suggestedTo).setMat(selectedMat);
         Data(suggestedFrom).setMat(highlightMat);
+        pieceToClick = Data(suggestedFrom).loc() ;
+        StartCoroutine(readyForTo());
+    }
+
+    private IEnumerator readyForTo()
+    {
+        while (!tutorial.readyForTo())
+        {
+            yield return new WaitForSeconds(.3f);
+        }
+
+        Data(suggestedTo).setMat(selectedMat);
+        pieceToClick = Data(suggestedTo).loc();
+
     }
 }

@@ -8,6 +8,11 @@ using UnityEngine.SceneManagement;
 public class OnlineMgmt : MonoBehaviourPunCallbacks
 {
     [SerializeField] private GameObject playerLeftGame;
+    [SerializeField] private GameObject drawRequest;
+    [SerializeField] private GameObject pauseMenu;
+    [SerializeField] private GameObject otherPauseMenu;
+
+
     private void Start()
     {
         PhotonNetwork.AddCallbackTarget(this);
@@ -16,6 +21,9 @@ public class OnlineMgmt : MonoBehaviourPunCallbacks
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         base.OnPlayerLeftRoom(otherPlayer);
+        if (drawRequest != null) { drawRequest.SetActive(false); }
+        if (pauseMenu != null) { pauseMenu.SetActive(false); }
+        if (otherPauseMenu != null) { otherPauseMenu.SetActive(false); }
         playerLeftGame.gameObject.SetActive(true);
         StartCoroutine(waitReturnToLobby());
     }
@@ -29,6 +37,7 @@ public class OnlineMgmt : MonoBehaviourPunCallbacks
 
     public void DisconnectAndWait()
     {
+        Time.timeScale = 1.0f;
         PhotonNetwork.Disconnect();
         StartCoroutine(WaitForDisconnect());
 

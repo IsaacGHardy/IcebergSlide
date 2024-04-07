@@ -13,7 +13,16 @@ public class CubeScript : MonoBehaviour, IPointerClickHandler
     }
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (!Game.isLocked && Game.canPickPiece(row, col))
+        if (Game.isTutorial)
+        {
+            if (Game.pieceToClick.eq(loc()))
+            {
+                penguin.soundEffect.playPoke();
+                penguin.run();
+                Game.tutorialPieceClick();
+            }
+        }
+        else if (!Game.isLocked && Game.canPickPiece(row, col))
         {
             penguin.soundEffect.playPoke();
             penguin.run();
