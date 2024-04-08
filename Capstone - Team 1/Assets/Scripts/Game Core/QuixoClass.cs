@@ -1318,7 +1318,7 @@ public class QuixoClass : MonoBehaviour
 
     void HighlightSuggestedMove()
     {
-        readAImove(ref suggestedTo, ref suggestedFrom, '0');
+        readAImove(ref suggestedTo, ref suggestedFrom, '1');
         Data(suggestedFrom).setMat(highlightMat);
         pieceToClick = Data(suggestedFrom).loc() ;
         StartCoroutine(readyForTo());
