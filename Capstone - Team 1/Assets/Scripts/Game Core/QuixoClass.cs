@@ -1114,21 +1114,17 @@ public class QuixoClass : MonoBehaviour
 
     private void goodAiDraw()
     {
-        if(turncount >= 20 && !isActiveStreak())
+        if(turncount >= 50)
         {
             draw();
         } 
-        else if(turncount >= 35)
-        {
-            draw();
-        }
         else
         {
             StartCoroutine(tellRejected());
         }
     }
 
-    private bool isActiveStreak()
+    /*private bool isActiveStreak()
     {
         char aiFace = (isPlayer1 ? 'O' : 'X');
         int maxStreak = 0;
@@ -1164,7 +1160,7 @@ public class QuixoClass : MonoBehaviour
         }
 
         return maxStreak >= 3;
-    }
+    }*/
 
     public void draw()
     {
