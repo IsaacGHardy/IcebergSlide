@@ -110,7 +110,7 @@ def score_pickup(spot_contains, player_turn, pickup_row, pickup_col, reasoning):
     reasoning = "Reasoning:"
 
     if (spot_contains == " "):
-       pickup_score += 1500
+       pickup_score += 2500
        reasoning += " " + "Unclaimed piece" + ", "
 
     if (is_a_corner(pickup_row, pickup_col) and spot_contains == player_turn):
