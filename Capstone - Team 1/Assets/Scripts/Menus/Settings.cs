@@ -8,6 +8,7 @@ public class Settings : MonoBehaviour
     [SerializeField] private GameObject checkmark;
     [SerializeField] Slider volumeSlider; 
     [SerializeField] QuixoClass quixoClass;
+    public static bool isQuick = false;
 
     // Start is called before the first frame update
     void Start()
@@ -17,18 +18,6 @@ public class Settings : MonoBehaviour
             PlayerPrefs.SetFloat("musicVolume", 1);
             Load();
         }
-
-        else
-        {
-            Load();
-        }
-
-        if (!PlayerPrefs.HasKey("quick"))
-        {
-            PlayerPrefs.SetInt("quick", 1);
-            Load();
-        }
-
         else
         {
             Load();
@@ -44,7 +33,7 @@ public class Settings : MonoBehaviour
     private void Load()
     {
         volumeSlider.value = PlayerPrefs.GetFloat("musicVolume");
-        if (checkmark != null) { checkmark.SetActive((PlayerPrefs.GetInt("quick") == 1)); }
+        if (checkmark != null) { checkmark.SetActive(isQuick); }
     }
 
     private void Save()
@@ -55,7 +44,7 @@ public class Settings : MonoBehaviour
     public void toggleQuick()
     {
         checkmark.SetActive(!checkmark.activeSelf);
-        PlayerPrefs.SetInt("quick", (checkmark.activeSelf ? 1 : 0));
+        isQuick = !isQuick;
         if(quixoClass != null) { quixoClass.toggleQuick(); }
     }
 }

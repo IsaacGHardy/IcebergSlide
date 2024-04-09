@@ -135,5 +135,4 @@ public class PhotonLobby : MonoBehaviourPunCallbacks
         SceneManager.LoadScene("Main Menu");
     }
 
-
 }

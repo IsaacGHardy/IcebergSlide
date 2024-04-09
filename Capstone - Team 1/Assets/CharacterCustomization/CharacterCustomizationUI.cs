@@ -20,6 +20,8 @@ public class CharacterCustomizationUI : MonoBehaviour
     [SerializeField] private Button AIEasierButton;
     [SerializeField] private Button AIHarderButton;
     [SerializeField] private TextMeshProUGUI AIDifficultyText;
+    [SerializeField] private TextMeshProUGUI AIDifficultyTextHelp;
+    [SerializeField] private TextMeshProUGUI AIDifficultyLogo;
     [SerializeField] private TMP_InputField p1Name;
     [SerializeField] private TMP_InputField p2Name;
     [SerializeField] private Button p1ForButton;
@@ -99,6 +101,8 @@ public class CharacterCustomizationUI : MonoBehaviour
             vsAiButton.gameObject.SetActive(vsAi);
             vsFriendButton.gameObject.SetActive(!vsAi);
             AIDifficultyText.gameObject.SetActive(vsAi);
+            AIDifficultyTextHelp.gameObject.SetActive(vsAi);
+            AIDifficultyLogo.gameObject.SetActive(vsAi);
             AIEasierButton.gameObject.SetActive(vsAi);
             AIHarderButton.gameObject.SetActive(vsAi);
         }
@@ -179,9 +183,9 @@ public class CharacterCustomizationUI : MonoBehaviour
 
     enum AIDifficulty
     {
-        Eggling = 9,
-        WaddleWarrior = 6,
-        IceMaster = 3,
+        Eggling = 15,
+        WaddleWarrior = 9,
+        IceMaster = 5,
         ArcticLegend = 1,
         EmperorOfTheIce = 0
     }
@@ -246,6 +250,8 @@ public class CharacterCustomizationUI : MonoBehaviour
         vsAiButton.gameObject.SetActive(vsAi);
         vsFriendButton.gameObject.SetActive(!vsAi);
         AIDifficultyText.gameObject.SetActive(vsAi);
+        AIDifficultyTextHelp.gameObject.SetActive(vsAi);
+        AIDifficultyLogo.gameObject.SetActive(vsAi);
         AIEasierButton.gameObject.SetActive(vsAi);
         AIHarderButton.gameObject.SetActive(vsAi);
         if (vsAi) { StartCoroutine(aiCustomization()); }
@@ -366,18 +372,23 @@ public class CharacterCustomizationUI : MonoBehaviour
         {
             case AIDifficulty.Eggling:
                 AIDifficultyText.text = "Eggling";
+                AIDifficultyTextHelp.text = "(Easiest)";
                 break;
             case AIDifficulty.WaddleWarrior:
                 AIDifficultyText.text = "Waddle Warrior";
+                AIDifficultyTextHelp.text = "(Easy)";
                 break;
             case AIDifficulty.IceMaster:
                 AIDifficultyText.text = "Ice Master";
+                AIDifficultyTextHelp.text = "(Medium)";
                 break;
             case AIDifficulty.ArcticLegend:
                 AIDifficultyText.text = "Arctic Legend";
+                AIDifficultyTextHelp.text = "(Hard)";
                 break;
             case AIDifficulty.EmperorOfTheIce:
                 AIDifficultyText.text = "Emperor Of The Ice";
+                AIDifficultyTextHelp.text = "(Impossible)";
                 break;
         }
     }

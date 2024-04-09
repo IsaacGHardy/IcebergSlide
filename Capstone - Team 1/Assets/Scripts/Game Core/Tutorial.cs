@@ -30,53 +30,39 @@ public class Tutorial : MonoBehaviour
     }
 
     List<string> tutorialTexts = new List<string>
-    {
-        //0
-        "You will always begin your turn by selecting a penguin on the outside of the board\n\n\n" +
-        "Try selecting the green penguin to begin your turn",
-        //1
-        "Now slide your selected penguin by clicking on the blue penguin\n\n" +
-        "The penguins will slide to fill the empty spot\n\n" +
-        "Slide that penguin like a pro!",
-        //2
-        "It's time for the rival penguins to make their move!",
-        //3
-        "Once again, choose the green penguin to begin your turn\n\n" +
-        "You can't slide penguins from the opposing team!",
-        //4
-        "Select the blue penguin to complete your turn\n\n" +
-        "You must always slide your penguin to the end of the same row or column\n\n" +
-        "Your options will bounce to let you know where you can slide your penguin",
-        //5
-        "It's time for the rival penguins to make their move!",
-        //6
-        "To win, aim to line up 5 of your penguins in a row, column, or diagonal\n\n" +
-        "It's like Tic Tac Toe but on ice!",
-        //7
-        "You can challenge the AI with different difficulty levels\n\n" +
-        "Fancy a real challenge? Try battling the Emperor of the Ice.\n\n" +
-        "Looking for a gentler opponent? Meet Eggling!",
-        //8
-        "Prefer to face off against a friend? We've got you covered!\n\n" +
-        "Iceberg Slide supports both online and local multiplayer matches.",
-        //9
-        "Feeling puzzled? Check out the pause menu for handy instructions and tips.",
-        //10
-        "Don't feel like wearing astronaut gear? Choose a new hat in the character selector.\n\n" +
-        "You can even come up with a cool nickname for your team!",
-        //11 
-        "Player 1 always takes the first slide.\n\n" +
-        "Want to change things up? Select 'Swap Sides' in the character selector.",
-        //12
-        "If the game seems to be stuck, and victory is slipping away, propose a draw.\n\n" +
-        "But there's no guarantee your opponent will accept!",
-        //13
-        "You can only offer a draw when it is your turn",
-        //14
-        "Think you've mastered the ice? Close this window and glide to victory on your own!\n\n" +
-        "Still need assistance? Keep this window open, and we'll keep guiding you."
-    };
-
+{
+    //0
+    "Start your turn by selecting a penguin outside the board.\n\n" +
+    "Try the green penguin.",
+    //1
+    "Slide your selected penguin by clicking another penguin.\n\n" +
+    "They'll fill the empty spot.",
+    //2
+    "Rival penguins are making their move!",
+    //3
+    "Choose the green penguin for your turn.\n\n" +
+    "You can't slide opponent penguins!",
+    //4
+    "Select the blue penguin to end your turn.\n\n" +
+    "Slide your penguin to the end of a row or column.",
+    //5
+    "Rival penguins are on the move!",
+    //6
+    "Win by lining up 5 penguins in a row, column, or diagonal.\n\n" +
+    "Think of it as icy Tic Tac Toe!",
+    //7
+    //9
+    "Find instructions and tips in the pause menu if you're puzzled.",
+    //12
+    "Propose a draw if victory seems unlikely.\n\n" +
+    "Your opponent may not accept!",
+    //13
+    "You can offer a draw only when it's your turn.",
+    //14
+    "Think you're an ice master?\n\n" +
+    "Close this and glide to victory!\n\n" +
+    "Need help? Keep this open for guidance."
+};
     List<int> indexesAdvanceOnCLick = new List<int>
     {
         0, 3
@@ -134,6 +120,7 @@ public class Tutorial : MonoBehaviour
         CharacterCustomizationUI.IS_AI_GAME = true;
         quixoClass.isTutorial = false;
         quixoClass.AIgame = true;
+        quixoClass.tutorialIsOver();
         StartCoroutine(moveCamera());
 
     }

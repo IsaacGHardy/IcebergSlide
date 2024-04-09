@@ -120,7 +120,7 @@ public class QuixoClass : MonoBehaviour
 
         if(!isOnline && !isTutorial)
         {
-            if (PlayerPrefs.GetInt("quick") == 1)
+            if (Settings.isQuick)
             {
                 spd = 50f;
                 isQuick = true;
@@ -178,7 +178,7 @@ public class QuixoClass : MonoBehaviour
     {
         if (!isOnline && !isTutorial)
         {
-            if (PlayerPrefs.GetInt("quick") == 1)
+            if (Settings.isQuick)
             {
                 spd = 50f;
                 isQuick = true;
@@ -470,9 +470,12 @@ public class QuixoClass : MonoBehaviour
 
     public void playPossibleMoves()
     {
-        foreach(Point p in poss)
+        if (!isQuick)
         {
-            Data(p).Play("Bounce");
+            foreach (Point p in poss)
+            {
+                Data(p).Play("Bounce");
+            }
         }
     }
 
@@ -870,7 +873,7 @@ public class QuixoClass : MonoBehaviour
 
     private void changePlayerTurn()
     {
-        offerDrawButton.gameObject.SetActive(turncount > 10);
+        offerDrawButton.gameObject.SetActive(turncount > 10 || (isTutorial && turncount >= 7));
         if (offerDrawButton.gameObject != null) { offerDrawButton.interactable = ((!AIgame && !isOnline && !isTutorial) || (isPlayer1 ? isXTurn : !isXTurn)); }
 
         if (isOnline)
@@ -1070,17 +1073,17 @@ public class QuixoClass : MonoBehaviour
         readAImove(AImove);
 
         //simulate hover
-        Data(from).aiHover();
+        if (!isQuick) { Data(from).aiHover(); }
 
         if (!isQuick) { yield return new WaitForSeconds(1f); }
 
         //simulate click
-        Data(from).aiClick();
+        if(!isQuick) { Data(from).aiClick(); }
         Data(from).run(true);
 
         if (!isQuick) { yield return new WaitForSeconds(1f); }
 
-        Data(to).aiClick();
+        if (!isQuick) { Data(to).aiClick(); }
         Data(to).run(true);
         moveInProgress = false;
 
@@ -1329,6 +1332,14 @@ public class QuixoClass : MonoBehaviour
 
         Data(suggestedTo).setMat(selectedMat);
         pieceToClick = Data(suggestedTo).loc();
+
+    }
+
+    public void tutorialIsOver()
+    {
+        CharacterCustomizationUI.AI_DIFFICULTY = 50;
+        Data(suggestedFrom).setMat(defaultMat);
+        Data(suggestedTo).setMat(defaultMat);
 
     }
 }

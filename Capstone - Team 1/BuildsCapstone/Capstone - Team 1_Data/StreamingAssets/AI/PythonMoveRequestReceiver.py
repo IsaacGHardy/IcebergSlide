@@ -12,5 +12,5 @@ CSharp_input = input()
 board_data = CSharp_input[0:25:1]
 generated_board = chars_to_board(board_data)
 team_playing_for = CSharp_input[25:26:1]
-difficulty = int(CSharp_input[26:27:1])
+difficulty = int(CSharp_input[26:])
 print(request_ai_move(generated_board, team_playing_for, difficulty))
