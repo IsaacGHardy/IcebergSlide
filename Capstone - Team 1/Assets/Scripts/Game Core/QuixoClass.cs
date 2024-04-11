@@ -487,6 +487,8 @@ public class QuixoClass : MonoBehaviour
             {
                 Data(p).Play("Idle_A");
             }
+            poss = null;
+
         }
     }
 
@@ -1063,8 +1065,8 @@ public class QuixoClass : MonoBehaviour
 
     private IEnumerator aiMove()
     {
-        if (!isQuick) { yield return new WaitForSeconds(.5f); }
-        
+        //if (!isQuick) { yield return new WaitForSeconds(.5f); }
+        yield return new WaitForSeconds(.5f);
 
         string boardStr = translateBoard();
 

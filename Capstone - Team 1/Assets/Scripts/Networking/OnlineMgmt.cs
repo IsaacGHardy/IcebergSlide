@@ -2,6 +2,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,6 +12,7 @@ public class OnlineMgmt : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject drawRequest;
     [SerializeField] private GameObject pauseMenu;
     [SerializeField] private GameObject otherPauseMenu;
+    [SerializeField] private TextMeshProUGUI middleText;
 
 
     private void Start()
@@ -24,7 +26,9 @@ public class OnlineMgmt : MonoBehaviourPunCallbacks
         if (drawRequest != null) { drawRequest.SetActive(false); }
         if (pauseMenu != null) { pauseMenu.SetActive(false); }
         if (otherPauseMenu != null) { otherPauseMenu.SetActive(false); }
-        playerLeftGame.gameObject.SetActive(true);
+        if (playerLeftGame != null) { playerLeftGame.gameObject.SetActive(true); }
+        if (middleText != null) { middleText.text = "Your opponent left the game"; }
+
         StartCoroutine(waitReturnToLobby());
     }
 

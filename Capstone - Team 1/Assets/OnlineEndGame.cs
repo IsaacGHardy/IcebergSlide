@@ -3,6 +3,7 @@ using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.SocialPlatforms;
@@ -14,11 +15,7 @@ public class OnlineEndGame : MonoBehaviour
     [SerializeField] private Penguin p2;
     [SerializeField] private TextMeshProUGUI WinnerText;
     [SerializeField] PhotonView photonView;
-    [SerializeField] private TextMeshProUGUI swapText;
-    [SerializeField] private TextMeshProUGUI playText;
-    [SerializeField] private TextMeshProUGUI otherPlayAgainText;
-    [SerializeField] private TextMeshProUGUI otherNewTeamsText;
-    [SerializeField] private TextMeshProUGUI otherToMenuText;
+    [SerializeField] private TextMeshProUGUI middleText;
     [SerializeField] private Button swapButton;
     [SerializeField] private Button playButton;
     [SerializeField] private Button toMenuButton;
@@ -33,6 +30,7 @@ public class OnlineEndGame : MonoBehaviour
     private void Awake()
     {
         playerList = PhotonNetwork.PlayerList;
+
 
         p1.setHat(OnlineCharacterCustomizationUI.XHAT);
         p2.setHat(OnlineCharacterCustomizationUI.OHAT);
@@ -87,6 +85,7 @@ public class OnlineEndGame : MonoBehaviour
         }
     }
 
+
     public void onlinePlayAgain()
     {
         photonView.RPC("setOtherPlay", RpcTarget.Others);
@@ -95,6 +94,7 @@ public class OnlineEndGame : MonoBehaviour
         {
             swapButton.interactable = false;
             toMenuButton.interactable = false;
+            middleText.text = $"Waiting on {(OnlineCharacterCustomizationUI.isP1 ? p2Name : p1Name)} to play again";
         }
         else
         {
@@ -103,7 +103,7 @@ public class OnlineEndGame : MonoBehaviour
         }
         if (!mePlay)
         {
-            playText.gameObject.SetActive(false);
+            middleText.text = "";
         }
         photonView.RPC("playAgain", RpcTarget.All);
     }
@@ -114,10 +114,10 @@ public class OnlineEndGame : MonoBehaviour
         otherPlay = !otherPlay;
         if(otherPlay)
         {
-            otherPlayAgainText.gameObject.SetActive(true);
+            middleText.text = $"{(OnlineCharacterCustomizationUI.isP1 ? p2Name : p1Name)} would like to play again";
         }
         else {
-            otherPlayAgainText.gameObject.SetActive(false);
+            middleText.text = "";
         }
     }
 
@@ -131,11 +131,11 @@ public class OnlineEndGame : MonoBehaviour
             mePlay = false;
             swapButton.interactable = true;
             toMenuButton.interactable = true;
-            playText.gameObject.SetActive(false);
+            middleText.text = "";
         }
         else if (mePlay && !otherPlay)
         {
-            playText.gameObject.SetActive(true);
+            middleText.text = $"Waiting on {(OnlineCharacterCustomizationUI.isP1 ? p2Name : p1Name)} to play again";
         }
     }
      public void onlineNewTeams()
@@ -158,7 +158,7 @@ public class OnlineEndGame : MonoBehaviour
         if (!meSwap)
         {
             //grab correct text
-            swapText.gameObject.SetActive(false);
+            middleText.text = "";
         }
         //Change RPC func call
         photonView.RPC("newTeams", RpcTarget.All);
@@ -169,11 +169,11 @@ public class OnlineEndGame : MonoBehaviour
         otherSwap = !otherSwap;
         if (otherSwap)
         {
-            otherNewTeamsText.gameObject.SetActive(true);
+            middleText.text = $"{(OnlineCharacterCustomizationUI.isP1 ? p2Name : p1Name)} would like to get new team";
         }
         else
         {
-            otherNewTeamsText.gameObject.SetActive(false);
+            middleText.text = "";
         }
     }
     [PunRPC]
@@ -189,13 +189,13 @@ public class OnlineEndGame : MonoBehaviour
             meSwap = false;
             playButton.interactable = true;
             toMenuButton.interactable=true;
-            swapText.gameObject.SetActive(false);
+            middleText.text = "";
         }
         //change bools
         else if (meSwap && !otherSwap)
         {
             //change text
-            swapText.gameObject.SetActive(true);
+            middleText.text = $"Waiting on {(OnlineCharacterCustomizationUI.isP1 ? p2Name : p1Name)} to get new teams";
         }
 
     }
@@ -222,7 +222,7 @@ public class OnlineEndGame : MonoBehaviour
     {
         //NOT WORKING
         photonView.RPC("otherToLobby", RpcTarget.Others);
-        waitSeconds(0.1f);
+        waitSeconds(0.5f);
         DisconnectAndWait();
     }
 
@@ -234,7 +234,8 @@ public class OnlineEndGame : MonoBehaviour
     [PunRPC]
     private void otherToLobby()
     {
-        otherToMenuText.gameObject.SetActive(true);
+        middleText.text = $"{(OnlineCharacterCustomizationUI.isP1 ? p2Name : p1Name)} has left";
     }
+
 }
 

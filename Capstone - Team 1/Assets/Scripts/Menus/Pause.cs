@@ -10,6 +10,8 @@ public class Pause : MonoBehaviour
     [SerializeField] GameObject otherPauseMenu;
     [SerializeField] GameObject pauseButton;
     [SerializeField] GameObject chat;
+    [SerializeField] GameObject tutorial;
+    private bool tutorialWasOpen;
 
     private void Awake()
     {
@@ -52,5 +54,18 @@ public class Pause : MonoBehaviour
     public void resumeGame()
     {
         Time.timeScale = 1;
+    }
+
+    public void openPauseWithTutorial()
+    {
+        if(tutorial != null)
+        {
+            tutorialWasOpen = tutorial.activeSelf;
+        }
+    }
+
+    public void closePauseWithTutorial()
+    {
+        tutorial.SetActive(tutorialWasOpen);
     }
 }

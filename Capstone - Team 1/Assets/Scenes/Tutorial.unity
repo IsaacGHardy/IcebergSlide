@@ -1916,6 +1916,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 740247019}
+        m_TargetAssemblyTypeName: Pause, Assembly-CSharp
+        m_MethodName: closePauseWithTutorial
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!114 &42945909
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15982,6 +15994,7 @@ MonoBehaviour:
   otherPauseMenu: {fileID: 0}
   pauseButton: {fileID: 991698951}
   chat: {fileID: 0}
+  tutorial: {fileID: 1179350368}
 --- !u!114 &740247020
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23180,6 +23193,18 @@ MonoBehaviour:
       - m_Target: {fileID: 740247019}
         m_TargetAssemblyTypeName: Pause, Assembly-CSharp
         m_MethodName: pauseGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 740247019}
+        m_TargetAssemblyTypeName: Pause, Assembly-CSharp
+        m_MethodName: openPauseWithTutorial
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
